@@ -30,37 +30,67 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: anthropics/claude-code-action@v1
+      # 워크플로 파일을 고친 브랜치에서는 액션이 실행을 거부한다.
+      # "Workflow validation failed. The workflow file must exist and have
+      #  identical content to the version on the repository's default branch."
+      # 그냥 두면 초록불인데 리뷰가 없는 상태가 되고 아무도 모른다. PR 14와 16이 그랬다.
+      - id: workflow-changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          if gh pr diff "$PR" --name-only | grep -q '^\.github/workflows/'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.workflow-changed.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr comment "$PR" --body "이 PR은 \`.github/workflows/\`를 고쳐서 **자동 리뷰가 실행되지 않았다.** 액션이 워크플로 파일이 기본 브랜치와 다르면 실행을 거부한다. 사람이 봐야 한다."
+
+      - if: steps.workflow-changed.outputs.changed != 'true'
+        uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # 무엇이 권한 거부로 버려지는지 보려고 켰다. 한 번 재고 나면 끈다.
+          # 거부된 호출이 리뷰 시간의 4분의 1을 먹고 있었다 (PR 13은 37턴 중 10번).
+          show_full_output: true
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
 
             PR 브랜치는 이미 현재 작업 디렉터리에 체크아웃되어 있다.
 
-            먼저 `AGENTS.md`를 읽어라. 그것이 이 레포의 개발 규칙이고, 리뷰 기준이다.
-            디자인이 걸린 변경이면 `docs/DESIGN.md`도 읽어라.
+            `AGENTS.md`를 읽어라. 그것이 리뷰 기준이다. 색이나 치수가 바뀐 PR이면
+            `docs/DESIGN.md`도 읽어라. 그다음 `gh pr diff`로 변경분을 본다.
 
-            그다음 `gh pr diff`로 변경분을 보고 아래 순서로 검토한다.
+            기계가 이미 보는 것은 보지 마라. CI에서 `npm run verify`가 아래를 잡는다.
+            여기서 또 지적하면 같은 말이 두 번 된다.
 
-            1. 버그 — 실제로 잘못 동작하는 지점. 재현 조건을 함께 적어라.
-            2. AGENTS.md 규칙 위반. 특히 자주 깨지는 것들:
-               - 규칙 1·2 — 이미 있는 함수·컴포넌트를 두고 새로 만들었는가
-               - 규칙 3 — 같은 사실이 두 곳에 적혔는가 (토큰, 스키마, 규칙)
-               - 규칙 8 — 스키마를 바꿨는데 `types/database.ts`를 다시 생성하지 않았는가
-               - 규칙 9 — 서버 진입점에서 검증하는가. 소유권 체크를 앱 코드에 흩뿌렸는가
-               - 규칙 10. 로딩, 빈 상태, 없음, 에러 네 가지가 다 있는가
-               - 규칙 11 — PR에 기능이 두 개 이상 섞였는가
-               - 스타일 — 토큰 대신 임의 값(`p-[13px]`, `text-[#333]`)을 썼는가
-            3. 더 단순하게 쓸 수 있는 곳. 지울 수 있는 코드.
+            - 포맷과 네이밍은 Biome이 본다
+            - 타입은 tsc가 본다
+            - 임의의 값, 안 쓰는 토큰, 상태 파일 누락, 문서 링크, 결정 기록 목차는
+              `scripts/harness-check.mjs`가 본다
+
+            판단이 필요한 것만 본다. 순서대로.
+
+            1. 버그. 실제로 잘못 동작하는 지점. 재현 조건을 함께 적어라
+            2. 규칙 1, 2. 이미 있는 함수나 컴포넌트를 두고 새로 만들었는가
+            3. 규칙 4. 근거 없이 쓴 값이 있는가. 결정 기록이 미정으로 남겨둔 값을
+               말없이 정해버리지 않았는가
+            4. 규칙 8. 스키마를 바꿨는데 `types/database.ts`를 다시 생성하지 않았는가
+            5. 규칙 9. 서버 진입점에서 검증하는가. 소유권 체크를 앱 코드에 흩뿌렸는가
+            6. 규칙 11. 기능이 두 개 이상 섞였는가. 섞였다면 PR 본문에 이유가 있는가
+            7. 규칙 14. 갈림길이었는데 결정 기록이 없는가
 
             리뷰 원칙:
-            - **한국어로 쓴다.**
-            - 포맷·네이밍은 지적하지 마라. Biome이 CI에서 이미 본다.
-            - 추측으로 지적하지 마라. 근거는 `파일:줄`이다. 확신이 없으면 질문으로 적어라.
-            - 문제가 없으면 없다고 한 줄로 끝내라. 억지로 만들어내지 마라.
-            - 심각한 것부터 적어라. 사소한 취향 차이는 아예 적지 마라.
+            - 한국어로 쓴다
+            - 추측으로 지적하지 마라. 근거는 `파일:줄`이다. 확신이 없으면 질문으로 적어라
+            - 문제가 없으면 없다고 한 줄로 끝내라. 억지로 만들어내지 마라
+            - 인라인 코멘트는 최대 5개다. 심각한 것부터 쓴다
+            - 사소한 취향 차이는 아예 적지 마라
 
             구체적인 코드 지점은 `mcp__github_inline_comment__create_inline_comment`로
             (`confirmed: true`) 인라인 코멘트를 달아라.
@@ -79,6 +109,7 @@ jobs:
   mention:
     if: >-
       github.event_name != 'pull_request' &&
+      github.event.comment.user.type != 'Bot' &&
       contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
     permissions:
@@ -94,5 +125,6 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Read,Grep,Glob"
