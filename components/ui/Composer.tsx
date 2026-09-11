@@ -72,7 +72,7 @@ export function Composer({
 	return (
 		<form
 			action={formAction}
-			className="flex gap-3 border-hairline border-b p-4 last:border-b-0"
+			className="flex gap-3 border-hairline border-b px-6 py-3 last:border-b-0"
 		>
 			{children}
 			<Avatar name={authorName} />
@@ -87,7 +87,7 @@ export function Composer({
 					{placeholder}
 				</label>
 				<textarea
-					className="mt-1 w-full resize-none text-body text-fg placeholder:text-fg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+					className="mt-0.5 w-full resize-none text-body text-fg placeholder:text-fg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 					disabled={pending}
 					id={id}
 					// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)

@@ -10,10 +10,10 @@ export default function FollowingLoading() {
 		<PageShell title="팔로잉">
 			{[0, 1, 2, 3].map((row) => (
 				<div
-					className="flex gap-3 border-hairline border-b p-4 last:border-b-0"
+					className="flex gap-3 border-hairline border-b px-6 py-3 last:border-b-0"
 					key={row}
 				>
-					<Skeleton className="size-10 shrink-0 rounded-full" />
+					<Skeleton className="size-9 shrink-0 rounded-full" />
 					<div className="flex flex-1 flex-col gap-2">
 						<Skeleton className="h-4 w-32" />
 						<Skeleton className="h-4 w-full" />
