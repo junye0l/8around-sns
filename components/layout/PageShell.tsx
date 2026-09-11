@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -5,23 +6,7 @@ import type { ReactNode } from "react";
  * 화면 뼈대. 레일 · 가운데 컬럼 · 붙박이 제목줄.
  *
  * 지금은 웹 폭만 맞춘다. 태블릿·모바일은 `docs/PLAN.md` §7에 따로 세워뒀다.
- *
- * 아이콘은 하나뿐이라 파일 안에 둔다 — `components/layout/SideNav.tsx`와 같은 기준이다.
  */
-function BackIcon() {
-	return (
-		<svg
-			aria-hidden
-			className="size-6 shrink-0"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			viewBox="0 0 24 24"
-		>
-			<path d="M15 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
-		</svg>
-	);
-}
 
 export function PageShell({
 	nav,
@@ -51,7 +36,7 @@ export function PageShell({
 								className="-ml-2 rounded-md p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-surface"
 								href={backHref}
 							>
-								<BackIcon />
+								<ChevronLeft aria-hidden className="size-6 shrink-0" />
 							</Link>
 						)}
 						<h1 className="text-title text-fg">{title}</h1>
