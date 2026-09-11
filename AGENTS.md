@@ -98,19 +98,25 @@ Tailwind v4를 쓰되, **유틸리티를 화면에 직접 흩뿌리지 않고 �
 - 토큰 값의 출처는 `docs/DESIGN.md`, 그것을 `app/globals.css`가 그대로 옮겨 적는다
 - `@theme`로 Tailwind 유틸리티에 노출한다 — `bg-canvas` `text-fg` `text-body` `rounded-md` `border-hairline`
 - **간격은 Tailwind 숫자 스케일을 쓴다.** 그것이 곧 4px 그리드다 (`p-1`=4px, `p-4`=16px, `p-16`=64px)
-- **임의의 값(`p-[13px]`, `text-[#333]`)을 쓰지 않는다.** `{4,8,12,16,20,24,32,40,48,56,64}` 밖의 값이 필요하면 이유를 주석으로 남긴다 (DESIGN.md §1 Principle 5)
+- **임의의 값(`p-[13px]`, `text-[#333]`)을 쓰지 않는다.** 6px이 필요하면 `p-1.5`를 쓴다.
+  4px 그리드 밖의 값이 필요하면 이유를 주석으로 남긴다 (DESIGN.md §5 Spacing System)
 - 같은 UI를 두 번째로 만들 때가 아니라, **처음부터** `components/ui/`에 만든다 (규칙 1)
-- `docs/DESIGN.md` §4 States는 **구현 스펙**이다. 로딩·빈 상태·에러·성공의 문구와 처리 방식이 거기 적혀 있다
+- **컴포넌트를 만들면 `docs/DESIGN.md` §4의 상태를 다 채운다** — loading · disabled · pressed · keyboard focus.
+  하나라도 비면 미완성이다 (규칙 10이 화면에 요구하는 것과 같은 기준이다)
+- **화면 문구는 `docs/DESIGN.md`에 없다.** 새로 쓸 때는 §6 Voice & Tone에 맞추고, 이미 있는 화면의 말투를 따른다
 - **문서에 없는 값을 지어내지 않는다** (DESIGN.md §7 Unknowns). 필요한데 없으면 멈추고 묻는다
 - **라이트 모드만 지원한다.** 다크 모드는 범위 밖이다. `prefers-color-scheme` 분기를 만들지 않는다
+- **아이콘은 `lucide-react`에서 가져온다.** SVG를 손으로 그리지 않는다.
+  `size-5`(20px)가 기본, 본문 옆 보조 정보는 `size-4`(16px). `aria-hidden`은 직접 붙인다 — lucide가 안 붙인다
 
-**당근 레퍼런스에서 오는 제약** (DESIGN.md §1 Principles)
+**Toss 레퍼런스에서 오는 제약** (DESIGN.md §1 Principles · §2)
 
-- 주황은 희소하다. **한 화면에 primary 요소 하나.** 두 개가 경쟁하면 하나는 중립으로 내린다
-- 브랜드 웹폰트를 넣지 않는다. 시스템 폰트로 간다. 제목이 무거워야 하면 굵기 700을 쓴다
-- 두 번째 브랜드 색을 만들지 않는다. 시맨틱 색(danger/info/success)은 유틸리티지 브랜드가 아니다
-- **스프링·오버슈트 이징 금지.** `--ease-enter` / `--ease-exit` / `--ease-standard` 셋만 쓴다
-- 그림자를 쓰지 않는다. 분리는 `border-hairline` 1px이 한다 (DESIGN.md §2 Depth)
+- **파랑은 동작에만 칠한다.** 장식으로 쓰지 않는다 (§1 Principle 2)
+- **브랜드 웹폰트를 넣지 않는다.** 스택에 이름만 두고 시스템 폰트로 간다 — 재배포 권리가 없다 (§3).
+  제목이 무거워야 하면 굵기 700을 쓴다
+- **`--color-brand-tint`를 제품 primary 자리에 쓰지 않는다.** 마케팅 CTA 값이다 (§1 Do 1)
+- **새 이징·duration을 만들지 않는다.** `--motion-*` / `--ease-*` 셋만 쓴다. 스프링·오버슈트 금지 (§2)
+- **그림자를 쓰지 않는다.** 분리는 `border-hairline` 1px이 한다 (§2 Depth)
 
 ---
 
@@ -366,9 +372,3 @@ PR을 만드는 시점과 리뷰를 보는 시점이 다르기 때문이다.
 |----|------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 익명 키 |
-
----
-
-# 아직 정하지 않은 것
-
-없음. 새로 생기면 여기에 적고, 정해지기 전까지 **임의로 정해서 진행하지 않는다**(규칙 6).

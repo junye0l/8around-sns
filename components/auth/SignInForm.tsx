@@ -20,7 +20,7 @@ export function SignInForm() {
 			<h1 className="text-center text-title text-fg">로그인</h1>
 
 			{failed?.formError && (
-				<p className="text-body-sm text-danger-strong" role="alert">
+				<p className="text-body-sm text-danger" role="alert">
 					{failed.formError}
 				</p>
 			)}

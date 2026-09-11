@@ -62,7 +62,7 @@ export function ContentCard({
 					{content}
 				</p>
 
-				{footer && <div className="mt-3">{footer}</div>}
+				{footer && <div className="mt-2">{footer}</div>}
 			</div>
 		</article>
 	);

@@ -1,43 +1,35 @@
 @import "tailwindcss";
 
 /*
- * 디자인 토큰. 값의 출처는 docs/DESIGN.md(Karrot SEED)이며 문서에 있는 값만 옮긴다.
+ * 디자인 토큰. 값의 출처는 docs/DESIGN.md(Toss TDS)이며 문서에 있는 값만 옮긴다.
  * 문서에 없는 값을 그럴듯하게 지어내지 않는다 (DESIGN.md §7 Unknowns, AGENTS.md 규칙 3·4).
- * 라이트 모드만 지원한다.
+ * 문서에 근거가 없는데 남겨둔 것은 "로컬 확장"이라고 적고 이유를 붙인다 (DESIGN.md §7 Agent Prompt Guide).
+ * 라이트 모드만 지원한다. 결정 0009.
  */
 
 @theme {
-	/* §2 SEED v2 product semantics — bg-canvas, text-fg, border-hairline 처럼 쓴다 */
-	--color-primary: #ff6f0f; /* carrot-500 */
-	--color-primary-hover: #ff9e66; /* hover / pressed */
-	--color-brand-tint: #fff5f0; /* carrot-50, paper-accent */
-	--color-brand-flash: #fff2ec; /* carrot-100, inline flash success */
+	/* §2 Color Palette & Roles — bg-canvas, text-fg, border-hairline 처럼 쓴다 */
+	--color-primary: #3182f6; /* TDS interaction blue */
+	--color-primary-hover: #2272eb; /* primary hover / strong blue */
+	--color-brand-tint: #e8f3ff; /* marketing weak background */
 
-	--color-canvas: #ffffff; /* gray-00, paper-default */
-	--color-background: #f2f3f6; /* gray-100, paper-background */
-	--color-surface: #f7f8fa; /* gray-50, paper-contents */
+	--color-canvas: #ffffff; /* 카드·입력면. on-primary 텍스트도 이 값이다 */
+	--color-background: #f2f4f6; /* surface, 페이지 바탕 */
 
-	--color-fg: #212124; /* gray-900, ink-text */
-	--color-fg-muted: #868b94; /* gray-600, ink-text-low */
-	--color-fg-strong: #1a1c20; /* gray-1000, 토스트 배경에도 쓰임 */
+	--color-fg: #191f28; /* 가장 강한 본문 */
+	--color-fg-muted: #8b95a1; /* 보조 텍스트 */
 
-	--color-hairline: #eaebee; /* gray-200, divider-2, 스켈레톤 블록 */
+	--color-hairline: #e5e8eb; /* border, 구분선·스켈레톤 블록 */
 
-	--color-danger: #fa2314; /* red-600 */
-	--color-danger-strong: #fa342c; /* red-700, 인라인 필드 에러 보더 */
-	--color-info: #009ceb; /* blue-500 */
-	--color-success: #1aa174; /* green-500 */
-	--color-success-strong: #079171; /* 거래 완료 체크 아이콘 */
-
-	--color-overlay-muted: rgba(0, 0, 0, 0.5); /* 바텀시트 백드롭 */
+	--color-danger: #e42939; /* 파괴적 동작과 에러 텍스트 */
 
 	/*
-	 * §3 타이포 — 시스템 폰트. 브랜드 웹폰트를 넣지 않는다 (§1 Principle 2).
-	 * Pretendard는 "선언된 fallback"이라 스택에만 둔다.
+	 * §3 타이포 — 웹폰트를 받지 않는다. 문서 §3이 "No general redistribution right"이라
+	 * 못박는다. 이름만 먼저 두고 설치된 사람만 보게 한다 (§1 Do "with a system fallback").
 	 */
 	--font-sans:
-		-apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard,
-		system-ui, sans-serif;
+		"Toss Product Sans", -apple-system, BlinkMacSystemFont, system-ui,
+		sans-serif;
 
 	--text-h1: 48px;
 	--text-h1--line-height: 1.35;
@@ -57,23 +49,21 @@
 
 	--text-body: 16px;
 	--text-body--line-height: 1.5;
-	--text-body--letter-spacing: -0.02em;
 
 	--text-body-sm: 14px;
 	--text-body-sm--line-height: 1.5;
-	--text-body-sm--letter-spacing: -0.02em;
 
 	/*
 	 * §5 스페이싱 — 모든 값은 4px 그리드. Tailwind 기본 숫자 스케일이 곧 4px 그리드라
 	 * (p-1=4px, p-4=16px, p-16=64px) 별도 이름 토큰을 만들지 않는다.
 	 */
 
-	/* §5 Border Radius */
+	/* §5 Border Radius Scale — 작은 면 4·6px, 버튼 8·10·14·16px */
 	--radius-sm: 6px;
 	--radius-md: 8px;
-	--radius-full: 9999px;
+	--radius-full: 9999px; /* 로컬 확장 — 문서에 없다. Avatar 원형이 이 값에 의존한다 */
 
-	/* §2 Motion — easings. 스프링·오버슈트는 금지다 */
+	/* 로컬 확장 — 문서 §2는 모션 토큰을 주지 않는다. 값을 지어내는 대신 쓰던 것을 유지한다 */
 	--ease-enter: cubic-bezier(0, 0, 0.2, 1);
 	--ease-exit: cubic-bezier(0.4, 0, 1, 1);
 	--ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,7 +71,7 @@
 	--default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* §2 Motion — durations. duration-[var(--motion-fast)] 로 참조한다 */
+/* 로컬 확장 — durations. duration-[var(--motion-fast)] 로 참조한다 */
 :root {
 	--motion-instant: 0ms;
 	--motion-fast: 150ms;
@@ -96,7 +86,7 @@ body {
 	font-family: var(--font-sans);
 }
 
-/* §2 Motion 4 — reduce 환경에서는 모든 motion 토큰이 instant로 붕괴한다. 예외 없음 */
+/* reduce 환경에서는 모든 motion 토큰이 instant로 붕괴한다. 예외 없음 */
 @media (prefers-reduced-motion: reduce) {
 	:root {
 		--motion-fast: 0ms;
@@ -108,7 +98,7 @@ body {
 	*,
 	*::before,
 	*::after {
-		/* biome-ignore lint/complexity/noImportantStyles: 유틸리티 클래스를 이기려면 필요하다. DESIGN.md §2 Motion 4 "No exceptions" */
+		/* biome-ignore lint/complexity/noImportantStyles: 유틸리티 클래스를 이기려면 필요하다. prefers-reduced-motion에 예외를 두지 않는다 */
 		animation-duration: 0.01ms !important;
 		/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
 		animation-iteration-count: 1 !important;

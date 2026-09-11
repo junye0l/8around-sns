@@ -99,7 +99,7 @@ export function Composer({
 				</div>
 
 				{error && (
-					<p className="mt-2 text-body-sm text-danger-strong" role="alert">
+					<p className="mt-2 text-body-sm text-danger" role="alert">
 						{error}
 					</p>
 				)}
