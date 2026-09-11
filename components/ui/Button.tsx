@@ -8,6 +8,9 @@ import { cn } from "@/lib/utils/cn";
  *
  * pressed는 hover와 같은 강한 파랑을 쓴다. 문서에 파랑이 둘뿐이라 세 번째를 지어내지
  * 않는다. 터치에는 hover가 없으므로 같은 색이어도 `active:`가 눌림을 알려준다.
+ *
+ * 포커스 링 색은 결정 0010.
+ * @see docs/decisions/0010-focus-ring-primary.md
  */
 const button = cva(
 	"inline-flex items-center justify-center rounded-md px-4 py-3 text-body font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed",

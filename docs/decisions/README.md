@@ -33,3 +33,4 @@
 | [0007](0007-comment-routes.md) | 댓글과 대댓글은 각자 자기 화면에서 단다 | 일부 대체됨 → 0008 |
 | [0008](0008-reply-tree-on-post.md) | 답글은 게시글 화면에서 보고, 다는 것은 자기 화면에서 한다 | 확정 |
 | [0009](0009-toss-tds-tokens.md) | 디자인 토큰의 출처를 Toss TDS로 옮긴다 | 확정 |
+| [0010](0010-focus-ring-primary.md) | 키보드 포커스 링은 primary를 쓴다 | 확정 |
