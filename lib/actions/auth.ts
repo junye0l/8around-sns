@@ -47,3 +47,16 @@ export async function signInAction(
 
 	redirect("/");
 }
+
+/**
+ * 로그아웃. 세션 쿠키를 지우고 로그인 화면으로 보낸다.
+ *
+ * 실패해도 로그인으로 보낸다 — 쿠키가 남아 있으면 미들웨어가 다시 홈으로 돌려보내므로
+ * 화면은 일관되고, 여기서 따로 에러를 띄울 자리도 없다.
+ */
+export async function signOutAction() {
+	const supabase = await createClient();
+	await supabase.auth.signOut();
+
+	redirect("/login");
+}
