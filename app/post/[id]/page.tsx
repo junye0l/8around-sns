@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CommentThread } from "@/components/comment/CommentThread";
+import { RepliesHeading } from "@/components/comment/RepliesHeading";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
 import { Composer } from "@/components/ui/Composer";
@@ -62,6 +63,8 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 			>
 				<input name="post_id" type="hidden" value={post.id} />
 			</Composer>
+
+			<RepliesHeading label="댓글" />
 
 			{comments.length === 0 ? (
 				<EmptyState message="아직 댓글이 없어요. 먼저 남겨보세요." />

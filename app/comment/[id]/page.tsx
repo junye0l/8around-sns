@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { RepliesHeading } from "@/components/comment/RepliesHeading";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
 import { Composer } from "@/components/ui/Composer";
@@ -85,6 +86,8 @@ export default async function CommentPage({
 				<input name="post_id" type="hidden" value={comment.post_id} />
 				<input name="parent_id" type="hidden" value={comment.id} />
 			</Composer>
+
+			<RepliesHeading label="답글" />
 
 			{replies.length === 0 ? (
 				<EmptyState message="아직 답글이 없어요. 먼저 남겨보세요." />
