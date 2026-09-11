@@ -1,0 +1,106 @@
+import type { AuthError, SupabaseClient } from "@supabase/supabase-js";
+import { describe, expect, it } from "vitest";
+import type { Database } from "@/types/database";
+import { signIn, signUp } from "./auth";
+
+/** signUp 응답과 `profiles` 조회 결과만 흉내 낸다 */
+const stub = (options: { code?: string; taken?: boolean }) =>
+	({
+		auth: {
+			signInWithPassword: async () => ({
+				error: options.code
+					? ({ code: options.code, message: "" } as AuthError)
+					: null,
+			}),
+			signUp: async () => ({
+				error: options.code
+					? ({ code: options.code, message: "" } as AuthError)
+					: null,
+			}),
+		},
+		from: () => ({
+			select: () => ({
+				eq: () => ({
+					maybeSingle: async () => ({
+						data: options.taken ? { id: "stub" } : null,
+					}),
+				}),
+			}),
+		}),
+	}) as unknown as SupabaseClient<Database>;
+
+const input = {
+	email: "a@b.com",
+	password: "hunter2",
+	username: "hong_gil",
+};
+
+describe("signUp", () => {
+	it("잘못된 입력을 필드별로 한 번에 돌려준다", async () => {
+		const result = await signUp(stub({}), {
+			email: "not-an-email",
+			password: "123",
+			username: "Alice",
+		});
+
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.errors.email).toBeTruthy();
+		expect(result.errors.password).toBeTruthy();
+		expect(result.errors.username).toBeTruthy();
+	});
+
+	it("이메일 중복은 이메일 필드에 붙인다", async () => {
+		const result = await signUp(stub({ code: "user_already_exists" }), input);
+
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.errors.email).toContain("이미 가입한");
+		expect(result.errors.username).toBeUndefined();
+	});
+
+	it("이유를 모르는 실패는 별명이 이미 있는지 확인해서 판정한다", async () => {
+		const taken = await signUp(
+			stub({ code: "unexpected_failure", taken: true }),
+			input,
+		);
+		expect(taken.ok).toBe(false);
+		if (taken.ok) return;
+		expect(taken.errors.username).toContain("이미 쓰고 있는");
+
+		const free = await signUp(
+			stub({ code: "unexpected_failure", taken: false }),
+			input,
+		);
+		expect(free.ok).toBe(false);
+		if (free.ok) return;
+		expect(free.errors.username).toBeUndefined();
+		expect(free.formError).toBeTruthy();
+	});
+
+	it("에러가 없으면 성공이다", async () => {
+		expect(await signUp(stub({}), input)).toEqual({ ok: true });
+	});
+});
+
+describe("signIn", () => {
+	it("어느 쪽이 틀렸는지 알려주지 않는다", async () => {
+		const result = await signIn(stub({ code: "invalid_credentials" }), {
+			email: "a@b.com",
+			password: "wrong",
+		});
+
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		// 필드에 붙이면 가입 여부가 새어 나간다
+		expect(result.errors.email).toBeUndefined();
+		expect(result.errors.password).toBeUndefined();
+		expect(result.formError).toContain("맞지 않아요");
+	});
+
+	it("에러가 없으면 성공이다", async () => {
+		expect(
+			await signIn(stub({}), { email: "a@b.com", password: "hunter2" }),
+		).toEqual({ ok: true });
+	});
+});
