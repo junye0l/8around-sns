@@ -46,7 +46,7 @@
 ## 3. 인증
 
 - [x] 회원가입 → 프로필 생성 (`on_auth_user_created` 트리거가 만든다)
-- [x] 로그인 / 로그아웃, 세션 유지 — 이메일 + 비밀번호 ([결정 0001](decisions/0001-login-identifier.md)). 로그아웃은 `TopBar`의 마이페이지 버튼 안에 있다
+- [x] 로그인 / 로그아웃, 세션 유지 — 이메일 + 비밀번호 ([결정 0001](decisions/0001-login-identifier.md)). 로그아웃은 `SideNav` 맨 아래에 있다
 - [x] 비로그인 상태에서 보호 라우트 접근 차단 — 허용 목록(`lib/utils/auth-route.ts`)에 없는 경로는 전부 `/login`으로 보낸다 ([결정 0006](decisions/0006-feed-requires-login.md))
   - [x] 반대 방향은 됐다 — 로그인한 사용자는 `/login` · `/signup`에 못 들어간다
 
