@@ -32,6 +32,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# 키 이름만 담긴 템플릿. 값이 없으므로 커밋한다 (AGENTS.md 규칙 12)
+!.env.example
 
 # vercel
 .vercel
