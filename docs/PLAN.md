@@ -81,7 +81,7 @@
 
 ## 7. 인터랙션 · 상태
 
-- [ ] 모든 화면에 로딩 / 빈 상태 / 에러 3종 (AGENTS.md 규칙 10)
+- [ ] 모든 화면에 로딩, 빈 상태, 없음, 에러 네 가지 (AGENTS.md 규칙 10)
 - [ ] 낙관적 업데이트 — 팔로우 토글, 댓글 작성
 - [ ] 전환은 `--motion-fast`(150ms) / `--motion-standard`(250ms), 이징은 `--ease-enter` / `--ease-exit` / `--ease-standard` 셋만
 - [x] `prefers-reduced-motion` 존중 — `app/globals.css:100-106`이 `motion-*`를 전부 0ms로 내린다 (DESIGN.md §3 Reduce motion)
