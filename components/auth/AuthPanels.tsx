@@ -31,8 +31,8 @@ const PATH = { signup: "/signup", signin: "/login" } as const;
  *   /signup, /login 이 각자 살아 있어야 미들웨어가 보호 라우트에서 보낼 곳이 생긴다
  * - 자동완성 — 비밀번호 칸이 둘이라 new-password / current-password 를 각 폼에 붙였다
  *
- * 모바일(<md)에서는 슬라이드하지 않는다. 400px에 2단을 밀어 넣으면 읽히지 않는다
- * (DESIGN.md §5 Responsive). 활성 폼만 보여주고 아래 버튼으로 바꾼다.
+ * md 아래에서는 슬라이드하지 않는다. 400px에 2단을 밀어 넣으면 읽히지 않는다.
+ * 활성 폼만 보여주고 아래 버튼으로 바꾼다.
  */
 export function AuthPanels({ initial }: { initial: Mode }) {
 	const [mode, setMode] = useState<Mode>(initial);

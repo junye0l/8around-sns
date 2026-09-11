@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/Button";
 
 /**
  * 없는 글. `getPost`가 null을 주면 페이지가 `notFound()`로 여기로 넘긴다.
- *
- * 문구는 DESIGN.md §6 — 무엇이 없는지 한 줄로 말하고 다음 행동만 가리킨다.
  */
 export default function PostNotFound() {
 	return (

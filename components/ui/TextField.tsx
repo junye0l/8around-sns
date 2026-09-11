@@ -10,8 +10,9 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
 };
 
 /**
- * Text Field — label + input + helper/error (DESIGN.md §4 SEED Product Components).
- * 에러 표현은 §4 States "Error (inline field)" — 보더 red-700 2px, 아래 13px 한 문장.
+ * 라벨, 입력칸, 안내 또는 에러 한 줄.
+ *
+ * `error`가 있으면 보더가 2px danger로 바뀌고 `aria-invalid`가 붙는다.
  */
 export function TextField({ label, error, hint, ...props }: TextFieldProps) {
 	const id = useId();
@@ -33,11 +34,9 @@ export function TextField({ label, error, hint, ...props }: TextFieldProps) {
 				{...props}
 			/>
 			{description && (
-				// 13px은 타입 스케일(14/16px) 밖이지만 DESIGN.md §4 States가 helper text를
-				// 13px로 못박아 둬서 그대로 쓴다 (AGENTS.md 스타일 규칙의 "이유를 주석으로")
+				// hint는 오른쪽, 에러는 왼쪽에서 읽는다
 				<p
-					// 제한사항(hint)은 오른쪽, 에러는 필드 바로 아래 왼쪽에서 읽는다
-					className={`text-[13px] ${error ? "text-danger" : "text-right text-fg-muted"}`}
+					className={`text-body-sm ${error ? "text-danger" : "text-right text-fg-muted"}`}
 					id={describedById}
 				>
 					{description}

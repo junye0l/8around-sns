@@ -6,19 +6,18 @@ type ContentCardProps = {
 	author: { username: string; display_name: string };
 	createdAt: string;
 	content: string;
-	/** 본문 아래 줄. 게시글·댓글의 댓글 수가 여기 붙는다 */
+	/** 본문 아래 줄. 댓글 수가 여기 붙는다 */
 	footer?: ReactNode;
 	/**
-	 * 아래 칸과 한 스레드로 이어진다. 아바타 밑으로 세로선이 흐르고 구분선은 빠진다 —
-	 * 선이 이미 "이어짐"을 말하는데 그 위에 칸을 나누는 선까지 그으면 둘이 싸운다
-	 * ([결정 0008](../../docs/decisions/0008-reply-tree-on-post.md)).
+	 * 아래 칸과 한 스레드로 이어진다. 아바타 밑으로 세로선이 흐르고 구분선은 빠진다.
+	 * @see docs/decisions/0008-reply-tree-on-post.md
 	 */
 	connected?: boolean;
 };
 
 /**
- * 누군가 쓴 글 한 칸. 게시글과 댓글이 같은 모양이라 하나를 같이 쓴다 (규칙 2).
- * 그림자를 쓰지 않고 `border-hairline` 1px로만 나눈다 (DESIGN.md §2 Depth).
+ * 누군가 쓴 글 한 칸. 게시글과 댓글이 같은 모양이라 하나를 같이 쓴다.
+ *
  * 목록의 마지막 칸은 바깥 테두리와 겹치므로 아래 선을 뺀다.
  */
 export function ContentCard({

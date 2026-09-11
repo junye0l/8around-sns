@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/Button";
 
 /**
- * 없는 댓글. 지워진 댓글, 이상한 주소, 그리고 **답글의 주소**가 여기로 온다 —
- * 답글에는 자기 화면이 없다 (`lib/queries/comment.ts`의 `getComment`, 결정 0007).
+ * 없는 댓글. 지워진 댓글, 이상한 주소, 답글의 주소가 여기로 온다.
+ * 답글에는 자기 화면이 없다.
  *
- * 문구는 DESIGN.md §6 — 무엇이 없는지 한 줄로 말하고 다음 행동만 가리킨다.
- * 돌아갈 글을 모르므로("어느 댓글인지"를 못 읽었다) 추천으로 보낸다.
+ * 어느 글의 댓글인지 모르는 상태라 돌아갈 곳은 추천이다.
+ * @see lib/queries/comment.ts 의 getComment
+ * @see docs/decisions/0007-comment-routes.md
  */
 export default function CommentNotFound() {
 	return (
