@@ -344,7 +344,7 @@ docs/agents-rules       문서
 
 - 제목은 커밋 메시지와 같은 형식
 - CI가 초록이고, Vercel 프리뷰 URL에서 직접 눌러본 뒤에 머지한다
-- 머지는 squash — `main` 히스토리를 한 기능 한 줄로 유지한다
+- 머지는 **머지 커밋**으로 한다. 레포 설정에서 `Allow merge commits`만 켜고 squash·rebase는 끈다 ([결정 0005](docs/decisions/0005-merge-commits.md))
 
 PR 만드는 절차는 `/pr` 스킬(`.claude/skills/pr/SKILL.md`)에 있다. 사람이 손으로 해도 같은 순서다.
 리뷰에 **대응하는** 절차는 `/pr-review`(`.claude/skills/pr-review/SKILL.md`)로 따로 나뉘어 있다 —
