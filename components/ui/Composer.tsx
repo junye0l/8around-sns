@@ -1,6 +1,12 @@
 "use client";
 
-import { type ReactNode, useActionState, useEffect, useId } from "react";
+import {
+	type ReactNode,
+	useActionState,
+	useEffect,
+	useId,
+	useState,
+} from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 
@@ -33,9 +39,9 @@ type ComposerProps = {
  *
  * 이미지, GIF, 투표 같은 것은 범위 밖이라 아이콘 자리를 만들지 않는다.
  *
- * textarea를 제어 컴포넌트로 두지 않는다. React 19는 함수 action이 끝나면 폼을
- * 자동으로 비우는데, 실패했을 때 쓰던 글이 날아가지 않게 `defaultValue`와 `key`로
- * 성공했을 때만 새로 그린다.
+ * textarea를 제어 컴포넌트로 둔다. React 19는 함수 action이 끝나면 폼을 자동으로
+ * 비우는데, 그러면 저장에 실패했을 때 쓰던 글까지 같이 날아간다. 값을 state로
+ * 들고 있으면 실패한 화면에 글이 남고, 성공했을 때만 비운다.
  */
 export function Composer({
 	authorName,
@@ -50,10 +56,15 @@ export function Composer({
 		ComposerResult | null,
 		FormData
 	>(action, null);
+	const [content, setContent] = useState("");
 	const id = useId();
 
+	// 성공했을 때만 비운다. result는 액션이 끝날 때마다 새 객체라 이걸로 구분된다
 	useEffect(() => {
-		if (result?.ok) onSuccess?.();
+		if (result?.ok) {
+			setContent("");
+			onSuccess?.();
+		}
 	}, [result, onSuccess]);
 
 	const error = result && !result.ok ? result.error : null;
@@ -79,14 +90,14 @@ export function Composer({
 					className="mt-1 w-full resize-none text-body text-fg placeholder:text-fg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 					disabled={pending}
 					id={id}
-					// 성공하면 key가 바뀌어 빈 칸으로 다시 그려진다. 실패하면 쓰던 글이 남는다
-					key={result?.ok ? "sent" : "editing"}
 					// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
 					maxLength={maxLength}
 					name="content"
+					onChange={(event) => setContent(event.target.value)}
 					placeholder={placeholder}
 					required
 					rows={3}
+					value={content}
 				/>
 
 				{error && (
