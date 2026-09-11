@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CommentThread } from "@/components/comment/CommentThread";
 import { PageShell } from "@/components/layout/PageShell";
@@ -11,6 +12,10 @@ import { getPost } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
 import { COMMENT_CONTENT_MAX } from "@/lib/utils/content";
+
+export const metadata: Metadata = {
+	title: "게시글",
+};
 
 /**
  * 게시글 상세 — 글 하나와 거기 달린 댓글. 답글은 부모 댓글 아래에 세로선으로 이어
@@ -42,7 +47,7 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 	return (
 		<PageShell
 			backHref="/"
-			nav={<SideNav username={username} />}
+			nav={<SideNav username={profile?.username ?? null} />}
 			title="게시글"
 		>
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">

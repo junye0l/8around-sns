@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
 import { CommentCount } from "@/components/ui/CommentCount";
@@ -9,6 +10,10 @@ import { listFeed } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
 import { POST_CONTENT_MAX } from "@/lib/utils/content";
+
+export const metadata: Metadata = {
+	title: "추천",
+};
 
 /**
  * 추천. 올라온 글을 전부 최신순으로 본다. 팔로잉 기준으로 거르는 화면이 옆에 따로 서기
@@ -31,7 +36,10 @@ export default async function Home() {
 	const displayName = profile?.display_name ?? username;
 
 	return (
-		<PageShell nav={<SideNav username={username} />} title="추천">
+		<PageShell
+			nav={<SideNav username={profile?.username ?? null} />}
+			title="추천"
+		>
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
 				<Composer
 					action={createPostAction}

@@ -42,3 +42,60 @@ export async function getCurrentProfile(
 
 	return data;
 }
+
+/** 프로필 화면의 주인공. 팔로워 · 팔로잉 수를 같이 들고 온다 */
+export type ProfileDetail = Pick<
+	Profile,
+	"id" | "username" | "display_name" | "bio"
+> & {
+	follower_count: number;
+	following_count: number;
+};
+
+/**
+ * `follows`는 `profiles`를 두 번 참조하므로 어느 FK인지 알려줘야 한다.
+ * 제약 이름의 출처는 `types/database.ts`의 `Relationships`다.
+ *
+ * 수를 DB에서 세어 온다. 화면에서 세려면 팔로우 행을 전부 받아야 하고
+ * 그건 수만 보여주는 자리에 목록을 통째로 끌고 오는 일이다.
+ */
+const PROFILE_DETAIL_SELECT =
+	"id, username, display_name, bio, followers:follows!follows_following_id_fkey(count), following:follows!follows_follower_id_fkey(count)";
+
+type ProfileDetailRow = Omit<
+	ProfileDetail,
+	"follower_count" | "following_count"
+> & {
+	followers: { count: number }[];
+	following: { count: number }[];
+};
+
+/**
+ * 별명으로 찾는 프로필. 없으면 null이고, 화면은 그걸 404로 바꾼다.
+ *
+ * 주소가 uuid가 아니라 별명이라 `getPost`(`lib/queries/post.ts:61`)가 하는
+ * 캐스팅 방어가 필요 없다. `username`은 text라 어떤 값이 와도 없는 것으로 끝난다.
+ *
+ * 실패하면 던진다. 화면의 에러 상태는 `app/error.tsx`가 받는다 (규칙 10).
+ */
+export async function getProfile(
+	supabase: SupabaseClient<Database>,
+	username: string,
+): Promise<ProfileDetail | null> {
+	const { data, error } = await supabase
+		.from("profiles")
+		.select(PROFILE_DETAIL_SELECT)
+		.eq("username", username)
+		.maybeSingle();
+
+	if (error) throw new Error(`프로필을 읽지 못했다: ${error.message}`);
+	if (!data) return null;
+
+	// PostgREST는 집계를 배열 한 칸으로 돌려준다. 화면까지 그 모양을 들고 가지 않는다
+	const { followers, following, ...profile } = data as ProfileDetailRow;
+	return {
+		...profile,
+		follower_count: followers[0]?.count ?? 0,
+		following_count: following[0]?.count ?? 0,
+	};
+}
