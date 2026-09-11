@@ -1,9 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { POST_CONTENT_MAX, postContentSchema } from "./post-content";
+import {
+	COMMENT_CONTENT_MAX,
+	contentSchema,
+	POST_CONTENT_MAX,
+} from "./content";
 
-const parse = (value: string) => postContentSchema.safeParse(value);
+const post = contentSchema(POST_CONTENT_MAX);
+const parse = (value: string) => post.safeParse(value);
 
-describe("postContentSchema", () => {
+describe("contentSchema", () => {
 	it("앞뒤 공백을 잘라낸 값을 돌려준다", () => {
 		const result = parse("  안녕  ");
 		expect(result.success && result.data).toBe("안녕");
@@ -18,5 +23,15 @@ describe("postContentSchema", () => {
 		// 공백 포함 2002자지만 잘라내면 2000자다. DB 제약도 저장값을 본다
 		expect(parse(` ${"가".repeat(POST_CONTENT_MAX)} `).success).toBe(true);
 		expect(parse("가".repeat(POST_CONTENT_MAX + 1)).success).toBe(false);
+	});
+
+	it("상한은 인자로 갈린다 — 댓글은 1000자에서 막힌다", () => {
+		const comment = contentSchema(COMMENT_CONTENT_MAX);
+		expect(comment.safeParse("가".repeat(COMMENT_CONTENT_MAX)).success).toBe(
+			true,
+		);
+		expect(
+			comment.safeParse("가".repeat(COMMENT_CONTENT_MAX + 1)).success,
+		).toBe(false);
 	});
 });

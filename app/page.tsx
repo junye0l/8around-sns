@@ -1,9 +1,13 @@
+import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { PostCard } from "@/components/post/PostCard";
-import { PostComposer } from "@/components/post/PostComposer";
+import { CommentCount } from "@/components/ui/CommentCount";
+import { Composer } from "@/components/ui/Composer";
+import { ContentCard } from "@/components/ui/ContentCard";
+import { createPostAction } from "@/lib/actions/post";
 import { listFeed } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
+import { POST_CONTENT_MAX } from "@/lib/utils/content";
 
 /**
  * 추천 — 올라온 글을 전부 최신순으로 본다. 팔로잉 기준으로 거르는 화면은
@@ -26,33 +30,41 @@ export default async function Home() {
 	const displayName = profile?.display_name ?? username;
 
 	return (
-		<>
-			<SideNav username={username} />
+		<PageShell nav={<SideNav username={username} />} title="추천">
+			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
+				<Composer
+					action={createPostAction}
+					authorName={displayName}
+					maxLength={POST_CONTENT_MAX}
+					pendingLabel="올리는 중"
+					placeholder="무슨 생각을 하고 있나요?"
+					submitLabel="올리기"
+				/>
 
-			{/* 레일은 fixed라 흐름 밖이다. 컬럼은 레일 오른쪽이 아니라 뷰포트 가운데에 선다.
-			    min-w-6xl(1152px = 레일 240 × 2 + 컬럼 672)보다 좁아지면 겹치는 대신
-			    가로 스크롤이 생긴다 — 좁은 폭 대응은 `docs/PLAN.md` §7에서 따로 한다 */}
-			<div className="min-w-6xl">
-				<main className="mx-auto w-full max-w-2xl px-4 pb-4">
-					<h1 className="sticky top-0 z-10 bg-background py-4 text-title text-fg">
-						추천
-					</h1>
-
-					<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-						<PostComposer authorName={displayName} />
-
-						{posts.length === 0 ? (
-							// 빈 상태는 한 줄로 이유를 말하고 다음 행동만 가리킨다 (DESIGN.md §4 · §6).
-							// 작성칸이 바로 위에 있으므로 버튼을 따로 두지 않는다
-							<p className="py-16 text-center text-body-sm text-fg-muted">
-								아직 올라온 글이 없어요. 첫 글을 남겨보세요.
-							</p>
-						) : (
-							posts.map((post) => <PostCard key={post.id} post={post} />)
-						)}
-					</div>
-				</main>
+				{posts.length === 0 ? (
+					// 빈 상태는 한 줄로 이유를 말하고 다음 행동만 가리킨다 (DESIGN.md §4 · §6).
+					// 작성칸이 바로 위에 있으므로 버튼을 따로 두지 않는다
+					<p className="py-16 text-center text-body-sm text-fg-muted">
+						아직 올라온 글이 없어요. 첫 글을 남겨보세요.
+					</p>
+				) : (
+					posts.map((post) => (
+						<ContentCard
+							author={post.author}
+							content={post.content}
+							createdAt={post.created_at}
+							footer={
+								<CommentCount
+									count={post.comment_count}
+									href={`/post/${post.id}`}
+									label="댓글"
+								/>
+							}
+							key={post.id}
+						/>
+					))
+				)}
 			</div>
-		</>
+		</PageShell>
 	);
 }

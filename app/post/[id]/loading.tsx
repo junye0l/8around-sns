@@ -2,19 +2,20 @@ import { PageShell } from "@/components/layout/PageShell";
 import { Skeleton } from "@/components/ui/Skeleton";
 
 /**
- * 첫 페인트. 레일과 컬럼 뼈대를 `app/page.tsx`와 같게 세워서 데이터가 와도 화면이 튀지 않는다.
+ * 상세 화면의 첫 페인트. `app/loading.tsx`는 제목이 "추천"이라 여기까지 쓰지 못한다.
  * 레일 안은 비워둔다 — 항목 수가 아니라 위치만 맞추면 된다.
  */
-export default function Loading() {
+export default function PostLoading() {
 	return (
 		<PageShell
+			backHref="/"
 			nav={
 				<div className="fixed inset-y-0 left-0 w-60 border-hairline border-r bg-canvas" />
 			}
-			title="추천"
+			title="게시글"
 		>
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-				{[0, 1, 2, 3].map((row) => (
+				{[0, 1, 2].map((row) => (
 					<div
 						className="flex gap-3 border-hairline border-b p-4 last:border-b-0"
 						key={row}
