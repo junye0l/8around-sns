@@ -18,6 +18,8 @@ const GUEST_ONLY = ["/login", "/signup"];
  */
 export async function updateSession(request: NextRequest) {
 	let response = NextResponse.next({ request });
+	// 어떤 응답을 돌려주든 같이 실려야 한다. 아래 setAll이 채운다
+	let authHeaders: Record<string, string> = {};
 
 	const supabase = createServerClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -37,6 +39,7 @@ export async function updateSession(request: NextRequest) {
 					}
 					// 인증 쿠키가 실린 응답은 CDN이 캐시하면 안 된다.
 					// 라이브러리가 넘겨주는 no-store 헤더를 그대로 붙인다.
+					authHeaders = headers;
 					for (const [key, headerValue] of Object.entries(headers)) {
 						response.headers.set(key, headerValue);
 					}
@@ -53,10 +56,16 @@ export async function updateSession(request: NextRequest) {
 	if (user && GUEST_ONLY.includes(request.nextUrl.pathname)) {
 		const home = request.nextUrl.clone();
 		home.pathname = "/";
-		// 세션 쿠키가 실린 response를 버리지 않도록 헤더를 그대로 옮긴다
 		const redirect = NextResponse.redirect(home);
+		// 새 응답이라 갱신된 세션 쿠키도, no-store 헤더도 물려받지 못한다.
+		// 둘 다 옮기지 않으면 인증 쿠키가 실린 응답이 CDN에 캐시될 수 있다.
 		for (const cookie of response.cookies.getAll()) {
 			redirect.cookies.set(cookie);
+		}
+		// response.headers 통째로가 아니라 라이브러리가 준 것만 옮긴다.
+		// next()가 붙이는 미들웨어 제어 헤더까지 리다이렉트에 실으면 안 된다
+		for (const [key, headerValue] of Object.entries(authHeaders)) {
+			redirect.headers.set(key, headerValue);
 		}
 		return redirect;
 	}
