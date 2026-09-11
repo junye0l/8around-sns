@@ -3,11 +3,11 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 /**
- * 화면 뼈대. 레일 · 가운데 컬럼 · 붙박이 제목줄.
+ * 화면 뼈대. 왼쪽 레일, 가운데 컬럼, 붙박이 제목줄.
  *
- * 지금은 웹 폭만 맞춘다. 태블릿·모바일은 `docs/PLAN.md` §7에 따로 세워뒀다.
+ * 웹 폭만 맞춘다.
+ * @see docs/PLAN.md 좁은 폭 대응
  */
-
 export function PageShell({
 	nav,
 	title,
@@ -24,9 +24,8 @@ export function PageShell({
 		<>
 			{nav}
 
-			{/* 레일은 fixed라 흐름 밖이다. 컬럼은 레일 오른쪽이 아니라 뷰포트 가운데에 선다.
-			    min-w-6xl(1152px = 레일 240 × 2 + 컬럼 672)보다 좁아지면 겹치는 대신
-			    가로 스크롤이 생긴다 — 좁은 폭 대응은 `docs/PLAN.md` §7에서 따로 한다 */}
+			{/* 레일이 fixed라 흐름 밖이다. min-w-6xl은 레일 240 두 개와 컬럼 672를 더한 값으로,
+			    이보다 좁아지면 겹치는 대신 가로 스크롤이 생긴다 */}
 			<div className="min-w-6xl">
 				<main className="mx-auto w-full max-w-2xl px-4 pb-4">
 					<div className="sticky top-0 z-10 flex items-center gap-2 bg-background py-4">

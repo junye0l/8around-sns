@@ -2,14 +2,10 @@ import { Home, LogOut } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth";
 
 /**
- * 왼쪽 네비 레일.
+ * 왼쪽 네비 레일. 웹 폭만 맞춘다.
  *
- * 지금은 웹 폭만 맞춘다. 태블릿·모바일은 `docs/PLAN.md` §7에 따로 세워뒀다 —
- * 폭마다 분기를 먼저 깔면 레이아웃이 바뀔 때마다 두 벌을 고치게 된다.
- *
- * 지금 들어갈 수 있는 항목은 추천과 로그아웃뿐이다. 검색·알림·메시지는
- * `AGENTS.md` 범위 밖이라 자리만 만들어두지 않는다 — 눌러도 아무 일이 없는
- * 메뉴는 없는 메뉴보다 나쁘다. 팔로잉 피드와 프로필이 `docs/PLAN.md` §5에서 이 자리를 채운다.
+ * 항목은 추천과 로그아웃뿐이다. 검색, 알림, 메시지는 범위 밖이라 자리를 만들지 않는다.
+ * @see docs/PLAN.md 좁은 폭 대응과 남은 화면
  */
 const ROW =
 	"flex w-full items-center gap-3 rounded-md px-3 py-3 text-body text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background";

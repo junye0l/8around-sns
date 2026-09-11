@@ -3,9 +3,7 @@
 import { Button } from "@/components/ui/Button";
 
 /**
- * 화면을 못 그린 경우 (DESIGN.md §4 States "Error (network / server-blocking)").
- * 문서는 subline을 gray-800으로 적지만 §2 팔레트에 없는 값이라 지어내지 않고
- * 있는 중립색(`text-fg-muted`, gray-600)을 쓴다 (§7 Unknowns).
+ * 화면을 못 그렸을 때 모든 라우트가 여기로 온다. 라우트마다 따로 만들지 않는다.
  */
 export default function FeedError({ reset }: { reset: () => void }) {
 	return (

@@ -10,11 +10,12 @@
 		"format": "biome check --write",
 		"typecheck": "next typegen && tsc --noEmit",
 		"test": "vitest run --passWithNoTests",
-		"verify": "npm run lint && npm run typecheck && npm run test",
+		"verify": "npm run lint && npm run typecheck && npm run test && npm run harness",
 		"db:push": "supabase db push",
 		"db:diff": "supabase db diff",
 		"types:gen": "mkdir -p types && supabase gen types typescript --linked > types/database.ts && biome format --write types/database.ts",
-		"db:link": "supabase link"
+		"db:link": "supabase link",
+		"harness": "node scripts/harness-check.mjs"
 	},
 	"dependencies": {
 		"@supabase/ssr": "^0.12.7",

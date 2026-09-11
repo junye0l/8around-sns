@@ -11,8 +11,8 @@ import { createClient } from "@/lib/supabase/server";
 import { POST_CONTENT_MAX } from "@/lib/utils/content";
 
 /**
- * 추천 — 올라온 글을 전부 최신순으로 본다. 팔로잉 기준으로 거르는 화면은
- * 이 옆에 따로 선다 (`docs/PLAN.md` §5). 그래서 이름이 "피드"가 아니라 "추천"이다.
+ * 추천. 올라온 글을 전부 최신순으로 본다. 팔로잉 기준으로 거르는 화면이 옆에 따로 서기
+ * 때문에 이름이 "피드"가 아니라 "추천"이다.
  *
  * 비로그인은 미들웨어가 `/login`으로 돌려보내므로 여기까지 오지 않는다
  * ([결정 0006](../docs/decisions/0006-feed-requires-login.md)).
