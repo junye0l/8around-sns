@@ -47,7 +47,8 @@
 
 - [x] 회원가입 → 프로필 생성 (`on_auth_user_created` 트리거가 만든다)
 - [ ] 로그인 / 로그아웃, 세션 유지 — 이메일 + 비밀번호 ([결정 0001](decisions/0001-login-identifier.md)). 로그인은 됐고 **로그아웃은 아직** — 누를 자리(TopBar)가 없다
-- [ ] 비로그인 상태에서 보호 라우트 접근 차단
+- [ ] 비로그인 상태에서 보호 라우트 접근 차단 — **보호할 화면이 아직 없다.** 피드가 들어올 때 `lib/supabase/middleware.ts`의 `GUEST_ONLY` 옆에 더한다
+  - [x] 반대 방향은 됐다 — 로그인한 사용자는 `/login` · `/signup`에 못 들어간다
 
 ## 4. 콘텐츠
 
@@ -72,7 +73,7 @@
 - [ ] `Avatar`
 - [ ] `Composer` (게시글·댓글 입력) — focus-within, error, disabled
 - [ ] `PostCard` — 그림자 없음, `border-hairline` 1px로만 분리
-- [ ] `TopBar` / `TabBar`
+- [ ] `TopBar` / `TabBar` — 마이페이지 버튼 안에 **로그아웃**을 넣는다 (§3 로그아웃이 여기 딸려 온다)
 - [ ] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
 - [ ] `EmptyState`, `Spinner`
 
