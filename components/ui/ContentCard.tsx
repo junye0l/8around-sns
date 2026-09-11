@@ -8,6 +8,12 @@ type ContentCardProps = {
 	content: string;
 	/** 본문 아래 줄. 게시글·댓글의 댓글 수가 여기 붙는다 */
 	footer?: ReactNode;
+	/**
+	 * 아래 칸과 한 스레드로 이어진다. 아바타 밑으로 세로선이 흐르고 구분선은 빠진다 —
+	 * 선이 이미 "이어짐"을 말하는데 그 위에 칸을 나누는 선까지 그으면 둘이 싸운다
+	 * ([결정 0008](../../docs/decisions/0008-reply-tree-on-post.md)).
+	 */
+	connected?: boolean;
 };
 
 /**
@@ -20,10 +26,19 @@ export function ContentCard({
 	createdAt,
 	content,
 	footer,
+	connected = false,
 }: ContentCardProps) {
 	return (
-		<article className="flex gap-3 border-hairline border-b p-4 last:border-b-0">
-			<Avatar name={author.display_name} />
+		<article
+			className={`flex gap-3 p-4 ${connected ? "" : "border-hairline border-b last:border-b-0"}`}
+		>
+			<div className="flex flex-col items-center gap-2">
+				<Avatar name={author.display_name} />
+
+				{/* 칸 사이가 위아래 패딩 16px씩 = 32px 벌어져 있다. 그만큼 아래로 넘겨야
+				    선이 다음 아바타에 닿는다 (`-mb-8`, 4px 그리드 위의 값) */}
+				{connected && <div className="-mb-8 w-px flex-1 bg-hairline" />}
+			</div>
 
 			{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 시각이 잘린다 */}
 			<div className="min-w-0 flex-1">

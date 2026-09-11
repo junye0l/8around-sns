@@ -29,6 +29,7 @@ export async function createCommentAction(
 
 	const result = await createComment(supabase, user.id, {
 		postId: formData.get("post_id"),
+		parentId: formData.get("parent_id"),
 		content: formData.get("content"),
 	});
 	if (result.ok) refresh();

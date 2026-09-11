@@ -3,6 +3,7 @@ import { SideNav } from "@/components/layout/SideNav";
 import { CommentCount } from "@/components/ui/CommentCount";
 import { Composer } from "@/components/ui/Composer";
 import { ContentCard } from "@/components/ui/ContentCard";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { createPostAction } from "@/lib/actions/post";
 import { listFeed } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
@@ -42,11 +43,7 @@ export default async function Home() {
 				/>
 
 				{posts.length === 0 ? (
-					// 빈 상태는 한 줄로 이유를 말하고 다음 행동만 가리킨다 (DESIGN.md §4 · §6).
-					// 작성칸이 바로 위에 있으므로 버튼을 따로 두지 않는다
-					<p className="py-16 text-center text-body-sm text-fg-muted">
-						아직 올라온 글이 없어요. 첫 글을 남겨보세요.
-					</p>
+					<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />
 				) : (
 					posts.map((post) => (
 						<ContentCard

@@ -29,7 +29,7 @@
 - [x] GitHub 레포 생성 (`junye0l/8around-sns`)
 - [x] 첫 푸시
 - [x] Vercel 연결 → https://8around-new-sns-beta.vercel.app
-- [ ] Supabase Auth URL Configuration (Site URL + Redirect URLs)
+- [x] Supabase Auth URL Configuration (Site URL + Redirect URLs)
 
 ## 2. 기반
 
@@ -55,8 +55,8 @@
 - [x] 게시글 작성
 - [x] 피드 노출 (최신순)
 - [x] 댓글 작성 — 게시글 상세(`/post/[id]`)에서 단다
-- [ ] 대댓글 — `parent_id`로 **1뎁스까지만** 편다. 댓글 상세(`/comment/[id]`)에서 단다
-- [x] ~~댓글 트리 변환은 `lib/utils/`의 순수 함수로 + 테스트 1개~~ — 화면을 나눠서 펼 트리가 없어졌다 ([결정 0007](decisions/0007-comment-routes.md))
+- [x] 대댓글 — `parent_id`로 **1뎁스까지만** 편다. 게시글 화면에서 부모 아래 세로선으로 보이고, 다는 것은 `/comment/[id]`에서 한다 ([결정 0008](decisions/0008-reply-tree-on-post.md))
+- [x] 댓글 트리 변환은 `lib/utils/`의 순수 함수로 + 테스트 1개 — `comment-tree.ts`. 0007에서 한 번 지웠다가 게시글 화면이 답글까지 펴면서 되살렸다 ([결정 0008](decisions/0008-reply-tree-on-post.md))
 
 ## 5. 소셜
 
@@ -69,21 +69,22 @@
 `docs/DESIGN.md` §4 Components & States를 구현 스펙으로 삼는다. 문서에 없는 값은 지어내지 않는다(§7 Unknowns).
 
 - [x] 토큰을 `app/globals.css`에 옮기고 `@theme`로 노출
-- [ ] `Button` — primary / secondary / ghost / danger, loading, disabled
+- [ ] `Button` — DESIGN.md §4 Box Button은 primary / primary-low / secondary / danger / disabled를 적어뒀다. 지금 선 것은 primary · outline(= secondary 자리) · loading · disabled · `href`(링크형, [결정 0008](decisions/0008-reply-tree-on-post.md)). 나머지는 쓸 화면이 생길 때 연다
 - [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
-- [x] `Composer` — 게시글과 댓글이 같이 쓴다. 숨은 입력만 바깥에서 넣는다
-- [x] `ContentCard` — 게시글과 댓글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리
+- [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다
+- [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
 - [x] `PageShell` — 레일 · 가운데 컬럼 · 붙박이 제목줄. 화면마다 다시 적지 않는다
 - [x] `SideNav` — 왼쪽 레일. 로고 · 추천 · **로그아웃**(§3이 여기 딸려 왔다). `TabBar`는 모바일 대응 때 §7에서 같이 본다
 - [x] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
-- [ ] `EmptyState`, `Spinner`
+- [x] `EmptyState` — 한 줄 문구. 버튼은 받지 않는다(세 화면 모두 위에 입력칸이 있다). 같은 마크업이 세 번째로 나타나 올렸다 (규칙 2)
+- [ ] `Spinner` — 아직 쓸 화면이 없다. `loading.tsx` 스켈레톤이 첫 페인트를 받는다
 
 ## 7. 인터랙션 · 상태
 
 - [ ] 모든 화면에 로딩 / 빈 상태 / 에러 3종 (AGENTS.md 규칙 10)
 - [ ] 낙관적 업데이트 — 팔로우 토글, 댓글 작성
 - [ ] 전환은 `--motion-fast`(150ms) / `--motion-standard`(250ms), 이징은 `--ease-enter` / `--ease-exit` / `--ease-standard` 셋만
-- [ ] `prefers-reduced-motion` 존중 — `app/globals.css`에 전역 처리됨
+- [x] `prefers-reduced-motion` 존중 — `app/globals.css:100-106`이 `motion-*`를 전부 0ms로 내린다 (DESIGN.md §3 Reduce motion)
 - [ ] **태블릿 · 모바일 대응** — 웹 폭을 먼저 다 세우고 뒤에 붙인다. 폭마다 분기를 미리 깔면 레이아웃이 바뀔 때마다 두 벌을 고친다. 레일은 `TabBar`로 접힌다
 
 ## 8. 애니메이션
