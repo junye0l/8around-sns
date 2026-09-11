@@ -72,11 +72,7 @@ export function AuthPanels({ initial }: { initial: Mode }) {
 				>
 					<h2 className="text-title text-fg">{panel.title}</h2>
 					<p className="text-body-sm text-fg-muted">{panel.body}</p>
-					<Button
-						className="mt-2 w-auto px-8"
-						onClick={toggle}
-						variant="outline"
-					>
+					<Button className="mt-2 px-8" onClick={toggle} variant="outline">
 						{panel.action}
 					</Button>
 				</div>
@@ -84,7 +80,7 @@ export function AuthPanels({ initial }: { initial: Mode }) {
 				{/* 모바일 전환 */}
 				<div className="border-hairline border-t p-8 pt-6 text-center md:hidden">
 					<p className="text-body-sm text-fg-muted">{panel.title}</p>
-					<Button className="mt-4" onClick={toggle} variant="outline">
+					<Button className="mt-4 w-full" onClick={toggle} variant="outline">
 						{panel.action}
 					</Button>
 				</div>

@@ -45,7 +45,7 @@ export function SignInForm() {
 				type="password"
 			/>
 
-			<Button className="mt-2" loading={pending} type="submit">
+			<Button className="mt-2 w-full" loading={pending} type="submit">
 				{pending ? "로그인하는 중" : "로그인"}
 			</Button>
 		</form>

@@ -56,7 +56,7 @@ export function SignUpForm() {
 				type="password"
 			/>
 
-			<Button className="mt-2" loading={pending} type="submit">
+			<Button className="mt-2 w-full" loading={pending} type="submit">
 				{pending ? "가입하는 중" : "가입하기"}
 			</Button>
 		</form>
