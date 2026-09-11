@@ -26,9 +26,12 @@ jobs:
       pull-requests: write
       id-token: write
     steps:
+      # 히스토리를 통째로 받는다. 얕게 받으면 리뷰가 커밋 메시지를 못 읽어서
+      # git fetch와 gh api를 번갈아 시도하다 막힌다. 실측으로 거부 5건이 전부 그것이었다.
+      # 레포가 2.7MB, 커밋 66개라 1~2초 더 든다.
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       # 워크플로 파일을 고친 브랜치에서는 액션이 실행을 거부한다.
       # "Workflow validation failed. The workflow file must exist and have
@@ -54,9 +57,8 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          # 무엇이 권한 거부로 버려지는지 보려고 켰다. 한 번 재고 나면 끈다.
-          # 거부된 호출이 리뷰 시간의 4분의 1을 먹고 있었다 (PR 13은 37턴 중 10번).
-          show_full_output: true
+          # 거부되는 도구를 다시 재야 하면 show_full_output: true 를 켠다.
+          # 켜면 리뷰 과정 전체가 공개 로그에 찍히므로 재고 나서 끈다.
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
@@ -106,6 +108,10 @@ jobs:
   # 액션 안에도 같은 검사가 있지만("No trigger was met for @claude") 그건
   # 러너 기동 + 체크아웃 + 의존성 설치를 다 마친 뒤에 도는 코드다.
   # 이 조건이 없으면 봇 댓글에도 20초짜리 빈 실행이 붙는다.
+  #
+  # review 잡에 있는 워크플로 검증 가드는 여기 없어도 된다. 빠뜨린 것이 아니다.
+  # issue_comment 이벤트는 언제나 기본 브랜치의 워크플로로 도니까 파일이 기본 브랜치와
+  # 다를 수가 없고, 따라서 액션의 검증에 걸릴 일도 없다.
   mention:
     if: >-
       github.event_name != 'pull_request' &&
@@ -118,13 +124,13 @@ jobs:
       issues: write
       id-token: write
     steps:
+      # review 잡과 같은 이유로 히스토리를 통째로 받는다.
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          show_full_output: true
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Read,Grep,Glob"
