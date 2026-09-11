@@ -65,9 +65,16 @@ jobs:
           claude_args: |
             --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Read,Grep,Glob"
 
-  # `@claude` 멘션으로 수동 호출. 댓글 내용이 그대로 지시가 된다
+  # `@claude` 멘션으로 수동 호출. 댓글 내용이 그대로 지시가 된다.
+  #
+  # 멘션이 없는 댓글은 여기서 걸러 러너를 아예 띄우지 않는다.
+  # 액션 안에도 같은 검사가 있지만("No trigger was met for @claude") 그건
+  # 러너 기동 + 체크아웃 + 의존성 설치를 다 마친 뒤에 도는 코드다.
+  # 이 조건이 없으면 봇 댓글에도 20초짜리 빈 실행이 붙는다.
   mention:
-    if: github.event_name != 'pull_request'
+    if: >-
+      github.event_name != 'pull_request' &&
+      contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
     permissions:
       contents: read
