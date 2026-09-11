@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ComponentProps } from "react";
 
 type ButtonProps = ComponentProps<"button"> & {
@@ -5,6 +6,12 @@ type ButtonProps = ComponentProps<"button"> & {
 	variant?: "primary" | "outline";
 	/** 진행 중. 문구를 바꾸고 입력을 막는다 */
 	loading?: boolean;
+	/**
+	 * 주면 `<Link>`가 된다. 모양은 같고 하는 일만 이동이다.
+	 * 이동에는 진행 중도 비활성도 없으므로 `loading`·`disabled`와 button 전용
+	 * 속성은 이 갈래에서 쓰이지 않는다.
+	 */
+	href?: string;
 };
 
 /**
@@ -30,14 +37,26 @@ export function Button({
 	loading = false,
 	disabled,
 	className = "",
+	href,
 	children,
 	...props
 }: ButtonProps) {
+	const classes = `rounded-md px-4 py-3 text-body font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) ${VARIANTS[variant]} ${className}`;
+
+	// 링크형이 세 번째로 나타나 여기서 갈랐다 (규칙 2 · PR #8 리뷰)
+	if (href) {
+		return (
+			<Link className={classes} href={href}>
+				{children}
+			</Link>
+		);
+	}
+
 	return (
 		<button
 			type="button"
 			disabled={disabled || loading}
-			className={`rounded-md px-4 py-3 text-body font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) ${VARIANTS[variant]} ${className}`}
+			className={classes}
 			{...props}
 		>
 			{children}
