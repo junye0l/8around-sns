@@ -98,25 +98,25 @@ Tailwind v4를 쓰되, **유틸리티를 화면에 직접 흩뿌리지 않고 �
 - 토큰 값의 출처는 `docs/DESIGN.md`, 그것을 `app/globals.css`가 그대로 옮겨 적는다
 - `@theme`로 Tailwind 유틸리티에 노출한다 — `bg-canvas` `text-fg` `text-body` `rounded-md` `border-hairline`
 - **간격은 Tailwind 숫자 스케일을 쓴다.** 그것이 곧 4px 그리드다 (`p-1`=4px, `p-4`=16px, `p-16`=64px)
-- **임의의 값(`p-[13px]`, `text-[#333]`)을 쓰지 않는다.** 4px 그리드 밖의 값이 필요하면 이유를 주석으로 남긴다
-  (DESIGN.md §5 Spacing System의 클러스터는 4·6·8·16·24·32px다. 6px은 `p-1.5`, 12·20px은 로컬 확장이다 — 문서가 그 스케일을 "not proof of every layout token"이라고 적는다)
+- **임의의 값(`p-[13px]`, `text-[#333]`)을 쓰지 않는다.** 6px이 필요하면 `p-1.5`를 쓴다.
+  4px 그리드 밖의 값이 필요하면 이유를 주석으로 남긴다 (DESIGN.md §5 Spacing System)
 - 같은 UI를 두 번째로 만들 때가 아니라, **처음부터** `components/ui/`에 만든다 (규칙 1)
-- `docs/DESIGN.md` §4 States는 **컴포넌트 상태 계약**이다 — fill/weak · loading · disabled · pressed · keyboard focus.
-  화면 문구(빈 상태·에러 카피)는 거기 없다. 지금 코드에 있는 한국어 문구가 사실상의 출처이고, 새로 지을 때는 §6 Voice & Tone을 따른다
+- **컴포넌트를 만들면 `docs/DESIGN.md` §4의 상태를 다 채운다** — loading · disabled · pressed · keyboard focus.
+  하나라도 비면 미완성이다 (규칙 10이 화면에 요구하는 것과 같은 기준이다)
+- **화면 문구는 `docs/DESIGN.md`에 없다.** 새로 쓸 때는 §6 Voice & Tone에 맞추고, 이미 있는 화면의 말투를 따른다
 - **문서에 없는 값을 지어내지 않는다** (DESIGN.md §7 Unknowns). 필요한데 없으면 멈추고 묻는다
 - **라이트 모드만 지원한다.** 다크 모드는 범위 밖이다. `prefers-color-scheme` 분기를 만들지 않는다
-- **아이콘은 `lucide-react`에서 가져온다.** SVG를 손으로 그리지 않는다 — 두께·캡이 파일마다 어긋난다.
-  크기는 `size-5`(20px)가 기본이고, 본문 옆에 붙는 보조 정보는 `size-4`(16px)다. `aria-hidden`을 직접 붙인다 (lucide는 안 붙인다)
+- **아이콘은 `lucide-react`에서 가져온다.** SVG를 손으로 그리지 않는다.
+  `size-5`(20px)가 기본, 본문 옆 보조 정보는 `size-4`(16px). `aria-hidden`은 직접 붙인다 — lucide가 안 붙인다
 
 **Toss 레퍼런스에서 오는 제약** (DESIGN.md §1 Principles · §2)
 
-- **파랑은 기능색이다.** 동작이 아닌 곳에 primary를 칠하지 않는다 (§1 Principle 2). 주황처럼 희소할 필요는 없다
-- 브랜드 웹폰트를 넣지 않는다. 시스템 폰트로 간다 — Toss Product Sans는 재배포 권리가 없다(§3 Evidence class).
-  스택에 이름만 두고 설치된 사람만 본다. 제목이 무거워야 하면 굵기 700을 쓴다
-- **제품 색과 마케팅 색을 섞지 않는다** (§1 Do 1). `--color-brand-tint`(`#e8f3ff`)는 마케팅 weak CTA 값이지 제품 primary가 아니다
-- **모션 값은 문서에 없다** (§2 Motion & Easing). `--motion-*` / `--ease-*` 셋은 로컬 확장으로 유지하되 새 곡선을 추가하지 않는다.
-  스프링·오버슈트는 여전히 금지다
-- 그림자를 쓰지 않는다. 분리는 `border-hairline` 1px이 한다 (§2 Depth — "flat color layering until ... verified")
+- **파랑은 동작에만 칠한다.** 장식으로 쓰지 않는다 (§1 Principle 2)
+- **브랜드 웹폰트를 넣지 않는다.** 스택에 이름만 두고 시스템 폰트로 간다 — 재배포 권리가 없다 (§3).
+  제목이 무거워야 하면 굵기 700을 쓴다
+- **`--color-brand-tint`를 제품 primary 자리에 쓰지 않는다.** 마케팅 CTA 값이다 (§1 Do 1)
+- **새 이징·duration을 만들지 않는다.** `--motion-*` / `--ease-*` 셋만 쓴다. 스프링·오버슈트 금지 (§2)
+- **그림자를 쓰지 않는다.** 분리는 `border-hairline` 1px이 한다 (§2 Depth)
 
 ---
 
@@ -377,9 +377,6 @@ PR을 만드는 시점과 리뷰를 보는 시점이 다르기 때문이다.
 
 # 아직 정하지 않은 것
 
-정해지기 전까지 **임의로 정해서 진행하지 않는다**(규칙 6). 정해지면 여기서 지우고 결정 기록에 남긴다.
+정하지 않은 값은 `docs/decisions/`의 최신 기록 **"남은 칸"**에 모아둔다. 목록을 여기에 옮겨 적지 않는다 (규칙 3).
 
-- **버튼 높이.** DESIGN.md §5가 웹에서 40px 또는 46px을 쓰라고 하는데 둘 중 무엇인지 정하지 않았다.
-  지금 `components/ui/Button.tsx`는 48px이다 — shadcn 컴포넌트를 넣어보고 같이 정한다 (결정 0009 "남은 칸")
-- **포커스 링 색.** §4가 keyboard focus 상태를 요구하는데 §2에 링 색이 없다
-- **카드·팝오버 배경.** 해당 컴포넌트가 이 제품에 없다. 생길 때 `canvas` / `background`에서 고른다
+거기 있는 값이 필요해지면 **임의로 정해서 진행하지 않는다**(규칙 6). 멈추고 묻고, 정해지면 새 결정 기록으로 남긴다.
