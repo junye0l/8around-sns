@@ -33,7 +33,7 @@ export function PageShell({
 						{backHref && (
 							<Link
 								aria-label="뒤로"
-								className="-ml-2 rounded-md p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-surface"
+								className="-ml-2 rounded-md p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-canvas"
 								href={backHref}
 							>
 								<ChevronLeft aria-hidden className="size-5 shrink-0" />

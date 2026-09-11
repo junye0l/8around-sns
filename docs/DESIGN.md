@@ -1,61 +1,61 @@
-# Karrot (당근) Reference Design System
+# Toss (토스) Reference Design System
 
 <!-- design-md:section experience -->
 ## 1. Experience
 
 ### Visual Theme & Atmosphere
 
-Karrot is a hyperlocal platform built around the idea that technology should make neighborhood relationships feel more human, not more anonymous. Its design keeps community content dominant through warm orange accents, calm neutrals, direct language, and light interface chrome. Two related but non-identical public surfaces express that identity: the current SEED v2 product system defines semantic Primary as carrot-500 (`#ff6f0f`), while the public Karrot marketing site renders its CTA orange as `#ff6600`. Keeping those values separate preserves both product-system truth and the recognizable warmth of the brand.
+Toss is a unified financial platform that tries to make consequential money decisions feel answerable, immediate, and visually calm. Its public design spans two related but distinct systems: TDS Mobile documents product UI with large, touch-oriented controls and explicit state contracts, while `toss.im` uses a tighter marketing-web button system. Across both, a strong blue action color, plain language, generous hierarchy, and purpose-built typography reduce the institutional distance people often feel around finance. This reference keeps product and marketing surfaces separate instead of forcing their geometry into one false universal component.
 
-SEED is the canonical source for product-system colors, type roles, and component behavior. The public marketing pages are evidence for the web font stack and marketing CTA geometry only. Both use warm neutrals, direct hierarchy, and restrained ornament so neighborhood content remains dominant.
+The verified common language is Toss Product Sans, a bright blue interaction accent, warm blue-grey neutrals, and direct hierarchy. Exact values below are limited to current computed styles or current official TDS documentation.
 
 **Key Characteristics:**
-- SEED semantic Primary: `#ff6f0f`; current marketing CTA: `#ff6600`
-- System-first web typography; `Pretendard Variable` is declared as a fallback but was not the computed first family in the inspected pages
-- Official SEED semantic roles backed by the open-source `global.css`
-- Components documented as behavior/state contracts, with marketing geometry kept surface-specific
+- Product primary `#3182f6`; marketing weak CTA `#e8f3ff` / `#1b64da`
+- Toss Product Sans loaded and used across all 810 visible TDS observations
+- Four documented TDS button sizes with explicit loading and disabled behavior
+- Surface-specific component geometry rather than one blended “Toss style”
 
 ### Do's and Don'ts
 
 ### Do
-- Use SEED Primary `#ff6f0f` for product-system work.
-- Use the system font result unless a target product surface proves another first family.
-- Follow each SEED component's documented states and accessibility behavior.
-- Keep marketing `#ff6600` explicitly scoped to the observed public website.
+- Keep TDS Mobile and `toss.im` marketing variants explicitly named by surface.
+- Use `Toss Product Sans` where the font is available, with a system fallback for resilience.
+- Preserve documented loading, disabled, pressed, and keyboard-focus states on buttons.
+- Treat badge content as status metadata, not as an action affordance.
+- Use exact component geometry only where the evidence names a size and surface.
 
 ### Don't
-- Don't relabel marketing `#ff6600` as SEED carrot-500.
-- Don't treat a declared Pretendard face as proof of visible use.
-- Don't reuse the retired 26px maximum; current SEED heading roles reach 48px.
-- Don't invent marketplace cards, sheets, or native-app geometry from a marketing snapshot.
+- Don't use logo brand blue as a silent replacement for UI primary `#3182f6`.
+- Don't claim Tossface is the visible primary UI font; it was declared but unused in this capture.
+- Don't copy documentation-site colors into native product tokens without component-level evidence.
+- Don't merge the 16px TDS radius with the 7px marketing radius into an average value.
+- Don't invent cards, shadows, tabs, toasts, or dialogs from generic fintech conventions.
 
 ### Brand Narrative
 
-Karrot (당근, *daangn*) launched in 2015 in Pangyo, South Korea, founded by Kim Yong-hyun and Kim Jae-hyun — both former Kakao engineers who had watched the open-marketplace model (Korean e-commerce giants, nationwide shipping, anonymous counterparties) fail the one job users actually cared about: trust. Their founding bet was that secondhand transactions are not a logistics problem; they are a **neighborhood problem**. The first version of the app hard-capped transactions to a **6 km radius** (later relaxed to 10 km in KR/JP, up to 50 km in North America), on the theory that if you can walk to the meeting, you can look the other person in the eye ([Crunchbase](https://www.crunchbase.com/organization/daangn-market), [KED Global](https://www.kedglobal.com/korean-startups/newsView/ked202407040005)).
+Toss presents finance as a connected product experience rather than a collection of institutional silos. Its design system supports that ambition by making repeated actions—checking, comparing, agreeing, paying, and recovering—feel consistent even when the underlying financial products differ.
 
-The product is built around that proximity constraint. Every listing surfaces the neighborhood name. Every match is geo-scoped. Every CTA assumes the buyer and seller will eventually stand in the same parking lot. The design language follows suit: a warm orange (`#ff6600`) that reads as a fresh carrot — not the corporate orange of enterprise dashboards, not the alarm orange of warnings — and no custom typeface, because the brand doesn't want a distinctive voice *around* user content; it wants user content to feel like the voice of the neighborhood itself. **Series D $162M August 2021** at **$2.7B valuation** made **Danggeun Market Inc.** Korea's **13th unicorn** (>1 trillion KRW). Earlier September 2019 raise: 40 billion KRW from **Altos Ventures + Goodwater Capital** (Silicon Valley). By early 2025 the company reports 40M+ cumulative registered users and 20M+ monthly active users across 1,400+ regions worldwide, with 227B KRW in cumulative funding ([Crunchbase — Karrot Market](https://www.crunchbase.com/organization/daangn-market), [KED Global — Korea's top flea market $180M](https://www.kedglobal.com/newsView/ked202102010008), [about.daangn.com](https://about.daangn.com)). <!-- about.daangn.com retrieved 2026-04 -->
+The company’s first-party design writing shows how this consistency became a brand system inside the product. Product branding is treated as the experience people receive while using a feature, not merely a campaign wrapped around it. Toss Product Sans extends the same logic into typography: numbers, symbols, Korean text, and multiple digital and offline contexts were considered as one product problem.
 
-What Karrot refuses: the anonymity of nationwide marketplaces (eBay, Coupang), the impersonal aesthetics of enterprise commerce (data-heavy dashboards, filter-rich search UIs), and the gamified engagement loops of consumer social (streaks, badges, algorithmic feeds). The brand's mission, stated on its own corporate page, is *"로컬의 모든 것을 연결해 동네의 숨은 가치를 기술로 깨우는"* — connecting everything local, awakening hidden neighborhood value through technology ([medium.com/daangn](https://medium.com/daangn)). Orange is the accent because the brand is supposed to feel like one warm thing in an otherwise neutral room.
+The practical design position is therefore clarity with momentum. **Easy to answer** reduces the cognitive cost of a decision; **Value first, cost later** makes benefit legible before asking for commitment. Blue, typography, motion, and microcopy are useful only when they help a person move through money with more confidence.
 
 ### Principles
 
-1. **Orange is scarce, on purpose.** `#ff6600` appears only on the primary CTA, active states, and a small set of brand moments. It never decorates, never fills a hero background, never tints a shadow. *UI implication:* at most one orange element per viewport in the primary flow; if a design has two orange CTAs competing on one screen, one must demote to neutral-weak.
-2. **System font, because content is the brand.** No custom typeface. Pretendard on web, Apple SD Gothic Neo / system sans on native. The community's listings *are* the product; the UI's job is to disappear behind them. *UI implication:* never embed a branded webfont on Karrot-styled surfaces. If a heading needs weight, use weight 700, not a display face.
-3. **Proximity is surfaced, always.** Every listing, chat, and search result shows a neighborhood name. Distance is not a filter you have to remember to toggle — it's a default. *UI implication:* every card, row, or summary that represents user content must show the neighborhood (`동` / `neighborhood`) as visible metadata, not hidden in a detail screen.
-4. **Trust comes from calm, not from badges.** No padlock icons in the main flow, no "Verified Seller" trophies, no red "FRAUD WARNING" banners on first paint. Trust is communicated through consistency, neutrality, and the user's ability to meet in person. *UI implication:* trust-and-safety copy lives in body-weight neutral text; reserve red and warning-iconography for actual errors, not ambient advisories.
-5. **Everything on the 4px grid.** The Seed Design system snaps all measurements to multiples of 4px. Off-grid values accrete into visual noise. *UI implication:* any padding, gap, or component height not in `{4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64}` must be justified in a comment or corrected.
-6. **One accent. One system. One rhythm.** No secondary brand hue exists. No "Karrot Blue" for utility, no "Karrot Green" for success-branded promo. Semantic colors (`fg-critical`, `fg-informative`, `fg-positive`) exist — but they are utility, not brand. *UI implication:* if a design introduces a second brand-scale color, it has drifted off-system; reject or re-scope to semantic.
-7. **Dark mode is a remap, not an inversion.** Semantic tokens point to different palette entries in dark mode; brand solid, critical, and informative are intentionally re-tuned rather than auto-computed. *UI implication:* never rely on `filter: invert()` or runtime HSL math. Every component reads from semantic tokens that already account for theme.
-8. **Content-dense, chrome-light.** Users scan many listings in one session — a listing card is closer to an SMS than to a Pinterest tile. *UI implication:* target 3–4 listings visible per mobile viewport; chrome (borders, shadows, decorative space) must not push that below 3.
+The following are implementation principles derived from the verified surfaces, not quoted corporate doctrine:
+
+1. Separate product-system evidence from marketing-surface evidence.
+2. Make interaction blue functional rather than decorative.
+3. Preserve component states, especially disabled, loading, pressed, and keyboard focus.
+4. Prefer exact, readable typography over ornamental depth.
+5. Treat financial outcomes as explicit states with clear next actions.
 
 ### Personas
 
-These are official product and stakeholder contexts, not invented demographic personas.
+These are first-party product contexts, not invented demographic personas.
 
-- **A neighbor buying or selling nearby:** needs location, distance, conversation, and handoff expectations to stay visible without marketplace-style complexity.
-- **A local resident sharing information or help:** needs plain community language and enough neighborhood context to judge relevance and trust.
-- **A local business connecting with nearby customers:** needs technology translated into familiar, human communication rather than enterprise marketing language.
-- **A person entering a new neighborhood:** needs recognizable local cues and low-pressure participation before the product asks for deeper commitment.
+- **A person answering a financial question:** needs options translated into concrete, comparable choices rather than a dense form or open-ended prompt.
+- **A person evaluating value before effort:** needs the likely benefit made visible before consent, document upload, consultation, or payment is requested.
+- **A person recovering from an interrupted flow:** needs the current state, consequence, and next safe action stated explicitly, especially in insurance, payment, or account contexts.
 
 <!-- design-md:section foundations -->
 ## 2. Foundations
@@ -63,86 +63,30 @@ These are official product and stakeholder contexts, not invented demographic pe
 <!-- design-md:claim foundations kind=rules-or-constraints lang=en -->
 ### Color Palette & Roles
 
-### SEED v2 product semantics
-- **Primary** (`#ff6f0f`): `--seed-semantic-color-primary`, mapped to carrot-500.
-- **Primary Hover / Pressed** (`#ff9e66`): current light-theme state mapping.
-- **Canvas** (`#ffffff`): gray-00 and `paper-default`.
-- **Background** (`#f2f3f6`): gray-100 and `paper-background`.
-- **Surface** (`#f7f8fa`): gray-50 and `paper-contents`.
-- **Foreground** (`#212124`): gray-900 and `ink-text`.
-- **Muted** (`#868b94`): gray-600 and `ink-text-low`.
-- **Hairline** (`#eaebee`): gray-200 and `divider-2`.
-- **Brand Tint** (`#fff5f0`): carrot-50 and `paper-accent`.
-- **Danger** (`#fa2314`): red-600.
-- **Accent / Info** (`#009ceb`): blue-500.
-- **Success** (`#1aa174`): green-500.
+### Product and shared roles
+- **Primary** (`#3182f6`): TDS interaction blue and primary action reference.
+- **Primary Hover / Strong Blue** (`#2272eb`): stronger blue visible in current TDS documentation.
+- **Canvas** (`#ffffff`): principal light background.
+- **Foreground** (`#191f28`): strongest product text.
+- **Body** (`#4e5968`): emphasized body and neutral action text.
+- **Muted** (`#8b95a1`): secondary product text.
+- **Surface** (`#f2f4f6`): quiet neutral layer.
+- **Border** (`#e5e8eb`): light divider or outline reference.
+- **On Primary** (`#ffffff`): text on filled primary actions.
+- **Danger** (`#e42939`): destructive/error text observed in the current TDS page.
 
-### Marketing web exception
-- **Marketing CTA** (`#ff6600`): computed background on both inspected Karrot public pages. Do not label it carrot-500 or substitute it for SEED Primary.
+### Marketing-web roles
+- **Weak Background** (`#e8f3ff`) and **Weak Foreground** (`#1b64da`): current light-blue `toss.im` CTA pair.
+- The official logo/brand blue in frontmatter is catalog identity metadata; do not substitute it for the verified UI primary `#3182f6`.
 <!-- design-md:claim-end -->
 
 ### Depth & Elevation
 
-The inspected public controls were flat and reported `box-shadow: none`. No universal shadow tokens are published in the canonical frontmatter until current component-style sources are captured claim by claim.
+No canonical shadow token is promoted in this revision. The inspected evidence contains documentation-site chrome as well as TDS examples, so treating every computed shadow as a Toss product token would overstate the source. Use flat color layering until a component-specific official source verifies elevation.
 
 ### Motion & Easing
 
-**Durations** (named, not raw milliseconds):
-
-| Token | Value | Use |
-|---|---|---|
-| `motion-instant` | 0ms | Toggle flips, checkbox state changes |
-| `motion-fast` | 150ms | Hover, focus, button press overlays, inline flash success |
-| `motion-standard` | 250ms | The default — card taps, tab switches, bottom-sheet reveals |
-| `motion-slow` | 350ms | Emphasized transitions — full-sheet presentations, success screens |
-| `motion-page` | 300ms | Native-style push/pop between routes |
-
-**Easings:**
-
-| Token | Curve | Use |
-|---|---|---|
-| `ease-enter` | `cubic-bezier(0.0, 0.0, 0.2, 1)` | Sheets, toasts, screen pushes appearing |
-| `ease-exit` | `cubic-bezier(0.4, 0.0, 1, 1)` | Dismissals, pops, toast auto-close |
-| `ease-standard` | `cubic-bezier(0.4, 0.0, 0.2, 1)` | Two-way transitions — expandable cards, tab content |
-
-**Spring stance.** **Spring and overshoot easings are forbidden across Karrot surfaces.** The brand is a neighborhood marketplace between strangers; playful bounce undermines the calm trust the rest of the system works to establish. Money and goods change hands on this app — a button that wobbles on press reads as toy-like, and a success card that springs in reads as celebratory in a way Karrot deliberately isn't. The one licensed exception is the native-platform pull-to-refresh indicator, which inherits the OS's default spring because overriding it would feel *more* jarring than accepting it. Every other motion uses `ease-enter`, `ease-exit`, or `ease-standard`.
-
-**Signature motions.**
-
-1. **Listing-card tap.** Card compresses to 98% scale on press (`motion-fast / ease-standard`), releases on tap-up before navigation begins. Feedback is immediate; the route transition follows on `motion-page / ease-enter`.
-2. **Bottom-sheet presentation.** Sheets rise from `y+40px` with `motion-standard / ease-enter` and a synchronized backdrop fade from `rgba(0,0,0,0)` to `rgba(0,0,0,0.5)` (`bg-overlay-muted`). Dismissal uses `motion-fast / ease-exit` — leaving is lighter than entering.
-3. **Neighborhood switch.** When the user changes their 동 (neighborhood), the listings feed cross-fades over `motion-slow` rather than sliding — sliding would imply geographic direction, which is misleading (Korean neighborhoods aren't ordered on an axis).
-4. **Reduce motion.** Under `prefers-reduced-motion: reduce`, all `motion-*` tokens collapse to `motion-instant`. No exceptions. Cross-fades replace slides. Pull-to-refresh indicator simplifies to a static spinner. The app stays fully usable; just less kinetic.
-
-- The 6 km / 10 km / 50 km radius progression is widely reported in press
-  (KED Global, Crunchbase, TechCrunch 2020/2021). Current product-level radius
-  may differ; verify before using as a design constraint.
-
-Not independently verified — widely documented public facts:
-- Karrot (Danggeun Market Inc.) founded 2015 in Pangyo by Kim Yong-hyun and
-  Kim Jae-hyun, both formerly at Kakao Corp.
-- Korean "동네" (neighborhood / dong) is a real administrative unit; the
-  characterization of nationwide Korean e-commerce incumbents is general
-  industry knowledge, not a sourced Karrot statement.
-
-Personas (§13) are fictional archetypes informed by publicly described Karrot
-user segments (KR urban young adult, KR secondary-city student, NA expat,
-KR retiree 동네생활 user). Any resemblance to specific individuals is unintended.
-
-Interpretive claims (editorial, not documented Karrot statements):
-- "Orange is the accent because the brand is supposed to feel like one warm
-  thing in an otherwise neutral room" (§11 closing) — editorial reading of the
-  design, not a sourced brand statement.
-- The characterization of the Karrot orange as "fresh carrot, not corporate
-  orange, not alarm orange" (§11) — editorial framing based on observed usage.
-- The spring-forbidden stance (§15) — derived from the overall brand posture
-  (trust between strangers, calm neutrality) as expressed in base §6 Shadow
-  Philosophy and §7 Do's/Don'ts; not a documented Seed Design rule.
--->
-
-**Tier 2 (Philosophy/founders):** Crunchbase (Karrot + Kim Jae-hyun + Kim Yong-hyun profiles), KED Global ($180M unicorn 2021), Korea Herald (Canada 2M), ZoomInfo (HQ Gangnam), KoreaTechDesk.
-**Style ref:** `toss` (KR neighbor tone, retained).
-**Resolved drift:** current SEED product Primary is `#ff6f0f`; current marketing-web CTA `#ff6600` is retained as a separate surface token. The prior 26px maximum and exact Pretendard/SF Mono claims were removed.
+No canonical motion duration or easing token is promoted in this revision. Preserve state clarity and reduced-motion compatibility, but label any exact animation curve or duration as a local extension until it is verified from an official component source.
 
 <!-- design-md:section typography-assets -->
 ## 3. Typography & Assets
@@ -150,86 +94,89 @@ Interpretive claims (editorial, not documented Karrot statements):
 ### Typography Rules
 
 ### Font Family
-- **Observed web UI**: `System`. The computed first family was `-apple-system` across 420 visible elements.
-- **Declared fallback**: `Pretendard Variable` appeared in the stack and FontFace declarations but had no visible first-family usage in this capture.
-- **Monospace**: no canonical UI monospace claim; do not invent one.
+- **Canonical visible UI family**: `Toss Product Sans`. The collector found 810 visible first-family uses backed by loaded FontFace resources.
+- **Tossface status**: declared in FontFace resources but not observed as the first family on a visible element. It is therefore context, not a canonical UI token.
+- **Monospace**: no current canonical monospace claim.
 
-### Hierarchy
+### Current TDS documentation hierarchy
 
-| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
-|------|------|------|--------|-------------|----------------|-------|
-| H1 | System | 48px | 700 | 135% | 0 | SEED semantic h1 |
-| H2 | System | 42px | 700 | 135% | 0 | SEED semantic h2 |
-| H3 | System | 34px | 700 | 135% | 0 | SEED semantic h3 |
-| Title 1 Bold | System | 24px | 700 | 135% | 0 | Section or chapter title |
-| Body L1 | System | 16px | 400 | 150% | -0.02em on web | Long-form body |
-| Body L2 | System | 14px | 400 | 150% | -0.02em on web | Compact body |
+| Role | Size | Weight | Line Height | Evidence |
+|---|---:|---:|---:|---|
+| H1 | 36px | 700 | 54px | computed TDS documentation style |
+| H2 | 30px | 600 | 45px | computed TDS documentation style |
+| H3 | 24px | 600 | 36px | computed TDS documentation style |
+| H4 | 22px | 600 | 33px | computed TDS documentation style |
+| Body | 16px | 400 | 24px | dominant visible role |
+| Body Small | 14px | 400 | 21px | secondary visible role |
 
-### Principles
-- Official SEED exposes regular and bold semantic weights; do not infer a broad custom weight scale.
-- Web tracking differs by role: headings remain neutral while body roles use narrow tracking.
-- The previous 26px maximum was an old snapshot and is no longer canonical.
+These are evidence-backed public-document roles, not a claim that every native Toss product screen uses this exact hierarchy.
 
-| Evidence class | Karrot status |
+| Evidence class | Toss status |
 |---|---|
-| **Official product-use** | SEED v2 defines product typography roles around platform/system families rather than a branded display face |
-| **Live surface-use** | `-apple-system` was the visible first family across the inspected Karrot marketing surfaces |
-| **Official distributed asset** | SEED design tokens and components are published openly; no separate public Karrot typeface asset is asserted |
-| **Declared-only** | Pretendard Variable appeared in public stacks and FontFace declarations without visible first-family use in this capture |
-| Evidence boundary | Exact native-app runtime family resolution outside the published SEED semantic roles |
+| **Official product-use** | Toss Product Sans was designed for financial symbols and mobile, desktop, and offline product contexts |
+| **Live surface-use** | Toss Product Sans is loaded and visibly used throughout the inspected TDS documentation surfaces |
+| **Official distributed asset** | No general redistribution right is asserted by the current official sources |
+| **Declared-only** | Tossface is declared in captured FontFace resources but was not observed as the visible first family |
+| Evidence boundary | Public redistribution/license terms and exact native-screen type metrics beyond documented TDS roles |
 
 <!-- design-md:section components-states -->
 ## 4. Components & States
 
 ### Component Stylings
 
-### Marketing Web
-
-**Primary CTA**
-- Background: `#ff6600`
+### TDS Mobile Button
+- Background: `#3182f6` for the canonical primary reference
 - Text: `#ffffff`
-- Radius: 9999px
-- Padding: 4px 12px
-- Height: 36px
-- Font: 14px / 500 / System
-- States: default observed on two public surfaces; hover not captured
-- Use: Header-level marketing action
+- Radius: 16px at xlarge
+- Height: 56px at xlarge
+- Padding: 0 20px
+- Font: 17px / 600 / Toss Product Sans
+- Size scale: small 32px / 8px radius; medium 38px / 10px; large 48px / 14px; xlarge 56px / 16px
+- States: fill or weak; primary, danger, light, or dark; loading, disabled, pressed, and keyboard focus
+- Use: primary and secondary mobile actions; preserve width while loading
 
-### SEED Product Components
+### TDS Mobile Text Field
+- Variants: box, line, big, hero
+- States: focus, error, disabled, read-only
+- Use: text entry with label, help text, and error text. Do not transfer undocumented page-chrome colors into the product field token.
 
-**Box Button**
-- States: primary, primary-low, secondary, danger, disabled, hover, keyboard
-- Use: Action component with xsmall through xlarge sizes; medium is the documented default
+### TDS Mobile Badge
+- Variants: fill or weak; xsmall, small, medium, large; semantic colors
+- States: semantic and size variants; badge is descriptive rather than interactive
+- Use: compact status or category label
 
-**Text Field**
-- States: outlined, underlined, focused, disabled, readonly, required, invalid
-- Use: Single-line form input with label, description, error message, and optional prefix/suffix
+### TDS Mobile Agreement
+- States: checked, unchecked, disabled, and nested agreement hierarchy
+- Use: terms selection; v3 and v4 are retained as separate official surfaces because both are publicly documented
 
-**Tabs**
-- States: selected, disabled, focus
-- Use: Hug or fill category navigation with a current-selection indicator
+### toss.im Marketing Primary
+- Background: `#e8f3ff`
+- Text: `#1b64da`
+- Radius: 7px
+- Height: 40px
+- Padding: 11px 16px
+- Font: 15px / 600 / Toss Product Sans
+- States: default observed; hover not captured in the retained evidence bundle
+- Use: light-blue marketing CTA
 
-**Snackbar**
-- States: default, success, warning, action focus
-- Use: Brief action feedback with at most one related action
+### toss.im Marketing Dark
+- Background: `rgba(0, 12, 30, 0.8)`
+- Text: `#ffffff`
+- Radius: 7px
+- Height: 46px
+- Padding: 11px 16px
+- Font: 17px / 600 / Toss Product Sans
+- States: default observed; hover not captured in the retained evidence bundle
+- Use: app-store style marketing CTA
 
 ### States
 
-| State | Treatment |
+| Component | Verified state contract |
 |---|---|
-| **Empty (no listings nearby)** | Warm one-line explanation (`아직 우리 동네에 올라온 물건이 없어요`) + one secondary CTA in neutral-weak (`내 동네 바꾸기` / change neighborhood). Never an illustration. Never `데이터가 없습니다`. |
-| **Empty (filter cleared)** | Single line of `gray-700` caption (`조건에 맞는 물건이 없어요`). No button — user resets the filter themselves. |
-| **Empty (new user, first paint)** | Single welcome sentence naming the user's detected neighborhood, plus a primary CTA `둘러보기` (browse) in Karrot Orange. No onboarding carousel. |
-| **Loading (first paint)** | Skeleton blocks at `gray-200` matching the final listing-card layout — 1:1 thumbnail box, two text lines, one metadata line. Shimmer at 1.2s with 8% white highlight. |
-| **Loading (infinite scroll)** | Bottom-of-list spinner in Karrot Orange, 24px diameter. No overlay. Existing cards stay visible. |
-| **Loading (refresh / pull-to-refresh)** | Pull-down reveals a carrot-glyph progress indicator in Karrot Orange; never a generic iOS spinner on branded surfaces. |
-| **Error (inline field)** | Input border becomes `#fa342c` (red-700) 2px, helper text below in red-700 13px. One actionable sentence (`동네를 다시 선택해 주세요`). |
-| **Error (toast)** | `#1a1c20` (gray-1000) background, white 14px weight 400 text, 3s auto-dismiss. Bottom of screen with 16px inset above the tab bar. One sentence. No icon. |
-| **Error (network / server-blocking)** | Full-screen centered message in `gray-1000` 16px weight 600, `gray-800` 14px weight 400 subline, retry button in Karrot Orange. No illustration. |
-| **Success (inline flash)** | Brief 300ms flash of `#fff2ec` (carrot-100) behind the updated element, fading back to default. For routine confirmations (favorited, saved search). |
-| **Success (transaction complete)** | Dedicated confirmation screen — not a toast. `#079171` (positive green) check icon top-center, one-line past-tense sentence (`거래가 완료되었어요`), and a single primary button `매너 평가 남기기` (leave manner rating). |
-| **Skeleton** | `gray-200` blocks at exact final dimensions matching the listing-card layout (1:1 thumbnail, two text lines, one metadata line). Shimmer 1.2s with 8% white highlight. Never over the neighborhood-name metadata — that slot stays blank until resolved, so the UI never implies a location that hasn't been confirmed. |
-| **Disabled** | Button background drops to `gray-200`, text to `gray-500`. No color inversion. Geometry stays identical so re-enable is frame-stable. |
+| TDS Button | fill/weak, semantic color, loading, disabled, pressed, keyboard focus |
+| TDS Text Field | box/line/big/hero, focus, error, disabled, read-only |
+| TDS Agreement | checked, unchecked, disabled, nested hierarchy |
+| Marketing CTAs | default geometry captured; hover remains unclaimed |
 
 <!-- design-md:section layout-platforms -->
 ## 5. Layout & Platforms
@@ -237,80 +184,41 @@ Interpretive claims (editorial, not documented Karrot statements):
 ### Layout Principles
 
 ### Spacing System
-- Base unit: 4px
-- Observed public-web clusters: 4px, 8px, 12px, 16px, and 64px
-- Treat larger marketing gaps as surface composition, not universal product tokens
+- Captured TDS documentation clusters: 4px, 6px, 8px, 16px, 24px, and 32px.
+- Treat those values as a compact working scale, not proof of every native product layout token.
 
 ### Grid & Container
-- Marketing pages use responsive full-width sections and a centered content column.
-- SEED components define their own layout constraints; for example, Box Button keeps a 16px mobile edge inset.
-
-### Whitespace Philosophy
-- Keep content dominant and chrome quiet.
-- Use the observed 4/8/12/16 rhythm locally; do not extrapolate undocumented marketplace grid rules from the marketing site.
+- TDS component documentation is mobile-oriented; its xlarge button is designed as a strong touch action.
+- The public marketing site uses a distinct responsive web composition and should not inherit mobile component geometry wholesale.
 
 ### Border Radius Scale
-- Small: 6px, observed on a public CTA.
-- Medium: 8px, observed on a public CTA.
-- Full: 9999px, dominant public-web button geometry.
-- Component-specific radii from SEED must be taken from that component's current style page, not inferred from this marketing scale.
+- Documentation chrome and components cluster around 4px and 6px for small surfaces.
+- Button sizes use 8px, 10px, 14px, and 16px radii from small through xlarge.
 
 ### Responsive Behavior
 
-### Observed and documented behavior
-- Public marketing controls render as compact 36px pills in the header and larger 40–48px CTAs deeper in the page.
-- SEED Box Button documents five sizes and requires a 16px mobile edge inset.
-- SEED Tabs supports `hug` and `fill`; fill is limited to five stable top-level items, while hug is recommended for six or more or variable categories.
-- Text Field labels and descriptions may wrap; the input value itself remains one line and clips horizontally.
+- TDS Mobile component sizes should remain touch-oriented; xlarge is the documented default button size.
+- On web, preserve the observed 40px or 46px marketing button height rather than substituting the 56px mobile control.
+- The public sources in this verification do not establish universal breakpoints, desktop maximum widths, or native safe-area values.
 
 <!-- design-md:section content-locales -->
 ## 6. Content & Locales
 
 ### Voice & Tone
 
-Karrot speaks like a trustworthy neighbor who just moved in next door: warm, plain-spoken, low-friction, and allergic to anything that sounds like corporate marketing. The voice assumes two strangers are about to hand each other a used crib across a parking lot — it protects that trust with earnestness, removes barriers with `부담 없이` (without burden) framing, and stays in everyday Korean sentence endings (`-어요`, `-예요`) rather than the formal `-ㅂ니다`. English surfaces (Karrot in US/Canada/UK/JP) mirror this in plain, contraction-friendly English — *"Buy and sell for free with locals"*, not *"Discover premium local marketplace experiences"*.
+Toss speaks as a capable guide that removes work rather than displaying financial expertise. Copy is short and direct, but the governing idea is not minimal word count by itself: a person should understand the value, answer the question, and recover from uncertainty without decoding industry language. Official product-design writing describes principles such as **Easy to answer** and **Value first, cost later**—make choices concrete, and show why an action is worthwhile before asking for effort, data, or commitment.
 
-| Context | Tone |
-|---|---|
-| CTAs | Short verb-first Korean (`판매하기`, `채팅하기`, `거래 완료`) / plain imperative English (`Sell`, `Chat`, `Apply`) |
-| Empty states | One warm line explaining *why it's empty* + one low-pressure suggestion. Never `데이터가 없습니다`. |
-| Error messages | Specific, blameless, actionable. Prefer `다시 시도해 주세요` over `오류가 발생했습니다`. |
-| Success toasts | Past-tense single sentence (`거래가 완료되었어요`). Quiet, not celebratory. |
-| Community guidelines | Second-person, direct, grounded in neighborhood norms. Reads like a house rule, not a ToS. |
-| Trust & safety | Calm, factual, never fearmongering. The goal is to keep people transacting, not to scare them off. |
-| Local / hyperlocal copy | Always name the neighborhood (`강남구 역삼동`, `Manhattan`). Proximity is the brand — surface it. |
-| Onboarding | One screen, one idea, one action. No bullet lists. No feature tours. |
-
-**Forbidden phrases.** `불편을 드려 죄송합니다`, `죄송하지만`, `데이터가 없습니다`, `오류가 발생했습니다`, `혁신적인`, English boilerplate like `Oops, something went wrong` or `We apologize for the inconvenience`. Marketing-speak bans: `amazing deals`, `best-in-class`, `revolutionary`, `world-class`. Emoji are permitted sparingly in community chat and stickers, but never in error messages, never in trust/safety copy, and never in financial/payment confirmations.
-
-**Voice samples.**
-
-- `로컬의 모든 것을 연결해, 동네의 숨은 가치를 깨워요` — mission statement. <!-- cited: about.daangn.com mission page, 2026-04 -->
+In product flows, name the outcome and next action precisely. In education or product-branding surfaces, explain one unfamiliar idea in everyday language and let the interface carry the rest. Avoid vague reassurance, unexplained abbreviations, institutional phrasing, or playful copy that makes a financial consequence ambiguous.
 
 <!-- design-md:section governance -->
 ## 7. Governance
 
 ### Agent Prompt Guide
 
-### Quick Color Reference
-- Product Primary: `#ff6f0f`
-- Product Hover / Pressed: `#ff9e66`
-- Marketing CTA only: `#ff6600`
-- Canvas: `#ffffff`; Background: `#f2f3f6`; Surface: `#f7f8fa`
-- Foreground: `#212124`; Muted: `#868b94`; Hairline: `#eaebee`
-- Danger: `#fa2314`; Accent: `#009ceb`; Success: `#1aa174`
-
-### Example Component Prompts
-- "Build a SEED primary action using semantic Primary `#ff6f0f`; use the Box Button's documented size and state contract rather than inventing geometry."
-- "Build a Karrot marketing header CTA with observed `#ff6600`, white text, 14px/500 System type, 36px height, and full-pill radius."
-- "Create a SEED text field with outlined and underlined variants, explicit label, error message, focused, readonly, required, invalid, and disabled states."
-
-### Iteration Guide
-1. Choose the target surface first: SEED product system or Karrot marketing web.
-2. Keep `#ff6f0f` and `#ff6600` distinct.
-3. Start with System typography; Pretendard remains a fallback until target-surface use is proved.
-4. Use only the 4/8/12/16/64 spacing observations as canonical shared values.
-5. Source component behavior from the current SEED page for that component.
+- “Create a TDS Mobile xlarge primary button using `#3182f6`, white text, 56px height, 16px radius, 17px/600 Toss Product Sans, and explicit loading/disabled/focus behavior.”
+- “Create a `toss.im` weak marketing CTA using `#e8f3ff` background, `#1b64da` text, 40px height, and 7px radius.”
+- “Use Toss Product Sans for the verified UI family; do not promote Tossface without visible usage evidence.”
+- “If building a component not listed here, mark it as an extension rather than presenting it as verified TDS.”
 
 <!-- design-md:claim authority kind=evidence-backed-reconstruction lang=en -->
 ### Authority

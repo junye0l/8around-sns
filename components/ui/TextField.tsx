@@ -28,7 +28,7 @@ export function TextField({ label, error, hint, ...props }: TextFieldProps) {
 				aria-describedby={description ? describedById : undefined}
 				aria-invalid={error ? true : undefined}
 				className={`rounded-md border bg-canvas px-4 py-3 text-body text-fg outline-none placeholder:text-fg-muted focus:border-primary ${
-					error ? "border-2 border-danger-strong" : "border-hairline"
+					error ? "border-2 border-danger" : "border-hairline"
 				}`}
 				{...props}
 			/>
@@ -37,7 +37,7 @@ export function TextField({ label, error, hint, ...props }: TextFieldProps) {
 				// 13px로 못박아 둬서 그대로 쓴다 (AGENTS.md 스타일 규칙의 "이유를 주석으로")
 				<p
 					// 제한사항(hint)은 오른쪽, 에러는 필드 바로 아래 왼쪽에서 읽는다
-					className={`text-[13px] ${error ? "text-danger-strong" : "text-right text-fg-muted"}`}
+					className={`text-[13px] ${error ? "text-danger" : "text-right text-fg-muted"}`}
 					id={describedById}
 				>
 					{description}

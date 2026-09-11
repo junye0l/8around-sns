@@ -29,7 +29,7 @@ const VARIANTS = {
 	primary:
 		"bg-primary text-canvas hover:bg-primary-hover disabled:bg-hairline disabled:text-fg-muted",
 	outline:
-		"border border-fg bg-transparent text-fg hover:bg-surface disabled:border-hairline disabled:text-fg-muted",
+		"border border-fg bg-transparent text-fg hover:bg-background disabled:border-hairline disabled:text-fg-muted",
 } as const;
 
 export function Button({

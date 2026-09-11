@@ -12,7 +12,7 @@ import { signOutAction } from "@/lib/actions/auth";
  * 메뉴는 없는 메뉴보다 나쁘다. 팔로잉 피드와 프로필이 `docs/PLAN.md` §5에서 이 자리를 채운다.
  */
 const ROW =
-	"flex w-full items-center gap-3 rounded-md px-3 py-3 text-body text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-surface";
+	"flex w-full items-center gap-3 rounded-md px-3 py-3 text-body text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background";
 
 export function SideNav({ username }: { username: string }) {
 	return (
@@ -22,7 +22,7 @@ export function SideNav({ username }: { username: string }) {
 			{/* 지금 갈 수 있는 곳이 여기뿐이라 링크가 아니라 현재 위치 표시다 */}
 			<span
 				aria-current="page"
-				className={`${ROW} mt-4 bg-surface font-semibold`}
+				className={`${ROW} mt-4 bg-background font-semibold`}
 			>
 				<Home aria-hidden className="size-5 shrink-0" />
 				추천
