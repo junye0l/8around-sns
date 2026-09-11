@@ -4,7 +4,11 @@ import Link from "next/link";
  * 없는 글. `getPost`가 null을 주면 페이지가 `notFound()`로 여기로 넘긴다.
  *
  * 문구는 DESIGN.md §6 — 무엇이 없는지 한 줄로 말하고 다음 행동만 가리킨다.
- * 버튼 모양은 `app/error.tsx`와 달리 링크라서 `Button`을 쓰지 않고 같은 기하만 맞춘다.
+ *
+ * ponytail: 아래 링크는 `components/ui/Button.tsx`의 primary 뼈대를 옮겨 적은 것이다.
+ * `Button`이 `<button type="button">`으로 고정이라 링크가 될 수 없다. 지금은 이 조합이
+ * 두 번째로 나타난 지점이라 규칙 2가 공통화를 강제하지 않는다. 세 번째 링크형 버튼이
+ * 생기면 `Button`이 `href`를 받아 `<Link>`로 갈라지게 열고 여기를 그걸로 바꾼다 (PR #8 리뷰).
  */
 export default function PostNotFound() {
 	return (
