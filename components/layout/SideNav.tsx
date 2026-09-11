@@ -24,7 +24,7 @@ export function SideNav({ username }: { username: string }) {
 				aria-current="page"
 				className={`${ROW} mt-4 bg-surface font-semibold`}
 			>
-				<Home aria-hidden className="size-6 shrink-0" />
+				<Home aria-hidden className="size-5 shrink-0" />
 				추천
 			</span>
 
@@ -34,7 +34,7 @@ export function SideNav({ username }: { username: string }) {
 				</p>
 				<form action={signOutAction}>
 					<button className={ROW} type="submit">
-						<LogOut aria-hidden className="size-6 shrink-0" />
+						<LogOut aria-hidden className="size-5 shrink-0" />
 						로그아웃
 					</button>
 				</form>

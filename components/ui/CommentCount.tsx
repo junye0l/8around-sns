@@ -23,7 +23,7 @@ export function CommentCount({
 			className="-m-2 inline-flex items-center gap-2 rounded-md p-2 text-body-sm text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-surface hover:text-fg"
 			href={href}
 		>
-			<MessageCircle aria-hidden className="size-5 shrink-0" />
+			<MessageCircle aria-hidden className="size-4 shrink-0" />
 			<span aria-hidden>{count}</span>
 		</Link>
 	);

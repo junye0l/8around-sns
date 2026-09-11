@@ -36,7 +36,7 @@ export function PageShell({
 								className="-ml-2 rounded-md p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-surface"
 								href={backHref}
 							>
-								<ChevronLeft aria-hidden className="size-6 shrink-0" />
+								<ChevronLeft aria-hidden className="size-5 shrink-0" />
 							</Link>
 						)}
 						<h1 className="text-title text-fg">{title}</h1>
