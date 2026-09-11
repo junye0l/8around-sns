@@ -24,3 +24,4 @@
 | [0002](0002-email-confirmation-off.md) | 이메일 확인을 끈다 | 확정 |
 | [0003](0003-signup-email-enumeration.md) | 가입 시 이메일 중복을 그대로 알린다 | 확정 |
 | [0004](0004-auth-single-screen-slide.md) | 가입·로그인을 한 화면에 놓고 미끄러뜨린다 | 확정 |
+| [0005](0005-merge-commits.md) | 머지는 머지 커밋으로 한다 | 확정 |

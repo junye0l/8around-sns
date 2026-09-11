@@ -344,14 +344,17 @@ docs/agents-rules       문서
 
 - 제목은 커밋 메시지와 같은 형식
 - CI가 초록이고, Vercel 프리뷰 URL에서 직접 눌러본 뒤에 머지한다
-- 머지는 squash — `main` 히스토리를 한 기능 한 줄로 유지한다
+- 머지는 **머지 커밋**으로 한다. 레포 설정에서 `Allow merge commits`만 켜고 squash·rebase는 끈다 ([결정 0005](docs/decisions/0005-merge-commits.md))
 
 PR 만드는 절차는 `/pr` 스킬(`.claude/skills/pr/SKILL.md`)에 있다. 사람이 손으로 해도 같은 순서다.
+리뷰에 **대응하는** 절차는 `/pr-review`(`.claude/skills/pr-review/SKILL.md`)로 따로 나뉘어 있다 —
+PR을 만드는 시점과 리뷰를 보는 시점이 다르기 때문이다.
 
 **자동 리뷰.** PR을 열면 Claude가 `AGENTS.md` 기준으로 한 번 리뷰한다
 (`.github/workflows/claude-review.yml`). 다시 보고 싶으면 PR에 `@claude` 를 멘션한다.
 푸시마다 돌지 않으므로, 지적을 고친 뒤 다시 받고 싶으면 직접 불러야 한다.
-리뷰는 사람 리뷰를 대신하지 않는다. 근거 없는 지적은 무시하고, 대신 왜 무시했는지 답글을 남긴다.
+리뷰는 사람 리뷰를 대신하지 않는다. **리뷰어도 틀린다** — 지적을 먼저 레포에서 검증하고,
+근거가 없으면 무시하되 왜 무시했는지 답글을 남긴다. 반박한 스레드는 스스로 닫지 않는다.
 
 ---
 
