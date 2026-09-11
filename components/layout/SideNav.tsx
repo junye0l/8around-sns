@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, LogOut, User } from "lucide-react";
+import { Home, LogOut, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOutAction } from "@/lib/actions/auth";
@@ -8,7 +8,7 @@ import { signOutAction } from "@/lib/actions/auth";
 /**
  * 왼쪽 네비 레일. 웹 폭만 맞춘다.
  *
- * 항목은 추천, 프로필, 로그아웃뿐이다. 검색, 알림, 메시지는 범위 밖이라 자리를 만들지 않는다.
+ * 항목은 추천, 프로필, 팔로잉, 로그아웃뿐이다. 검색, 알림, 메시지는 범위 밖이라 자리를 만들지 않는다.
  * @see docs/PLAN.md 좁은 폭 대응과 남은 화면
  *
  * 지금 어디인지를 `usePathname`으로 직접 읽는다. 화면마다 prop으로 내려주면
@@ -54,6 +54,15 @@ export function SideNav({ username }: { username: string | null }) {
 					프로필
 				</Link>
 			)}
+
+			<Link
+				aria-current={pathname === "/following" ? "page" : undefined}
+				className={`${ROW} ${pathname === "/following" ? CURRENT : ""}`}
+				href="/following"
+			>
+				<Users aria-hidden className="size-5 shrink-0" />
+				팔로잉
+			</Link>
 
 			<div className="mt-auto">
 				<p className="truncate px-3 py-2 text-body-sm text-fg-muted">

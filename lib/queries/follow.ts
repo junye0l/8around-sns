@@ -69,6 +69,30 @@ export async function listFollowing(
 }
 
 /**
+ * 내가 팔로우하는 사람들의 id. 팔로잉 피드가 이걸로 글을 거른다.
+ *
+ * `listFollowing`과 달리 프로필을 조인하지 않는다 — 여기서 필요한 것은 id뿐이고,
+ * 화면에 이름을 띄우지 않는다.
+ *
+ * ponytail: 개수를 자르지 않는다. 자르면 누군가의 글이 조용히 사라진다. 대신
+ * 팔로우가 수천이 되면 `in` 목록이 질의 문자열 길이에 걸린다. 그때는 뷰나
+ * RPC로 옮긴다.
+ */
+export async function listFollowingIds(
+	supabase: SupabaseClient<Database>,
+	profileId: string,
+): Promise<string[]> {
+	const { data, error } = await supabase
+		.from("follows")
+		.select("following_id")
+		.eq("follower_id", profileId);
+
+	if (error) throw new Error(`팔로잉을 읽지 못했다: ${error.message}`);
+
+	return data.map((row) => row.following_id);
+}
+
+/**
  * 내가 이 사람을 팔로우하고 있는지. 비로그인이면 볼 것도 없으므로 false다.
  *
  * 기본키로 한 행을 찍는다. 프로필과 같이 읽지 않는 이유는 이것만 보는 사람이
