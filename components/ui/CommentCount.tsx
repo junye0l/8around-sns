@@ -20,7 +20,7 @@ export function CommentCount({
 		<Link
 			aria-label={`${label} ${count}개`}
 			// 누를 자리를 40px로 넓히되 -m-2 로 되돌려서 카드 간격은 그대로 둔다
-			className="-m-2 inline-flex items-center gap-2 rounded-md p-2 text-body-sm text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-surface hover:text-fg"
+			className="-m-2 inline-flex items-center gap-1 rounded-md p-2 text-body-sm text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-surface hover:text-fg"
 			href={href}
 		>
 			<MessageCircle aria-hidden className="size-4 shrink-0" />
