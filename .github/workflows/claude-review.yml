@@ -6,6 +6,11 @@ name: Claude Review
 on:
   pull_request:
     types: [opened]
+    # 대화 기록만 담긴 PR은 리뷰하지 않는다. 리뷰할 코드가 없는데다,
+    # 기록 자체가 AI에게 준 지시문이라 diff로 먹이면 지시로 읽힐 수 있다.
+    # 변경 파일이 전부 여기 맞을 때만 건너뛴다 — 코드가 섞이면 그대로 리뷰한다.
+    paths-ignore:
+      - 'exports/**'
   issue_comment:
     types: [created]
   pull_request_review_comment:
