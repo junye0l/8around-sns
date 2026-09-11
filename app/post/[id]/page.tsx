@@ -58,7 +58,6 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 					action={createCommentAction}
 					authorName={displayName}
 					maxLength={COMMENT_CONTENT_MAX}
-					pendingLabel="남기는 중"
 					placeholder="댓글을 남겨보세요"
 					submitLabel="댓글"
 				>
