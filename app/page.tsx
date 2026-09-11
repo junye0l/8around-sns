@@ -42,9 +42,8 @@ export default async function Home() {
 					action={createPostAction}
 					authorName={displayName}
 					maxLength={POST_CONTENT_MAX}
-					pendingLabel="올리는 중"
 					placeholder="무슨 생각을 하고 있나요?"
-					submitLabel="올리기"
+					submitLabel="게시"
 				/>
 
 				{posts.length === 0 ? (

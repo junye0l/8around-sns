@@ -16,13 +16,22 @@ import { cn } from "@/lib/utils/cn";
  * 진행 중일 때의 회색은 `disabled:`가 아니라 `aria-busy:`가 칠한다. 진행 중에도
  * 요소는 살아 있어야 포커스를 잃지 않기 때문이다. 결정 0012.
  *
+ * `sm`은 60x36이다. `docs/DESIGN.md`의 웹 버튼 40 또는 46px 어디에도 없는 값이고,
+ * 사용자가 지정했다. 결정 0014.
+ *
  * 포커스 링 색은 결정 0010.
  * @see docs/decisions/0010-focus-ring-primary.md
  */
 const button = cva(
-	"inline-flex items-center justify-center rounded-md border px-4 py-3 text-body font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed aria-busy:cursor-progress",
+	"inline-flex items-center justify-center rounded-md border font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed aria-busy:cursor-progress",
 	{
 		variants: {
+			size: {
+				md: "px-4 py-3 text-body",
+				// 60x36 고정. 폭을 고정해야 진행 중에도 자리가 안 흔들린다.
+				// 들어가는 문구는 두 글자뿐이다 — 게시, 댓글, 답글
+				sm: "h-9 w-15 text-body-sm",
+			},
 			variant: {
 				primary:
 					"border-transparent bg-primary text-canvas hover:bg-primary-hover active:bg-primary-hover disabled:bg-hairline disabled:text-fg-muted aria-busy:bg-hairline aria-busy:text-fg-muted aria-busy:hover:bg-hairline",
@@ -30,7 +39,7 @@ const button = cva(
 					"border-fg bg-transparent text-fg hover:bg-background active:bg-hairline disabled:border-hairline disabled:text-fg-muted aria-busy:border-hairline aria-busy:text-fg-muted aria-busy:hover:bg-transparent",
 			},
 		},
-		defaultVariants: { variant: "primary" },
+		defaultVariants: { size: "md", variant: "primary" },
 	},
 );
 
@@ -47,6 +56,7 @@ type ButtonProps = ComponentProps<"button"> &
 	};
 
 export function Button({
+	size,
 	variant,
 	loading = false,
 	disabled,
@@ -56,7 +66,7 @@ export function Button({
 	onClick,
 	...props
 }: ButtonProps) {
-	const classes = cn(button({ variant }), className);
+	const classes = cn(button({ size, variant }), className);
 
 	if (href) {
 		return (

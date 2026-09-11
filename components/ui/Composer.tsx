@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	type ReactNode,
-	useActionState,
-	useEffect,
-	useId,
-	useState,
-} from "react";
+import { type ReactNode, useActionState, useEffect, useId } from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 
@@ -20,7 +14,6 @@ type ComposerProps = {
 	) => Promise<ComposerResult>;
 	placeholder: string;
 	submitLabel: string;
-	pendingLabel: string;
 	maxLength: number;
 	/** 액션에 같이 보낼 숨은 입력. 댓글은 여기에 post_id를 싣는다 */
 	children?: ReactNode;
@@ -29,19 +22,26 @@ type ComposerProps = {
 };
 
 /**
- * 입력칸. 아바타 · 입력 · 버튼이 한 줄로 서고, 손대면 아래로 열린다.
- * 접힌 동안 카운터와 에러 자리를 비워두면 목록 첫 칸이 그만큼 조용해진다.
+ * 입력칸. 아바타 옆에 이름이 서고 그 아래로 입력과 버튼이 온다.
+ * 모달과 추천 피드가 같은 모양을 쓴다.
  *
- * textarea를 제어 컴포넌트로 두는 이유가 있다. React 19는 함수 action이 끝나면
- * 폼을 자동으로 비우는데, 그러면 저장에 실패했을 때 쓰던 글까지 같이 날아간다.
- * 값을 state로 들고 있으면 실패한 화면에 글이 남고, 성공했을 때만 비운다.
+ * **글자수 카운터를 두지 않는다.** 손대는 순간 없던 줄이 생겨 아래가 밀렸다.
+ * 상한은 `maxLength`가 조용히 막고, 진짜 방어는 서버와 DB 제약이 한다 (규칙 9).
+ * 결정 0014.
+ *
+ * **높이가 고정이다.** 접었다 펴면 그것도 레이아웃이 밀리는 일이다.
+ *
+ * 이미지, GIF, 투표 같은 것은 범위 밖이라 아이콘 자리를 만들지 않는다.
+ *
+ * textarea를 제어 컴포넌트로 두지 않는다. React 19는 함수 action이 끝나면 폼을
+ * 자동으로 비우는데, 실패했을 때 쓰던 글이 날아가지 않게 `defaultValue`와 `key`로
+ * 성공했을 때만 새로 그린다.
  */
 export function Composer({
 	authorName,
 	action,
 	placeholder,
 	submitLabel,
-	pendingLabel,
 	maxLength,
 	children,
 	onSuccess,
@@ -50,71 +50,56 @@ export function Composer({
 		ComposerResult | null,
 		FormData
 	>(action, null);
-	const [content, setContent] = useState("");
-	const [opened, setOpened] = useState(false);
 	const id = useId();
 
-	// 성공했을 때만 비운다. result는 액션이 끝날 때마다 새 객체라 이걸로 구분된다
 	useEffect(() => {
-		if (result?.ok) {
-			setContent("");
-			onSuccess?.();
-		}
+		if (result?.ok) onSuccess?.();
 	}, [result, onSuccess]);
 
 	const error = result && !result.ok ? result.error : null;
-	// 포커스가 빠져도 쓰던 글이 있으면 닫지 않는다. 닫으면 쓴 내용이 가려진다
-	const expanded = opened || content.length > 0;
 
 	return (
 		<form
 			action={formAction}
-			className="flex gap-3 border-hairline border-b p-4"
+			className="flex gap-3 border-hairline border-b p-4 last:border-b-0"
 		>
 			{children}
 			<Avatar name={authorName} />
 
+			{/* min-w-0 이 없으면 긴 이름이 flex 칸을 밀어내 시각이 잘린다 */}
 			<div className="min-w-0 flex-1">
+				<p className="truncate text-body-sm font-semibold text-fg">
+					{authorName}
+				</p>
+
 				<label className="sr-only" htmlFor={id}>
 					{placeholder}
 				</label>
-				<div className="flex items-start gap-4">
-					<textarea
-						className="min-w-0 flex-1 resize-none py-2 text-body text-fg placeholder:text-fg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
-						disabled={pending}
-						id={id}
-						// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
-						maxLength={maxLength}
-						name="content"
-						onBlur={() => setOpened(false)}
-						onChange={(event) => setContent(event.target.value)}
-						onFocus={() => setOpened(true)}
-						placeholder={placeholder}
-						required
-						rows={expanded ? 3 : 1}
-						value={content}
-					/>
-					<Button
-						className="shrink-0"
-						disabled={content.trim().length === 0}
-						loading={pending}
-						type="submit"
-					>
-						{pending ? pendingLabel : submitLabel}
-					</Button>
-				</div>
+				<textarea
+					className="mt-1 w-full resize-none text-body text-fg placeholder:text-fg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+					disabled={pending}
+					id={id}
+					// 성공하면 key가 바뀌어 빈 칸으로 다시 그려진다. 실패하면 쓰던 글이 남는다
+					key={result?.ok ? "sent" : "editing"}
+					// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
+					maxLength={maxLength}
+					name="content"
+					placeholder={placeholder}
+					required
+					rows={3}
+				/>
 
 				{error && (
-					<p className="mt-2 text-body-sm text-danger" role="alert">
+					<p className="mt-1 text-body-sm text-danger" role="alert">
 						{error}
 					</p>
 				)}
 
-				{expanded && (
-					<p className="mt-1 text-right text-body-sm text-fg-muted">
-						{content.length} / {maxLength}
-					</p>
-				)}
+				<div className="mt-2 flex justify-end">
+					<Button loading={pending} size="sm" type="submit">
+						{submitLabel}
+					</Button>
+				</div>
 			</div>
 		</form>
 	);

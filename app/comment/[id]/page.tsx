@@ -78,7 +78,6 @@ export default async function CommentPage({
 					action={createCommentAction}
 					authorName={displayName}
 					maxLength={COMMENT_CONTENT_MAX}
-					pendingLabel="남기는 중"
 					placeholder={`${comment.author.username}님에게 답글 남기기`}
 					submitLabel="답글"
 				>

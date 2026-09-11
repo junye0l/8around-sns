@@ -39,9 +39,8 @@ export function ComposeButton({
 					authorName={authorName}
 					maxLength={POST_CONTENT_MAX}
 					onSuccess={close}
-					pendingLabel="올리는 중"
 					placeholder="무슨 생각을 하고 있나요?"
-					submitLabel="올리기"
+					submitLabel="게시"
 				/>
 			</DialogContent>
 		</Dialog>
