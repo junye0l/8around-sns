@@ -122,6 +122,23 @@ for (const f of files.filter((f) => f.endsWith(".md") && !f.startsWith("."))) {
 	});
 }
 
+/** 규칙 3. cn()이 아는 타입 스케일 이름과 `@theme`의 `--text-*`가 같아야 한다. */
+{
+	const declared = [...read("app/globals.css").matchAll(/--text-([\w-]+):/g)]
+		.map(([, name]) => name)
+		.filter((name) => !name.includes("--"));
+	const known =
+		read("lib/utils/cn.ts").match(/FONT_SIZES = \[([^\]]*)\]/)?.[1] ?? "";
+	for (const name of declared)
+		if (!known.includes(`"${name}"`))
+			fail(
+				"규칙 3",
+				"lib/utils/cn.ts",
+				0,
+				`--text-${name}이 FONT_SIZES에 없다`,
+			);
+}
+
 /** 규칙 14. 결정 기록과 목차가 서로 맞아야 한다. */
 {
 	const index = read("docs/decisions/README.md");

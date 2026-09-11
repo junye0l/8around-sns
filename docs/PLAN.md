@@ -75,15 +75,15 @@
 
 shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decisions/0009-toss-tds-tokens.md)가 정한 방향을 따른다.
 
-- [ ] shadcn CLI가 `tailwind.config` 없이 `@theme`만 있는 v4 세팅을 받는지 확인한다. 안 받으면 CLI 없이 소스만 옮긴다
-- [ ] 동작이 있는 것만 가져온다. Dialog, Sheet, Tabs, DropdownMenu
-- [ ] `Button`을 다시 쓴다. pressed와 keyboard focus를 채우고 높이를 정한다
+- [x] CLI를 쓰지 않는다. 레포 구조를 CLI가 바꾸게 두지 않고 소스만 옮긴다. `cva`, `clsx`, `tailwind-merge` 셋을 깔았다
+- [x] `Button`을 shadcn 구조로 다시 썼다. pressed와 keyboard focus를 채웠다
+- [ ] 버튼 높이. 지금 48px, 문서는 웹에서 40 또는 46px이다
+- [ ] 포커스와 키보드를 다루는 것은 필요해질 때 가져온다. Dialog, Sheet, Tabs, DropdownMenu
 - [ ] `Avatar`, `Card`, `Skeleton`, `Input`은 가져오지 않는다. 지금 것이 같거나 더 맞다
 - [ ] 새 의존성은 설치 전에 묻는다
 
 - [x] 토큰을 `app/globals.css`에 옮기고 `@theme`로 노출
-- [ ] `Button` — 지금 선 것은 primary, outline, loading, disabled, `href`(링크형)다.
-  새 문서가 요구하는 pressed와 keyboard focus가 없다. 높이도 48px이라 문서의 40 또는 46px과 다르다. shadcn 도입 때 같이 채운다
+- [ ] `Button` — primary, outline, loading, disabled, pressed, keyboard focus, `href`(링크형)까지 섰다. 높이만 남았다
 - [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
 - [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다
 - [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
