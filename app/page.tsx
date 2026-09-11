@@ -36,10 +36,7 @@ export default async function Home() {
 	const displayName = profile?.display_name ?? username;
 
 	return (
-		<PageShell
-			nav={<SideNav username={profile?.username ?? null} />}
-			title="추천"
-		>
+		<PageShell nav={<SideNav profile={profile} />} title="추천">
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
 				<Composer
 					action={createPostAction}
