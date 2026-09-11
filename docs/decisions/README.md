@@ -27,7 +27,7 @@
 | [0001](0001-login-identifier.md) | 로그인 식별자는 이메일이다 | 확정 |
 | [0002](0002-email-confirmation-off.md) | 이메일 확인을 끈다 | 확정 |
 | [0003](0003-signup-email-enumeration.md) | 가입 시 이메일 중복을 그대로 알린다 | 확정 |
-| [0004](0004-auth-single-screen-slide.md) | 가입·로그인을 한 화면에 놓고 미끄러뜨린다 | 확정 |
+| [0004](0004-auth-single-screen-slide.md) | 가입·로그인을 한 화면에 놓고 미끄러뜨린다 | 대체됨 → 0016 |
 | [0005](0005-merge-commits.md) | 머지는 머지 커밋으로 한다 | 확정 |
 | [0006](0006-feed-requires-login.md) | 피드는 로그인해야 본다 | 확정 |
 | [0007](0007-comment-routes.md) | 댓글과 대댓글은 각자 자기 화면에서 단다 | 일부 대체됨 → 0008 |
@@ -39,3 +39,4 @@
 | [0013](0013-sidebar-overlays.md) | 드롭다운과 모달은 radix에서 가져오고, 글쓰기 진입점을 레일에 둔다 | 확정 |
 | [0014](0014-composer-layout.md) | 글자수 카운터를 버리고 입력칸 높이를 고정한다 | 확정 |
 | [0015](0015-threads-shell.md) | 화면 뼈대를 Threads 모양으로 바꾸고 버튼을 흑백으로 옮긴다 | 확정 |
+| [0016](0016-threads-auth.md) | 가입·로그인을 한 컬럼으로 펴고 슬라이드를 걷어낸다 | 확정 |

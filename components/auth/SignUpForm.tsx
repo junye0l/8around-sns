@@ -16,8 +16,10 @@ export function SignUpForm() {
 	const errors = failed?.errors ?? {};
 
 	return (
-		<form action={formAction} className="flex flex-col gap-4">
-			<h1 className="text-center text-title text-fg">가입하기</h1>
+		<form action={formAction} className="flex flex-col gap-2">
+			<h1 className="mb-2 text-center text-body font-semibold text-fg">
+				8around 계정 만들기
+			</h1>
 
 			{failed?.formError && (
 				<p className="text-body-sm text-danger" role="alert">
@@ -56,7 +58,7 @@ export function SignUpForm() {
 				type="password"
 			/>
 
-			<Button className="mt-2 w-full" loading={pending} type="submit">
+			<Button className="mt-2 h-14 w-full" loading={pending} type="submit">
 				{pending ? "가입하는 중" : "가입하기"}
 			</Button>
 		</form>

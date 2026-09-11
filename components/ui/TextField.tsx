@@ -10,36 +10,43 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
 };
 
 /**
- * 라벨, 입력칸, 안내 또는 에러 한 줄.
+ * 입력칸 하나와 안내 또는 에러 한 줄. 라벨은 화면에서 감추고 `placeholder`가 그 말을 대신한다,
+ * 없으면 라벨 문구를 그대로 placeholder로 쓴다. Threads의 채운 상자 모양이다. 결정 0016.
  *
- * `error`가 있으면 보더가 2px danger로 바뀌고 `aria-invalid`가 붙는다.
+ * `error`가 있으면 보더가 danger로 바뀌고 `aria-invalid`가 붙는다.
  *
- * 평상시 테두리는 `fg-muted`다. `hairline`은 흰 카드 위에서 대비 1.23:1이라
- * 입력칸의 유일한 경계로는 안 보인다. 계산값은 결정 0012에 있다.
+ * 상자는 `background`로 채우고 `hairline` 테두리를 두른다. 채움만으로는 흰 바탕과
+ * 1.1:1이라 경계가 안 보이고, 테두리만으로는 결정 0012가 잰 1.23:1이다. 둘을 같이 쓴다.
  */
-export function TextField({ label, error, hint, ...props }: TextFieldProps) {
+export function TextField({
+	label,
+	error,
+	hint,
+	placeholder,
+	...props
+}: TextFieldProps) {
 	const id = useId();
 	const describedById = `${id}-desc`;
 	const description = error ?? hint;
 
 	return (
 		<div className="flex flex-col gap-1">
-			<label className="text-body-sm font-medium text-fg" htmlFor={id}>
+			<label className="sr-only" htmlFor={id}>
 				{label}
 			</label>
 			<input
 				id={id}
 				aria-describedby={description ? describedById : undefined}
 				aria-invalid={error ? true : undefined}
-				className={`rounded-md border bg-canvas px-4 py-3 text-body text-fg outline-none placeholder:text-fg-muted focus:border-primary ${
-					error ? "border-2 border-danger" : "border-fg-muted"
+				className={`h-14 rounded-lg border bg-background px-4 text-body text-fg outline-none placeholder:text-fg-muted focus:border-fg ${
+					error ? "border-danger" : "border-hairline"
 				}`}
+				placeholder={placeholder ?? label}
 				{...props}
 			/>
 			{description && (
-				// hint는 오른쪽, 에러는 왼쪽에서 읽는다
 				<p
-					className={`text-body-sm ${error ? "text-danger" : "text-right text-fg-muted"}`}
+					className={`px-1 text-body-sm ${error ? "text-danger" : "text-fg-muted"}`}
 					id={describedById}
 					// 에러만 말한다. hint에 붙이면 화면에 뜰 때마다 읽어서 시끄럽다
 					role={error ? "alert" : undefined}
