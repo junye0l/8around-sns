@@ -25,11 +25,11 @@
 - [x] GitHub Actions CI 1개 — lint → typecheck → test → build
 - [x] `AGENTS.md` 규칙 13개 + 커밋/브랜치 컨벤션, `CLAUDE.md`는 포인터만
 - [x] PR 템플릿
-- [x] PR 자동 리뷰 워크플로 (Claude, `AGENTS.md` 기준)
+- [x] PR 자동 리뷰 워크플로 (Claude, `AGENTS.md` 기준)ㄴ
 - [x] GitHub 레포 생성 (`junye0l/8around-sns`)
 - [x] 첫 푸시
 - [x] Vercel 연결 → https://8around-new-sns-beta.vercel.app
-- [ ] Supabase Auth URL Configuration (Site URL + Redirect URLs)
+- [x] Supabase Auth URL Configuration (Site URL + Redirect URLs)
 
 ## 2. 기반
 
@@ -46,17 +46,17 @@
 ## 3. 인증
 
 - [x] 회원가입 → 프로필 생성 (`on_auth_user_created` 트리거가 만든다)
-- [x] 로그인 / 로그아웃, 세션 유지 — 이메일 + 비밀번호 ([결정 0001](decisions/0001-login-identifier.md)). 로그아웃은 `SideNav` 맨 아래에 있다
-- [x] 비로그인 상태에서 보호 라우트 접근 차단 — 허용 목록(`lib/utils/auth-route.ts`)에 없는 경로는 전부 `/login`으로 보낸다 ([결정 0006](decisions/0006-feed-requires-login.md))
+- [ ] 로그인 / 로그아웃, 세션 유지 — 이메일 + 비밀번호 ([결정 0001](decisions/0001-login-identifier.md)). 로그인은 됐고 **로그아웃은 아직** — 누를 자리(TopBar)가 없다
+- [ ] 비로그인 상태에서 보호 라우트 접근 차단 — **보호할 화면이 아직 없다.** 피드가 들어올 때 `lib/supabase/middleware.ts`의 `GUEST_ONLY` 옆에 더한다
   - [x] 반대 방향은 됐다 — 로그인한 사용자는 `/login` · `/signup`에 못 들어간다
 
 ## 4. 콘텐츠
 
-- [x] 게시글 작성
-- [x] 피드 노출 (최신순)
-- [x] 댓글 작성 — 게시글 상세(`/post/[id]`)에서 단다
-- [ ] 대댓글 — `parent_id`로 **1뎁스까지만** 편다. 댓글 상세(`/comment/[id]`)에서 단다
-- [x] ~~댓글 트리 변환은 `lib/utils/`의 순수 함수로 + 테스트 1개~~ — 화면을 나눠서 펼 트리가 없어졌다 ([결정 0007](decisions/0007-comment-routes.md))
+- [ ] 게시글 작성
+- [ ] 피드 노출 (최신순)
+- [ ] 댓글 작성
+- [ ] 대댓글 — `parent_id`로 **1뎁스까지만** 편다. 무한 중첩은 모바일에서 안 읽히고 쿼리가 재귀로 감
+- [ ] 댓글 트리 변환은 `lib/utils/`의 순수 함수로 + 테스트 1개
 
 ## 5. 소셜
 
@@ -70,12 +70,11 @@
 
 - [x] 토큰을 `app/globals.css`에 옮기고 `@theme`로 노출
 - [ ] `Button` — primary / secondary / ghost / danger, loading, disabled
-- [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
-- [x] `Composer` — 게시글과 댓글이 같이 쓴다. 숨은 입력만 바깥에서 넣는다
-- [x] `ContentCard` — 게시글과 댓글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리
-- [x] `PageShell` — 레일 · 가운데 컬럼 · 붙박이 제목줄. 화면마다 다시 적지 않는다
-- [x] `SideNav` — 왼쪽 레일. 로고 · 추천 · **로그아웃**(§3이 여기 딸려 왔다). `TabBar`는 모바일 대응 때 §7에서 같이 본다
-- [x] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
+- [ ] `Avatar`
+- [ ] `Composer` (게시글·댓글 입력) — focus-within, error, disabled
+- [ ] `PostCard` — 그림자 없음, `border-hairline` 1px로만 분리
+- [ ] `TopBar` / `TabBar` — 마이페이지 버튼 안에 **로그아웃**을 넣는다 (§3 로그아웃이 여기 딸려 온다)
+- [ ] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
 - [ ] `EmptyState`, `Spinner`
 
 ## 7. 인터랙션 · 상태
@@ -84,7 +83,6 @@
 - [ ] 낙관적 업데이트 — 팔로우 토글, 댓글 작성
 - [ ] 전환은 `--motion-fast`(150ms) / `--motion-standard`(250ms), 이징은 `--ease-enter` / `--ease-exit` / `--ease-standard` 셋만
 - [ ] `prefers-reduced-motion` 존중 — `app/globals.css`에 전역 처리됨
-- [ ] **태블릿 · 모바일 대응** — 웹 폭을 먼저 다 세우고 뒤에 붙인다. 폭마다 분기를 미리 깔면 레이아웃이 바뀔 때마다 두 벌을 고친다. 레일은 `TabBar`로 접힌다
 
 ## 8. 애니메이션
 

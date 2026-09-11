@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
+import { CommentThread } from "@/components/comment/CommentThread";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
 import { Composer } from "@/components/ui/Composer";
 import { ContentCard } from "@/components/ui/ContentCard";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { createCommentAction } from "@/lib/actions/comment";
 import { listPostComments } from "@/lib/queries/comment";
 import { getPost } from "@/lib/queries/post";
@@ -11,8 +13,10 @@ import { createClient } from "@/lib/supabase/server";
 import { COMMENT_CONTENT_MAX } from "@/lib/utils/content";
 
 /**
- * 게시글 상세 — 글 하나와 거기 달린 댓글. 대댓글은 여기가 아니라 댓글 상세에서 단다
- * ([결정 0007](../../../docs/decisions/0007-comment-routes.md)).
+ * 게시글 상세 — 글 하나와 거기 달린 댓글. 답글은 부모 댓글 아래에 세로선으로 이어
+ * 같이 보이고, **다는** 것은 댓글 상세에서 한다
+ * ([결정 0007](../../../docs/decisions/0007-comment-routes.md) ·
+ * [0008](../../../docs/decisions/0008-reply-tree-on-post.md)).
  *
  * 댓글을 게시글과 같이 읽지 않고 나눠 읽는 이유: 없는 글이면 404로 끝내야 하는데,
  * uuid가 아닌 주소까지 같이 던지면 댓글 쿼리가 먼저 터져 에러 화면으로 샌다.
@@ -61,18 +65,10 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 				</Composer>
 
 				{comments.length === 0 ? (
-					// 빈 상태는 한 줄로 이유를 말하고 다음 행동만 가리킨다 (DESIGN.md §4 · §6)
-					<p className="py-16 text-center text-body-sm text-fg-muted">
-						아직 댓글이 없어요. 먼저 남겨보세요.
-					</p>
+					<EmptyState message="아직 댓글이 없어요. 먼저 남겨보세요." />
 				) : (
 					comments.map((comment) => (
-						<ContentCard
-							author={comment.author}
-							content={comment.content}
-							createdAt={comment.created_at}
-							key={comment.id}
-						/>
+						<CommentThread comment={comment} key={comment.id} />
 					))
 				)}
 			</div>

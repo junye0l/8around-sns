@@ -12,6 +12,8 @@ export type CreateCommentResult = { ok: true } | { ok: false; error: string };
  */
 const createCommentSchema = z.object({
 	postId: z.uuid("사라진 글이에요"),
+	// 답글이 아니면 폼에 숨은 입력이 없고 FormData.get 이 null을 준다
+	parentId: z.uuid("사라진 댓글이에요").nullable(),
 	content: contentSchema(COMMENT_CONTENT_MAX),
 });
 
@@ -21,11 +23,15 @@ const createCommentSchema = z.object({
  *
  * `author_id`는 호출부가 세션에서 꺼내 준다. 폼에서 받지 않는다 —
  * `lib/services/post.ts`와 같은 이유다.
+ *
+ * 답글도 같은 함수가 받는다. 다른 것은 `parentId` 하나뿐이라 서비스를 새로 만들지
+ * 않는다(규칙 2). 깊이 제한은 세지 않는다 — RLS가 "부모가 이미 자식이면 거절"을
+ * 한다 (`supabase/migrations/0001_init.sql:155-171`, 규칙 9).
  */
 export async function createComment(
 	supabase: SupabaseClient<Database>,
 	authorId: string,
-	input: { postId: unknown; content: unknown },
+	input: { postId: unknown; parentId: unknown; content: unknown },
 ): Promise<CreateCommentResult> {
 	const parsed = createCommentSchema.safeParse(input);
 	if (!parsed.success) {
@@ -34,6 +40,7 @@ export async function createComment(
 
 	const { error } = await supabase.from("comments").insert({
 		post_id: parsed.data.postId,
+		parent_id: parsed.data.parentId,
 		author_id: authorId,
 		content: parsed.data.content,
 	});
