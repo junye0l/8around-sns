@@ -33,33 +33,31 @@ export default async function FollowingPage() {
 
 	return (
 		<PageShell nav={<SideNav profile={profile} />} title="팔로잉">
-			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-				{feed.posts.length === 0 ? (
-					<EmptyState
-						message={
-							feed.followsAnyone
-								? "팔로우한 사람들이 아직 글을 안 썼어요."
-								: "아직 팔로우한 사람이 없어요. 추천에서 마음에 드는 사람을 팔로우해 보세요."
+			{feed.posts.length === 0 ? (
+				<EmptyState
+					message={
+						feed.followsAnyone
+							? "팔로우한 사람들이 아직 글을 안 썼어요."
+							: "아직 팔로우한 사람이 없어요. 추천에서 마음에 드는 사람을 팔로우해 보세요."
+					}
+				/>
+			) : (
+				feed.posts.map((post) => (
+					<ContentCard
+						author={post.author}
+						content={post.content}
+						createdAt={post.created_at}
+						footer={
+							<CommentCount
+								count={post.comment_count}
+								href={`/post/${post.id}`}
+								label="댓글"
+							/>
 						}
+						key={post.id}
 					/>
-				) : (
-					feed.posts.map((post) => (
-						<ContentCard
-							author={post.author}
-							content={post.content}
-							createdAt={post.created_at}
-							footer={
-								<CommentCount
-									count={post.comment_count}
-									href={`/post/${post.id}`}
-									label="댓글"
-								/>
-							}
-							key={post.id}
-						/>
-					))
-				)}
-			</div>
+				))
+			)}
 		</PageShell>
 	);
 }

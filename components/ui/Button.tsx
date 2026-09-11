@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils/cn";
 /**
  * 변형별 색과 상태. 너비는 정하지 않는다. 부르는 쪽이 `className`으로 준다.
  *
- * pressed는 hover와 같은 강한 파랑을 쓴다. 문서에 파랑이 둘뿐이라 세 번째를 지어내지
- * 않는다. 터치에는 hover가 없으므로 같은 색이어도 `active:`가 눌림을 알려준다.
+ * primary는 검정(`fg`)이다. 파랑은 포커스 링에만 남는다. 결정 0015.
+ * hover와 pressed는 새 색을 만들지 않고 같은 토큰의 불투명도만 낮춘다,
+ * 결정 0013의 오버레이(`bg-fg/40`)와 같은 방식이다.
  *
  * 테두리는 변형이 아니라 기본값에 있고 변형은 색만 바꾼다. outline에만 두면 변형이
  * 바뀔 때 상자가 사방 1px씩 커진다 — 팔로우 버튼이 primary에서 outline으로 넘어가며
@@ -16,27 +17,27 @@ import { cn } from "@/lib/utils/cn";
  * 진행 중일 때의 회색은 `disabled:`가 아니라 `aria-busy:`가 칠한다. 진행 중에도
  * 요소는 살아 있어야 포커스를 잃지 않기 때문이다. 결정 0012.
  *
- * `sm`은 60x36이다. `docs/DESIGN.md`의 웹 버튼 40 또는 46px 어디에도 없는 값이고,
- * 사용자가 지정했다. 결정 0014.
+ * `md`는 40px이다. `docs/DESIGN.md`의 웹 버튼 40 또는 46px 중 작은 쪽으로, 결정 0009의
+ * 남은 칸을 0015가 닫았다. `sm`은 60x36이고 사용자가 지정했다. 결정 0014.
  *
  * 포커스 링 색은 결정 0010.
  * @see docs/decisions/0010-focus-ring-primary.md
  */
 const button = cva(
-	"inline-flex items-center justify-center rounded-md border font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed aria-busy:cursor-progress",
+	"inline-flex items-center justify-center rounded-lg border font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed aria-busy:cursor-progress",
 	{
 		variants: {
 			size: {
-				md: "px-4 py-3 text-body",
+				md: "h-10 px-4 text-body-sm",
 				// 60x36 고정. 폭을 고정해야 진행 중에도 자리가 안 흔들린다.
 				// 들어가는 문구는 두 글자뿐이다 — 게시, 댓글, 답글
 				sm: "h-9 w-15 text-body-sm",
 			},
 			variant: {
 				primary:
-					"border-transparent bg-primary text-canvas hover:bg-primary-hover active:bg-primary-hover disabled:bg-hairline disabled:text-fg-muted aria-busy:bg-hairline aria-busy:text-fg-muted aria-busy:hover:bg-hairline",
+					"border-transparent bg-fg text-canvas hover:bg-fg/90 active:bg-fg/80 disabled:bg-hairline disabled:text-fg-muted aria-busy:bg-hairline aria-busy:text-fg-muted aria-busy:hover:bg-hairline",
 				outline:
-					"border-fg bg-transparent text-fg hover:bg-background active:bg-hairline disabled:border-hairline disabled:text-fg-muted aria-busy:border-hairline aria-busy:text-fg-muted aria-busy:hover:bg-transparent",
+					"border-hairline bg-transparent text-fg hover:bg-background active:bg-hairline disabled:text-fg-muted aria-busy:text-fg-muted aria-busy:hover:bg-transparent",
 			},
 		},
 		defaultVariants: { size: "md", variant: "primary" },

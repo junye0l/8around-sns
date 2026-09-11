@@ -37,35 +37,33 @@ export default async function Home() {
 
 	return (
 		<PageShell nav={<SideNav profile={profile} />} title="추천">
-			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-				<Composer
-					action={createPostAction}
-					authorName={displayName}
-					maxLength={POST_CONTENT_MAX}
-					placeholder="무슨 생각을 하고 있나요?"
-					submitLabel="게시"
-				/>
+			<Composer
+				action={createPostAction}
+				authorName={displayName}
+				maxLength={POST_CONTENT_MAX}
+				placeholder="무슨 생각을 하고 있나요?"
+				submitLabel="게시"
+			/>
 
-				{posts.length === 0 ? (
-					<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />
-				) : (
-					posts.map((post) => (
-						<ContentCard
-							author={post.author}
-							content={post.content}
-							createdAt={post.created_at}
-							footer={
-								<CommentCount
-									count={post.comment_count}
-									href={`/post/${post.id}`}
-									label="댓글"
-								/>
-							}
-							key={post.id}
-						/>
-					))
-				)}
-			</div>
+			{posts.length === 0 ? (
+				<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />
+			) : (
+				posts.map((post) => (
+					<ContentCard
+						author={post.author}
+						content={post.content}
+						createdAt={post.created_at}
+						footer={
+							<CommentCount
+								count={post.comment_count}
+								href={`/post/${post.id}`}
+								label="댓글"
+							/>
+						}
+						key={post.id}
+					/>
+				))
+			)}
 		</PageShell>
 	);
 }

@@ -79,18 +79,18 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 
 - [x] CLI를 쓰지 않는다. 레포 구조를 CLI가 바꾸게 두지 않고 소스만 옮긴다. `cva`, `clsx`, `tailwind-merge` 셋을 깔았다
 - [x] `Button`을 shadcn 구조로 다시 썼다. pressed와 keyboard focus를 채웠다
-- [ ] 기본 버튼 높이. 지금 50px, 문서는 웹에서 40 또는 46px이다. 작은 버튼(60x36)은 결정 0014에서 따로 정해졌다
+- [x] 기본 버튼 높이 40px ([결정 0015](decisions/0015-threads-shell.md)). 작은 버튼(60x36)은 결정 0014에서 따로 정해졌다
 - [x] `Dialog`와 `DropdownMenu`를 radix로 가져왔다 ([결정 0013](decisions/0013-sidebar-overlays.md)). Sheet, Tabs는 아직 쓸 화면이 없다
 - [ ] `Avatar`, `Card`, `Skeleton`, `Input`은 가져오지 않는다. 지금 것이 같거나 더 맞다
 - [ ] 새 의존성은 설치 전에 묻는다
 
 - [x] 토큰을 `app/globals.css`에 옮기고 `@theme`로 노출
-- [ ] `Button` — primary, outline, loading, disabled, pressed, keyboard focus, `href`(링크형)까지 섰다. 높이만 남았다
+- [x] `Button` — primary(검정), outline, loading, disabled, pressed, keyboard focus, `href`(링크형). 높이 40px
 - [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
 - [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다. 카운터 없음, 높이 고정 ([결정 0014](decisions/0014-composer-layout.md))
 - [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
-- [x] `PageShell` — 레일 · 가운데 컬럼 · 붙박이 제목줄. 화면마다 다시 적지 않는다
-- [x] `SideNav` — 왼쪽 레일. 로고 · 추천 · 새로운 게시글 · 프로필 · 팔로잉, 하단에 더 보기(로그아웃). `TabBar`는 모바일 대응 때 §7에서 같이 본다
+- [x] `PageShell` — 아이콘 레일 · 가운데 카드 컬럼 · 붙박이 제목줄. 카드 상자도 여기서 그린다 ([결정 0015](decisions/0015-threads-shell.md))
+- [x] `SideNav` — 왼쪽 아이콘 레일. 로고 · 추천 · 새로운 게시글 · 팔로잉 · 프로필, 하단에 더 보기(로그아웃). `TabBar`는 모바일 대응 때 §7에서 같이 본다
 - [x] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
 - [x] `EmptyState` — 한 줄 문구. 버튼은 받지 않는다(세 화면 모두 위에 입력칸이 있다). 같은 마크업이 세 번째로 나타나 올렸다 (규칙 2)
 - [ ] `Spinner` — 아직 쓸 화면이 없다. `loading.tsx` 스켈레톤이 첫 페인트를 받는다

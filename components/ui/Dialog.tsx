@@ -20,6 +20,8 @@ export const DialogClose = Primitive.Close;
  * 말하는 유일한 수단이고, radix도 없으면 경고한다.
  *
  * 위에서 96px 떨어뜨린다. 가운데에 띄우면 입력 중 키보드가 올라올 때 자리가 흔들린다.
+ *
+ * 제목줄 왼쪽에 "취소"가 선다. Esc와 바깥 클릭 말고도 눈에 보이는 닫는 길이 하나는 있어야 한다.
  */
 export function DialogContent({
 	title,
@@ -40,10 +42,15 @@ export function DialogContent({
 				)}
 				{...props}
 			>
-				<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-					<Primitive.Title className="border-hairline border-b px-4 py-3 text-body font-semibold text-fg">
-						{title}
-					</Primitive.Title>
+				<div className="overflow-hidden rounded-xl border border-hairline bg-canvas">
+					<div className="relative flex h-15 items-center justify-center border-hairline border-b">
+						<Primitive.Close className="absolute left-2 rounded-md px-2 py-1 text-body text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+							취소
+						</Primitive.Close>
+						<Primitive.Title className="text-body font-semibold text-fg">
+							{title}
+						</Primitive.Title>
+					</div>
 					{children}
 				</div>
 			</Primitive.Content>

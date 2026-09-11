@@ -29,8 +29,8 @@ export function ComposeButton({
 	return (
 		<Dialog onOpenChange={setOpen} open={open}>
 			<DialogTrigger className={className}>
-				<Plus aria-hidden className="size-5 shrink-0" />
-				새로운 게시글
+				<Plus aria-hidden className="size-6 shrink-0" />
+				<span className="sr-only">새로운 게시글</span>
 			</DialogTrigger>
 
 			<DialogContent title="새로운 게시글">

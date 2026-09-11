@@ -21,7 +21,8 @@ export function MoreMenu({ className }: { className: string }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className={className}>
-				<Menu aria-hidden className="size-5 shrink-0" />더 보기
+				<Menu aria-hidden className="size-6 shrink-0" />
+				<span className="sr-only">더 보기</span>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent>

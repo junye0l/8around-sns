@@ -46,32 +46,30 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 
 	return (
 		<PageShell backHref="/" nav={<SideNav profile={profile} />} title="게시글">
-			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-				{/* 이 글이 화면의 주인공이라 댓글 수를 다시 붙이지 않는다. 목록이 바로 아래에 있다 */}
-				<ContentCard
-					author={post.author}
-					content={post.content}
-					createdAt={post.created_at}
-				/>
+			{/* 이 글이 화면의 주인공이라 댓글 수를 다시 붙이지 않는다. 목록이 바로 아래에 있다 */}
+			<ContentCard
+				author={post.author}
+				content={post.content}
+				createdAt={post.created_at}
+			/>
 
-				<Composer
-					action={createCommentAction}
-					authorName={displayName}
-					maxLength={COMMENT_CONTENT_MAX}
-					placeholder="댓글을 남겨보세요"
-					submitLabel="댓글"
-				>
-					<input name="post_id" type="hidden" value={post.id} />
-				</Composer>
+			<Composer
+				action={createCommentAction}
+				authorName={displayName}
+				maxLength={COMMENT_CONTENT_MAX}
+				placeholder="댓글을 남겨보세요"
+				submitLabel="댓글"
+			>
+				<input name="post_id" type="hidden" value={post.id} />
+			</Composer>
 
-				{comments.length === 0 ? (
-					<EmptyState message="아직 댓글이 없어요. 먼저 남겨보세요." />
-				) : (
-					comments.map((comment) => (
-						<CommentThread comment={comment} key={comment.id} />
-					))
-				)}
-			</div>
+			{comments.length === 0 ? (
+				<EmptyState message="아직 댓글이 없어요. 먼저 남겨보세요." />
+			) : (
+				comments.map((comment) => (
+					<CommentThread comment={comment} key={comment.id} />
+				))
+			)}
 		</PageShell>
 	);
 }
