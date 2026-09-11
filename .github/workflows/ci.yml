@@ -18,7 +18,9 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test
+      # 빌드 타임 프리렌더가 Supabase를 친다. 가짜 값이면 CI에서만 깨진다.
+      # NEXT_PUBLIC_* 은 어차피 브라우저 번들에 박히는 공개 값이다 — RLS가 막는다
       - run: npm run build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
