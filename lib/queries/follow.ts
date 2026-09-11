@@ -25,7 +25,7 @@ type FollowRow = { user: FollowUser };
 /**
  * 이 사람을 팔로우하는 사람들. 최근에 건 순이다.
  *
- * `follows_following_id_idx`(`supabase/migrations/0001_init.sql:112`)는 필터까지만
+ * `follows_following_id_idx`(`supabase/migrations/0001_init.sql:105`)는 필터까지만
  * 받는다. `created_at` 정렬은 인덱스 밖이라 Postgres가 따로 한다 — `LIMIT 100`이라
  * top-N으로 끝난다. 팔로워가 수천을 넘으면 `(following_id, created_at desc)` 복합으로
  * 바꾼다. 결정 0012.
@@ -50,7 +50,7 @@ export async function listFollowers(
 
 /**
  * 이 사람이 팔로우하는 사람들. 기본키 앞부분(`follower_id`)이 필터를 받는다
- * (`supabase/migrations/0001_init.sql:105`). 정렬은 위와 같아서 인덱스 밖이다.
+ * (`supabase/migrations/0001_init.sql:100`). 정렬은 위와 같아서 인덱스 밖이다.
  */
 export async function listFollowing(
 	supabase: SupabaseClient<Database>,

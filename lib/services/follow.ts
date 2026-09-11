@@ -26,7 +26,7 @@ const setFollowSchema = z.object({
  * `lib/services/post.ts`와 같은 이유다.
  *
  * 자기 자신은 세지 않는다. `follows_no_self` 제약
- * (`supabase/migrations/0001_init.sql:100`)이 DB에서 막으므로 여기 같은 체크를
+ * (`supabase/migrations/0001_init.sql:101`)이 DB에서 막으므로 여기 같은 체크를
  * 두지 않는다 (규칙 2, 9).
  */
 export async function setFollow(
