@@ -23,13 +23,18 @@
 - [x] Next.js + TypeScript `strict`
 - [x] Biome (lint + format 통합), `npm run verify` 한 줄로 수렴
 - [x] GitHub Actions CI 1개 — lint → typecheck → test → build
-- [x] `AGENTS.md` 규칙 13개 + 커밋/브랜치 컨벤션, `CLAUDE.md`는 포인터만
+- [x] `AGENTS.md` 규칙 15개 + 커밋/브랜치 컨벤션, `CLAUDE.md`는 포인터만
 - [x] PR 템플릿
 - [x] PR 자동 리뷰 워크플로 (Claude, `AGENTS.md` 기준)
 - [x] GitHub 레포 생성 (`junye0l/8around-sns`)
 - [x] 첫 푸시
 - [x] Vercel 연결 → https://8around-new-sns-beta.vercel.app
 - [x] Supabase Auth URL Configuration (Site URL + Redirect URLs)
+- [x] `npm run harness` — 규칙 중 기계가 볼 수 있는 것을 검사하고 `verify`가 부른다
+- [ ] Claude Code 훅 — 행동 직전에 막아야 하는 규칙. `.env` 열람, `main` 직접 커밋, 히스토리 다시 쓰기, `npm run dev` 실행
+- [ ] GitHub 브랜치 보호 — 훅은 에이전트만 막는다. 사람은 레포 설정이 막는다
+- [ ] 과정 검증 - 새 세션에 "팔로우 기능 구현해줘" 한 줄만 주고 결과를 채점한다. 빠뜨린 단계가 스킬의 목차가 된다
+- [ ] `/new-feature` 스킬 — 맥락 수집, 브랜치, 계획 승인까지. 구현 뒤는 `/pr`이 받는다. 위 검증 뒤에 만든다
 
 ## 2. 기반
 
@@ -66,10 +71,19 @@
 
 ## 6. 공통 컴포넌트
 
-`docs/DESIGN.md` §4 Components & States를 구현 스펙으로 삼는다. 문서에 없는 값은 지어내지 않는다(§7 Unknowns).
+`docs/DESIGN.md`의 Components & States를 구현 스펙으로 삼는다. 문서에 없는 값은 지어내지 않는다.
+
+shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decisions/0009-toss-tds-tokens.md)가 정한 방향을 따른다.
+
+- [ ] shadcn CLI가 `tailwind.config` 없이 `@theme`만 있는 v4 세팅을 받는지 확인한다. 안 받으면 CLI 없이 소스만 옮긴다
+- [ ] 동작이 있는 것만 가져온다. Dialog, Sheet, Tabs, DropdownMenu
+- [ ] `Button`을 다시 쓴다. pressed와 keyboard focus를 채우고 높이를 정한다
+- [ ] `Avatar`, `Card`, `Skeleton`, `Input`은 가져오지 않는다. 지금 것이 같거나 더 맞다
+- [ ] 새 의존성은 설치 전에 묻는다
 
 - [x] 토큰을 `app/globals.css`에 옮기고 `@theme`로 노출
-- [ ] `Button` — DESIGN.md §4 Box Button은 primary / primary-low / secondary / danger / disabled를 적어뒀다. 지금 선 것은 primary · outline(= secondary 자리) · loading · disabled · `href`(링크형, [결정 0008](decisions/0008-reply-tree-on-post.md)). 나머지는 쓸 화면이 생길 때 연다
+- [ ] `Button` — 지금 선 것은 primary, outline, loading, disabled, `href`(링크형)다.
+  새 문서가 요구하는 pressed와 keyboard focus가 없다. 높이도 48px이라 문서의 40 또는 46px과 다르다. shadcn 도입 때 같이 채운다
 - [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
 - [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다
 - [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
