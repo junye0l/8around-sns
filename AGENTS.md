@@ -35,6 +35,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | `npm run verify` | lint + typecheck + test. **커밋 전에 이것만 돌리면 된다** |
 | `npm run format` | Biome 포맷 + 자동 수정 |
 | `npm run dev` | 개발 서버. **에이전트가 직접 실행하지 않는다 (규칙 7)** |
+| `npm run db:push` | 마이그레이션을 원격 DB에 적용 (규칙 7 — 먼저 묻는다) |
+| `npm run types:gen` | 스키마에서 `types/database.ts` 재생성 |
 
 CI는 `verify` 3단계에 `npm run build`를 더해 그대로 돌린다. 로컬에서 `verify`가 통과하면 CI도 통과한다.
 
@@ -134,7 +136,7 @@ Tailwind v4를 쓰되, **유틸리티를 화면에 직접 흩뿌리지 않고 �
 | 사실 | 유일한 출처 |
 |------|-------------|
 | DB 스키마 | `supabase/migrations/*.sql` — 대시보드에서 손으로 고치지 않는다 |
-| DB 타입 | 스키마에서 **생성**한다. 손으로 쓰지 않는다 (규칙 8) |
+| DB 타입 | `types/database.ts` — `npm run types:gen`으로 생성한다 (규칙 8) |
 | 색·간격·폰트 | `docs/DESIGN.md` 토큰 |
 | 개발 규칙 | 이 문서 |
 | 일정·범위 | `docs/PLAN.md` |
@@ -182,7 +184,18 @@ Tailwind v4를 쓰되, **유틸리티를 화면에 직접 흩뿌리지 않고 �
 ## 8. 스키마가 타입의 출처다
 
 DB 타입은 스키마에서 생성한다. 손으로 쓴 타입과 실제 컬럼이 어긋나면 런타임에서만 터진다.
-스키마를 바꿨으면 **같은 작업 안에서** 타입을 다시 생성한다.
+
+```
+supabase/migrations/*.sql   스키마를 바꾸는 유일한 방법. 새 파일을 추가한다
+npm run db:push             원격 DB에 적용
+npm run types:gen           types/database.ts 재생성
+```
+
+- **`types/database.ts`를 손으로 고치지 않는다.** 생성물이다. 고쳐도 다음 `types:gen` 때 날아간다
+- 컬럼이 마음에 안 들면 타입이 아니라 **마이그레이션을 고친다**
+- 스키마를 바꿨으면 **같은 작업 안에서** 타입을 다시 생성하고 함께 커밋한다
+- 생성물이지만 **커밋한다.** 없으면 새로 합류한 사람이 Supabase 로그인 없이는 typecheck조차 못 돌리고, CI도 같은 이유로 막힌다
+- 기존 마이그레이션 파일을 수정하지 않는다. 이미 적용된 것은 되돌릴 수 없으므로 새 파일을 만든다
 
 ## 9. 검증은 신뢰 경계에서, 권한은 RLS에서
 
@@ -282,6 +295,13 @@ docs/agents-rules       문서
 - 제목은 커밋 메시지와 같은 형식
 - CI가 초록이고, Vercel 프리뷰 URL에서 직접 눌러본 뒤에 머지한다
 - 머지는 squash — `main` 히스토리를 한 기능 한 줄로 유지한다
+
+PR 만드는 절차는 `/pr` 스킬(`.claude/skills/pr/SKILL.md`)에 있다. 사람이 손으로 해도 같은 순서다.
+
+**자동 리뷰.** PR을 열면 Claude가 `AGENTS.md` 기준으로 한 번 리뷰한다
+(`.github/workflows/claude-review.yml`). 다시 보고 싶으면 PR에 `@claude` 를 멘션한다.
+푸시마다 돌지 않으므로, 지적을 고친 뒤 다시 받고 싶으면 직접 불러야 한다.
+리뷰는 사람 리뷰를 대신하지 않는다. 근거 없는 지적은 무시하고, 대신 왜 무시했는지 답글을 남긴다.
 
 ---
 

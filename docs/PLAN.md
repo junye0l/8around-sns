@@ -25,6 +25,7 @@
 - [x] GitHub Actions CI 1개 — lint → typecheck → test → build
 - [x] `AGENTS.md` 규칙 13개 + 커밋/브랜치 컨벤션, `CLAUDE.md`는 포인터만
 - [x] PR 템플릿
+- [x] PR 자동 리뷰 워크플로 (Claude, `AGENTS.md` 기준)
 - [x] GitHub 레포 생성 (`junye0l/8around-sns`)
 - [x] 첫 푸시
 - [x] Vercel 연결 → https://8around-new-sns-beta.vercel.app
@@ -33,14 +34,14 @@
 ## 2. 기반
 
 - [x] Supabase 프로젝트 생성, `.env.local` 채우기
-- [ ] `lib/supabase/` 클라이언트 (server / client / middleware)
-- [ ] 마이그레이션으로 4테이블 생성
+- [x] `lib/supabase/` 클라이언트 (server / client / middleware)
+- [x] 마이그레이션으로 4테이블 생성
   - `profiles` — id(auth.users FK), username, display_name, bio
   - `posts` — id, author_id, content, created_at
   - `comments` — id, post_id, author_id, **parent_id (self FK, nullable)**, content
   - `follows` — follower_id, following_id (복합 PK)
-- [ ] RLS 정책 — 읽기는 공개, 쓰기/삭제는 본인만
-- [ ] DB 타입 생성 (`types/`) + 생성 명령을 `package.json`에 등록
+- [x] RLS 정책 — 읽기는 공개, 쓰기/삭제는 본인만
+- [x] DB 타입 생성 (`types/`) + 생성 명령을 `package.json`에 등록
 
 ## 3. 인증
 
