@@ -26,8 +26,9 @@
 - [x] `AGENTS.md` 규칙 13개 + 커밋/브랜치 컨벤션, `CLAUDE.md`는 포인터만
 - [x] PR 템플릿
 - [x] GitHub 레포 생성 (`junye0l/8around-sns`)
-- [ ] 첫 푸시
-- [ ] Vercel 연결 → 배포 URL 확보
+- [x] 첫 푸시
+- [x] Vercel 연결 → https://8around-new-sns-beta.vercel.app
+- [ ] Supabase Auth URL Configuration (Site URL + Redirect URLs)
 
 ## 2. 기반
 
