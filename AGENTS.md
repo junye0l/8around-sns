@@ -49,7 +49,7 @@ CI는 `verify` 3단계에 `npm run build`를 더해 그대로 돌린다. 로컬�
 app/                    라우트. page.tsx / layout.tsx 만. 로직을 두지 않는다
 components/
   ui/                   순수 UI. props만 받는다. 데이터 접근도 상태도 없다
-  layout/               화면 뼈대 — TopBar, TabBar, Container
+  layout/               화면 뼈대. 여러 화면이 공유하는 네비게이션·컨테이너
   <기능>/               그 기능에만 쓰이는 UI — post/, comment/, follow/
 hooks/                  클라이언트 훅 (use~)
 lib/
