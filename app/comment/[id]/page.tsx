@@ -54,7 +54,7 @@ export default async function CommentPage({
 	return (
 		<PageShell
 			backHref={`/post/${comment.post_id}`}
-			nav={<SideNav username={profile?.username ?? null} />}
+			nav={<SideNav profile={profile} />}
 			title="답글"
 		>
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">

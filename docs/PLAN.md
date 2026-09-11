@@ -80,7 +80,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 - [x] CLI를 쓰지 않는다. 레포 구조를 CLI가 바꾸게 두지 않고 소스만 옮긴다. `cva`, `clsx`, `tailwind-merge` 셋을 깔았다
 - [x] `Button`을 shadcn 구조로 다시 썼다. pressed와 keyboard focus를 채웠다
 - [ ] 버튼 높이. 지금 50px, 문서는 웹에서 40 또는 46px이다 (테두리를 기본값으로 옮기며 48 → 50px)
-- [ ] 포커스와 키보드를 다루는 것은 필요해질 때 가져온다. Dialog, Sheet, Tabs, DropdownMenu
+- [x] `Dialog`와 `DropdownMenu`를 radix로 가져왔다 ([결정 0013](decisions/0013-sidebar-overlays.md)). Sheet, Tabs는 아직 쓸 화면이 없다
 - [ ] `Avatar`, `Card`, `Skeleton`, `Input`은 가져오지 않는다. 지금 것이 같거나 더 맞다
 - [ ] 새 의존성은 설치 전에 묻는다
 
@@ -90,7 +90,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 - [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다
 - [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
 - [x] `PageShell` — 레일 · 가운데 컬럼 · 붙박이 제목줄. 화면마다 다시 적지 않는다
-- [x] `SideNav` — 왼쪽 레일. 로고 · 추천 · **로그아웃**(§3이 여기 딸려 왔다). `TabBar`는 모바일 대응 때 §7에서 같이 본다
+- [x] `SideNav` — 왼쪽 레일. 로고 · 추천 · 새로운 게시글 · 프로필 · 팔로잉, 하단에 더 보기(로그아웃). `TabBar`는 모바일 대응 때 §7에서 같이 본다
 - [x] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
 - [x] `EmptyState` — 한 줄 문구. 버튼은 받지 않는다(세 화면 모두 위에 입력칸이 있다). 같은 마크업이 세 번째로 나타나 올렸다 (규칙 2)
 - [ ] `Spinner` — 아직 쓸 화면이 없다. `loading.tsx` 스켈레톤이 첫 페인트를 받는다

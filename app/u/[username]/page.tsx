@@ -47,7 +47,7 @@ export default async function ProfilePage({
 	return (
 		<PageShell
 			backHref="/"
-			nav={<SideNav username={viewer?.username ?? null} />}
+			nav={<SideNav profile={viewer} />}
 			title={profile.display_name}
 		>
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">

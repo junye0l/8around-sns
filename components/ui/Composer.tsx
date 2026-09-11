@@ -24,6 +24,8 @@ type ComposerProps = {
 	maxLength: number;
 	/** 액션에 같이 보낼 숨은 입력. 댓글은 여기에 post_id를 싣는다 */
 	children?: ReactNode;
+	/** 저장에 성공했을 때. 모달이 이걸로 닫힌다 */
+	onSuccess?: () => void;
 };
 
 /**
@@ -42,6 +44,7 @@ export function Composer({
 	pendingLabel,
 	maxLength,
 	children,
+	onSuccess,
 }: ComposerProps) {
 	const [result, formAction, pending] = useActionState<
 		ComposerResult | null,
@@ -53,8 +56,11 @@ export function Composer({
 
 	// 성공했을 때만 비운다. result는 액션이 끝날 때마다 새 객체라 이걸로 구분된다
 	useEffect(() => {
-		if (result?.ok) setContent("");
-	}, [result]);
+		if (result?.ok) {
+			setContent("");
+			onSuccess?.();
+		}
+	}, [result, onSuccess]);
 
 	const error = result && !result.ok ? result.error : null;
 	// 포커스가 빠져도 쓰던 글이 있으면 닫지 않는다. 닫으면 쓴 내용이 가려진다

@@ -45,11 +45,7 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 	const displayName = profile?.display_name ?? username;
 
 	return (
-		<PageShell
-			backHref="/"
-			nav={<SideNav username={profile?.username ?? null} />}
-			title="게시글"
-		>
+		<PageShell backHref="/" nav={<SideNav profile={profile} />} title="게시글">
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
 				{/* 이 글이 화면의 주인공이라 댓글 수를 다시 붙이지 않는다. 목록이 바로 아래에 있다 */}
 				<ContentCard

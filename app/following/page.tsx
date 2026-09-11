@@ -32,10 +32,7 @@ export default async function FollowingPage() {
 		: { posts: [], followsAnyone: false };
 
 	return (
-		<PageShell
-			nav={<SideNav username={profile?.username ?? null} />}
-			title="팔로잉"
-		>
+		<PageShell nav={<SideNav profile={profile} />} title="팔로잉">
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
 				{feed.posts.length === 0 ? (
 					<EmptyState

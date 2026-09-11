@@ -41,7 +41,7 @@ export default async function FollowingPage({
 	return (
 		<PageShell
 			backHref={`/u/${profile.username}`}
-			nav={<SideNav username={viewer?.username ?? null} />}
+			nav={<SideNav profile={viewer} />}
 			title="팔로잉"
 		>
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
