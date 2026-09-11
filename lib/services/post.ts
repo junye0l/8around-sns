@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { postContentSchema } from "@/lib/utils/post-content";
+import { contentSchema, POST_CONTENT_MAX } from "@/lib/utils/content";
 import type { Database } from "@/types/database";
 
 export type CreatePostResult = { ok: true } | { ok: false; error: string };
@@ -17,7 +17,7 @@ export async function createPost(
 	authorId: string,
 	input: unknown,
 ): Promise<CreatePostResult> {
-	const parsed = postContentSchema.safeParse(input);
+	const parsed = contentSchema(POST_CONTENT_MAX).safeParse(input);
 	if (!parsed.success) {
 		return { ok: false, error: parsed.error.issues[0].message };
 	}

@@ -54,9 +54,9 @@
 
 - [x] 게시글 작성
 - [x] 피드 노출 (최신순)
-- [ ] 댓글 작성
-- [ ] 대댓글 — `parent_id`로 **1뎁스까지만** 편다. 무한 중첩은 모바일에서 안 읽히고 쿼리가 재귀로 감
-- [ ] 댓글 트리 변환은 `lib/utils/`의 순수 함수로 + 테스트 1개
+- [x] 댓글 작성 — 게시글 상세(`/post/[id]`)에서 단다
+- [ ] 대댓글 — `parent_id`로 **1뎁스까지만** 편다. 댓글 상세(`/comment/[id]`)에서 단다
+- [x] ~~댓글 트리 변환은 `lib/utils/`의 순수 함수로 + 테스트 1개~~ — 화면을 나눠서 펼 트리가 없어졌다 ([결정 0007](decisions/0007-comment-routes.md))
 
 ## 5. 소셜
 
@@ -71,8 +71,9 @@
 - [x] 토큰을 `app/globals.css`에 옮기고 `@theme`로 노출
 - [ ] `Button` — primary / secondary / ghost / danger, loading, disabled
 - [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
-- [x] `Composer` — 지금은 게시글용 `components/post/PostComposer.tsx` 하나다. 댓글 입력이 생길 때 겹치는 껍데기를 `components/ui/`로 올린다
-- [x] `PostCard` — 그림자 없음, `border-hairline` 1px로만 분리
+- [x] `Composer` — 게시글과 댓글이 같이 쓴다. 숨은 입력만 바깥에서 넣는다
+- [x] `ContentCard` — 게시글과 댓글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리
+- [x] `PageShell` — 레일 · 가운데 컬럼 · 붙박이 제목줄. 화면마다 다시 적지 않는다
 - [x] `SideNav` — 왼쪽 레일. 로고 · 추천 · **로그아웃**(§3이 여기 딸려 왔다). `TabBar`는 모바일 대응 때 §7에서 같이 본다
 - [x] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
 - [ ] `EmptyState`, `Spinner`
