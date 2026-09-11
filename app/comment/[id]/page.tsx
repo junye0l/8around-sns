@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
@@ -10,6 +11,10 @@ import { getPost } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
 import { COMMENT_CONTENT_MAX } from "@/lib/utils/content";
+
+export const metadata: Metadata = {
+	title: "답글",
+};
 
 /**
  * 답글 화면 — 위에서부터 게시글 본문 · 답글 달 댓글 · 입력칸 · 이미 달린 답글.
@@ -49,7 +54,7 @@ export default async function CommentPage({
 	return (
 		<PageShell
 			backHref={`/post/${comment.post_id}`}
-			nav={<SideNav username={username} />}
+			nav={<SideNav username={profile?.username ?? null} />}
 			title="답글"
 		>
 			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">

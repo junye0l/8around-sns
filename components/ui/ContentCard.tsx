@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { formatRelativeTime } from "@/lib/utils/relative-time";
@@ -42,12 +43,19 @@ export function ContentCard({
 			{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 시각이 잘린다 */}
 			<div className="min-w-0 flex-1">
 				<div className="flex items-baseline gap-2">
-					<span className="truncate text-body-sm font-semibold text-fg">
-						{author.display_name}
-					</span>
-					<span className="truncate text-body-sm text-fg-muted">
-						@{author.username}
-					</span>
+					{/* 이름을 누르면 그 사람의 프로필로 간다. 아바타는 aria-hidden이라
+					    링크로 감싸면 이름 없는 링크가 하나 더 생긴다 */}
+					<Link
+						className="-m-2 flex min-w-0 items-baseline gap-2 rounded-md p-2 transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						href={`/u/${author.username}`}
+					>
+						<span className="truncate text-body-sm font-semibold text-fg">
+							{author.display_name}
+						</span>
+						<span className="truncate text-body-sm text-fg-muted">
+							@{author.username}
+						</span>
+					</Link>
 					<time
 						className="ml-auto shrink-0 text-body-sm text-fg-muted"
 						dateTime={createdAt}

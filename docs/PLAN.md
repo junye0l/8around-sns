@@ -65,9 +65,11 @@
 
 ## 5. 소셜
 
-- [ ] 팔로우 / 언팔로우 토글
-- [ ] 팔로워 · 팔로잉 목록
+- [x] 프로필 화면 — `/u/[username]`. 글 · 댓글의 이름을 누르면 간다 ([결정 0011](decisions/0011-profile-routes.md))
+- [x] 팔로우 / 언팔로우 토글 — 프로필 화면 한 곳에서 한다. 의도를 버튼이 보내고 중복은 무시한다 (결정 0011)
+- [x] 팔로워 · 팔로잉 수와 목록 — 수를 누르면 `/u/[username]/followers` · `/following`으로 간다
 - [ ] 팔로잉 기준 피드 필터
+- [ ] 프로필 화면에 그 사람이 쓴 글 — 요청 범위 밖이라 아직 자리가 없다
 
 ## 6. 공통 컴포넌트
 
@@ -77,7 +79,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 
 - [x] CLI를 쓰지 않는다. 레포 구조를 CLI가 바꾸게 두지 않고 소스만 옮긴다. `cva`, `clsx`, `tailwind-merge` 셋을 깔았다
 - [x] `Button`을 shadcn 구조로 다시 썼다. pressed와 keyboard focus를 채웠다
-- [ ] 버튼 높이. 지금 48px, 문서는 웹에서 40 또는 46px이다
+- [ ] 버튼 높이. 지금 50px, 문서는 웹에서 40 또는 46px이다 (테두리를 기본값으로 옮기며 48 → 50px)
 - [ ] 포커스와 키보드를 다루는 것은 필요해질 때 가져온다. Dialog, Sheet, Tabs, DropdownMenu
 - [ ] `Avatar`, `Card`, `Skeleton`, `Input`은 가져오지 않는다. 지금 것이 같거나 더 맞다
 - [ ] 새 의존성은 설치 전에 묻는다
@@ -95,7 +97,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 
 ## 7. 인터랙션 · 상태
 
-- [ ] 모든 화면에 로딩, 빈 상태, 없음, 에러 네 가지 (AGENTS.md 규칙 10)
+- [x] 모든 화면에 로딩, 빈 상태, 없음, 에러 네 가지 (AGENTS.md 규칙 10) — 6개 라우트 대조 완료 ([결정 0012](decisions/0012-a11y-pass.md))
 - [ ] 낙관적 업데이트 — 팔로우 토글, 댓글 작성
 - [ ] 전환은 `--motion-fast`(150ms) / `--motion-standard`(250ms), 이징은 `--ease-enter` / `--ease-exit` / `--ease-standard` 셋만
 - [x] `prefers-reduced-motion` 존중 — `app/globals.css:100-106`이 `motion-*`를 전부 0ms로 내린다 (DESIGN.md §3 Reduce motion)

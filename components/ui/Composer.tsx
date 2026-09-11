@@ -74,7 +74,7 @@ export function Composer({
 				</label>
 				<div className="flex items-start gap-4">
 					<textarea
-						className="min-w-0 flex-1 resize-none py-2 text-body text-fg outline-none placeholder:text-fg-muted"
+						className="min-w-0 flex-1 resize-none py-2 text-body text-fg placeholder:text-fg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 						disabled={pending}
 						id={id}
 						// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)

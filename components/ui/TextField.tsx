@@ -13,6 +13,9 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
  * 라벨, 입력칸, 안내 또는 에러 한 줄.
  *
  * `error`가 있으면 보더가 2px danger로 바뀌고 `aria-invalid`가 붙는다.
+ *
+ * 평상시 테두리는 `fg-muted`다. `hairline`은 흰 카드 위에서 대비 1.23:1이라
+ * 입력칸의 유일한 경계로는 안 보인다. 계산값은 결정 0012에 있다.
  */
 export function TextField({ label, error, hint, ...props }: TextFieldProps) {
 	const id = useId();
@@ -29,7 +32,7 @@ export function TextField({ label, error, hint, ...props }: TextFieldProps) {
 				aria-describedby={description ? describedById : undefined}
 				aria-invalid={error ? true : undefined}
 				className={`rounded-md border bg-canvas px-4 py-3 text-body text-fg outline-none placeholder:text-fg-muted focus:border-primary ${
-					error ? "border-2 border-danger" : "border-hairline"
+					error ? "border-2 border-danger" : "border-fg-muted"
 				}`}
 				{...props}
 			/>
@@ -38,6 +41,8 @@ export function TextField({ label, error, hint, ...props }: TextFieldProps) {
 				<p
 					className={`text-body-sm ${error ? "text-danger" : "text-right text-fg-muted"}`}
 					id={describedById}
+					// 에러만 말한다. hint에 붙이면 화면에 뜰 때마다 읽어서 시끄럽다
+					role={error ? "alert" : undefined}
 				>
 					{description}
 				</p>

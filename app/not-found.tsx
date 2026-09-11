@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 export default function NotFound() {
 	return (
 		<main className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
-			<p className="text-body font-semibold text-fg">없는 주소예요</p>
+			<h1 className="text-body font-semibold text-fg">없는 주소예요</h1>
 			<p className="text-body-sm text-fg-muted">
 				주소가 바뀌었거나 지워졌을 수 있어요.
 			</p>

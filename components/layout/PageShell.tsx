@@ -32,13 +32,13 @@ export function PageShell({
 						{backHref && (
 							<Link
 								aria-label="뒤로"
-								className="-ml-2 rounded-md p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-canvas"
+								className="-ml-2 rounded-md p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-canvas focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 								href={backHref}
 							>
 								<ChevronLeft aria-hidden className="size-5 shrink-0" />
 							</Link>
 						)}
-						<h1 className="text-title text-fg">{title}</h1>
+						<h1 className="min-w-0 truncate text-title text-fg">{title}</h1>
 					</div>
 
 					{children}
