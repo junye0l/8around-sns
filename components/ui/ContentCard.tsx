@@ -19,7 +19,7 @@ type ContentCardProps = {
 /**
  * 누군가 쓴 글 한 칸. 게시글과 댓글이 같은 모양이라 하나를 같이 쓴다.
  *
- * 이름, 별명, 시간이 한 줄에 왼쪽부터 선다. 시간을 오른쪽 끝으로 밀지 않는다,
+ * 이름과 시간이 한 줄에 왼쪽부터 선다. 시간을 오른쪽 끝으로 밀지 않는다,
  * 눈이 이름에서 본문으로 내려가는 길에 시간이 같이 읽힌다. 레퍼런스(Threads)의 배치다.
  *
  * 목록의 마지막 칸은 바깥 테두리와 겹치므로 아래 선을 뺀다.
@@ -43,19 +43,16 @@ export function ContentCard({
 				{connected && <div className="-mb-6 w-px flex-1 bg-hairline" />}
 			</div>
 
-			{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 시각이 잘린다 */}
+			{/* min-w-0 이 없으면 긴 이름이 flex 칸을 밀어내 시각이 잘린다 */}
 			<div className="min-w-0 flex-1">
 				<div className="flex min-w-0 items-baseline gap-2 text-body-sm">
 					{/* 이름을 누르면 그 사람의 프로필로 간다. 아바타는 aria-hidden이라
 					    링크로 감싸면 이름 없는 링크가 하나 더 생긴다 */}
 					<Link
-						className="-m-1 flex min-w-0 items-baseline gap-1 rounded-md p-1 transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						className="-m-1 min-w-0 truncate rounded-md p-1 font-semibold text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 						href={`/u/${author.username}`}
 					>
-						<span className="truncate font-semibold text-fg">
-							{author.display_name}
-						</span>
-						<span className="truncate text-fg-muted">@{author.username}</span>
+						{author.display_name}
 					</Link>
 					<time className="shrink-0 text-fg-muted" dateTime={createdAt}>
 						{formatRelativeTime(createdAt)}
