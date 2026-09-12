@@ -12,18 +12,20 @@ import { cn } from "@/lib/utils/cn";
  * @see docs/PLAN.md 애니메이션 절
  */
 /**
- * 이 메뉴를 포인터로 열었는지. 닫을 때 포커스를 트리거로 되돌릴지가 여기서 갈린다.
+ * 무엇으로 열었는지와 그 트리거가 무엇인지. 닫을 때 포커스를 어떻게 돌려줄지가 여기서 갈린다.
  * 상태가 아니라 ref다 — 값이 바뀌어도 다시 그릴 이유가 없다.
  */
-const OpenedByPointer = createContext<{ current: boolean } | null>(null);
+type Opener = { byPointer: boolean; node: HTMLElement | null };
+
+const OpenerContext = createContext<{ current: Opener } | null>(null);
 
 export function DropdownMenu(props: ComponentProps<typeof Primitive.Root>) {
-	const openedByPointer = useRef(false);
+	const opener = useRef<Opener>({ byPointer: false, node: null });
 
 	return (
-		<OpenedByPointer.Provider value={openedByPointer}>
+		<OpenerContext.Provider value={opener}>
 			<Primitive.Root {...props} />
-		</OpenedByPointer.Provider>
+		</OpenerContext.Provider>
 	);
 }
 
@@ -34,18 +36,21 @@ export function DropdownMenu(props: ComponentProps<typeof Primitive.Root>) {
 export function DropdownMenuTrigger(
 	props: ComponentProps<typeof Primitive.Trigger>,
 ) {
-	const openedByPointer = useContext(OpenedByPointer);
+	const opener = useContext(OpenerContext);
 
 	return (
 		<Primitive.Trigger
 			{...props}
 			onKeyDown={(event) => {
 				props.onKeyDown?.(event);
-				if (openedByPointer) openedByPointer.current = false;
+				if (opener) opener.current.byPointer = false;
 			}}
 			onPointerDown={(event) => {
 				props.onPointerDown?.(event);
-				if (openedByPointer) openedByPointer.current = true;
+				if (opener) opener.current.byPointer = true;
+			}}
+			ref={(node) => {
+				if (opener) opener.current.node = node;
 			}}
 		/>
 	);
@@ -67,7 +72,7 @@ export function DropdownMenuContent({
 	onCloseAutoFocus,
 	...props
 }: ComponentProps<typeof Primitive.Content>) {
-	const openedByPointer = useContext(OpenedByPointer);
+	const opener = useContext(OpenerContext);
 
 	return (
 		<Primitive.Portal>
@@ -78,12 +83,19 @@ export function DropdownMenuContent({
 					className,
 				)}
 				collisionPadding={8}
-				// 마우스로 열었으면 포커스를 트리거로 되돌리지 않는다. 되돌리면 크롬이 그걸
-				// 키보드 포커스로 쳐서 파란 링이 남고, 누른 사람은 왜 떴는지 모른다.
-				// 키보드로 열었을 때는 되돌려야 한다 — 안 그러면 탭 자리를 잃는다
+				// 포커스는 어느 쪽이든 트리거로 돌아간다. 안 그러면 닫은 뒤 Tab이 문서
+				// 처음부터 시작한다. 마우스로 열었을 때만 링을 끈다 — 되돌리는 것은
+				// 프로그램적 포커스인데 크롬이 그걸 키보드 포커스로 쳐서 파란 링을 남긴다
 				onCloseAutoFocus={(event) => {
 					onCloseAutoFocus?.(event);
-					if (openedByPointer?.current) event.preventDefault();
+					if (!opener?.current.byPointer) return;
+
+					event.preventDefault();
+					// `focusVisible`는 lib.dom의 FocusOptions에 아직 없다. 브라우저는 받는다
+					opener.current.node?.focus({
+						focusVisible: false,
+						preventScroll: true,
+					} as FocusOptions & { focusVisible: boolean });
 				}}
 				side={side}
 				sideOffset={sideOffset}
