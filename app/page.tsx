@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { ComposeRow } from "@/components/post/ComposeRow";
 import { PostList } from "@/components/post/PostList";
+import { POST_COMPOSE } from "@/components/post/post-compose";
+import { ComposeRow } from "@/components/ui/ComposeRow";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listFeed } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
@@ -34,7 +35,7 @@ export default async function Home() {
 
 	return (
 		<PageShell nav={<SideNav profile={profile} />} title="추천">
-			<ComposeRow authorName={displayName} />
+			<ComposeRow {...POST_COMPOSE} authorName={displayName} />
 
 			{posts.length === 0 ? (
 				<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />

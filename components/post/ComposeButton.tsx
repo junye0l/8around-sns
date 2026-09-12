@@ -1,7 +1,8 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { ComposeDialog } from "@/components/post/ComposeDialog";
+import { POST_COMPOSE } from "@/components/post/post-compose";
+import { ComposeDialog } from "@/components/ui/ComposeDialog";
 import { DialogTrigger } from "@/components/ui/Dialog";
 
 /**
@@ -19,11 +20,15 @@ export function ComposeButton({
 	authorName: string;
 }) {
 	return (
-		<ComposeDialog authorName={authorName}>
-			<DialogTrigger className={className}>
-				<Plus aria-hidden className="size-6 shrink-0" />
-				<span className={labelClassName}>새로운 게시글</span>
-			</DialogTrigger>
-		</ComposeDialog>
+		<ComposeDialog
+			{...POST_COMPOSE}
+			authorName={authorName}
+			trigger={
+				<DialogTrigger className={className}>
+					<Plus aria-hidden className="size-6 shrink-0" />
+					<span className={labelClassName}>새로운 게시글</span>
+				</DialogTrigger>
+			}
+		/>
 	);
 }

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { CommentThread } from "@/components/comment/CommentThread";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { Composer } from "@/components/ui/Composer";
+import { ComposeRow } from "@/components/ui/ComposeRow";
 import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -19,10 +19,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * 게시글 상세 — 글 하나와 거기 달린 댓글. 답글은 부모 댓글 아래에 세로선으로 이어
- * 같이 보이고, **다는** 것은 댓글 상세에서 한다
+ * 게시글 상세 — 글 하나와 거기 달린 댓글. 답글은 하나면 부모 댓글 아래에 세로선으로 이어
+ * 보이고 둘 이상이면 접힌다. **다는** 것은 댓글 상세에서 한다
  * ([결정 0007](../../../docs/decisions/0007-comment-routes.md) ·
- * [0008](../../../docs/decisions/0008-reply-tree-on-post.md)).
+ * [0008](../../../docs/decisions/0008-reply-tree-on-post.md) ·
+ * [0019](../../../docs/decisions/0019-comment-compose-modal.md)).
  *
  * 댓글을 게시글과 같이 읽지 않고 나눠 읽는 이유: 없는 글이면 404로 끝내야 하는데,
  * uuid가 아닌 주소까지 같이 던지면 댓글 쿼리가 먼저 터져 에러 화면으로 샌다.
@@ -54,15 +55,16 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 				createdAt={post.created_at}
 			/>
 
-			<Composer
+			<ComposeRow
 				action={createCommentAction}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
-				placeholder="댓글을 남겨보세요"
+				placeholder={`${post.author.username}님에게 답글 남기기`}
 				submitLabel="댓글"
+				title="댓글"
 			>
 				<input name="post_id" type="hidden" value={post.id} />
-			</Composer>
+			</ComposeRow>
 
 			<SectionHeading label="댓글" />
 
