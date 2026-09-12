@@ -52,6 +52,7 @@ export function DropdownMenuContent({
 export function DropdownMenuItem({
 	className,
 	danger = false,
+	onPointerUp,
 	...props
 }: ComponentProps<typeof Primitive.Item> & { danger?: boolean }) {
 	return (
@@ -63,7 +64,11 @@ export function DropdownMenuItem({
 				danger ? "text-danger" : "text-fg",
 				className,
 			)}
-			onPointerUp={(event) => event.preventDefault()}
+			// 호출자 핸들러와 합친다. 스프레드 앞에 그냥 두면 호출자가 넘긴 것이 이걸 덮어쓴다
+			onPointerUp={(event) => {
+				onPointerUp?.(event);
+				event.preventDefault();
+			}}
 			{...props}
 		/>
 	);
