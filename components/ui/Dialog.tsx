@@ -43,7 +43,7 @@ export function DialogContent({
 				{...props}
 			>
 				<div className="overflow-hidden rounded-xl border border-hairline bg-canvas">
-					<div className="relative flex h-15 items-center justify-center border-hairline border-b">
+					<div className="relative flex h-15 items-center justify-center">
 						<Primitive.Close className="absolute left-2 rounded-md px-2 py-1 text-body text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
 							취소
 						</Primitive.Close>
