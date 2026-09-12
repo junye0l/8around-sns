@@ -212,6 +212,21 @@ export type Database = {
 			[_ in never]: never;
 		};
 		Functions: {
+			following_posts: {
+				Args: never;
+				Returns: {
+					author_id: string;
+					content: string;
+					created_at: string;
+					id: string;
+				}[];
+				SetofOptions: {
+					from: "*";
+					to: "posts";
+					isOneToOne: false;
+					isSetofReturn: true;
+				};
+			};
 			liked_by_viewer: {
 				Args: { post: Database["public"]["Tables"]["posts"]["Row"] };
 				Returns: boolean;

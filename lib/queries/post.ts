@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { listFollowingIds } from "@/lib/queries/follow";
 import type { Database } from "@/types/database";
 
 export type FeedPost = {
@@ -105,43 +104,34 @@ export async function getPost(
 	return data && toFeedPost(data);
 }
 
-/** 팔로잉 피드의 결과. 빈 화면 문구가 두 가지라 무엇이 비었는지 구분해서 돌려준다 */
-export type FollowingFeed = {
-	posts: FeedPost[];
-	/** 한 명도 팔로우하지 않은 상태. 팔로우는 했는데 글이 없는 것과 다르다 */
-	followsAnyone: boolean;
-};
-
 /**
  * 내가 팔로우하는 사람들의 글만. 정렬과 개수는 추천 피드와 같다.
  *
- * 팔로우 목록을 먼저 읽고 `in`으로 거른다. PostgREST는 서브쿼리를 못 받고,
- * `posts`에서 `profiles`를 거쳐 `follows`까지 내려가는 중첩 임베드는 필터가 한 단
- * 더 깊어진다. 두 번 읽는 대신 모양이 단순하고, 아무도 팔로우하지 않았으면
- * 두 번째 쿼리를 아예 던지지 않는다.
+ * 누구를 팔로우하는지는 DB 함수 `following_posts`가 요청의 JWT로 거른다
+ * (`supabase/migrations/0005_following_posts.sql`). 그래서 보는 사람 id를 받지 않고,
+ * 프로필 조회와 나란히 던질 수 있다 — 전에는 내 id → 팔로우 목록 → 글, 세 번을
+ * 차례로 갔다. 결정 0025.
  *
- * `posts_author_id_idx`(`supabase/migrations/0001_init.sql:69`)가 필터를 받는다.
+ * 함수가 `setof posts`를 돌려주므로 select 문자열과 정렬, 개수는 추천 피드와 같은 것을 쓴다.
+ *
+ * 비어 있을 때 "팔로우한 사람이 없다"와 "팔로우했는데 글이 없다"를 가르는 것은 부르는 쪽이
+ * 한다 — 그 구분은 빈 경우에만 필요해서 여기서 매번 묻지 않는다.
  *
  * 실패하면 던진다. 화면의 에러 상태는 `app/error.tsx`가 받는다 (규칙 10).
  */
 export async function listFollowingFeed(
 	supabase: SupabaseClient<Database>,
-	viewerId: string,
-): Promise<FollowingFeed> {
-	const followingIds = await listFollowingIds(supabase, viewerId);
-	if (followingIds.length === 0) return { posts: [], followsAnyone: false };
-
+): Promise<FeedPost[]> {
 	const { data, error } = await supabase
-		.from("posts")
+		.rpc("following_posts")
 		.select(POST_SELECT)
-		.in("author_id", followingIds)
 		.order("created_at", { ascending: false })
 		.limit(FEED_LIMIT)
 		.returns<PostRow[]>();
 
 	if (error) throw new Error(`팔로잉 피드를 읽지 못했다: ${error.message}`);
 
-	return { posts: data.map(toFeedPost), followsAnyone: true };
+	return data.map(toFeedPost);
 }
 
 /**
