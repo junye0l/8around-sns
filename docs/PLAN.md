@@ -70,6 +70,15 @@
 - [x] 팔로워 · 팔로잉 수와 목록 — 수를 누르면 `/u/[username]/followers` · `/following`으로 간다
 - [x] 팔로잉 기준 피드 필터 — `/following`. 팔로우 목록을 먼저 읽고 `in`으로 거른다 (`lib/queries/post.ts`의 `listFollowingFeed`)
 - [x] 프로필 화면에 그 사람이 쓴 글 — 헤더 아래에 최신순으로 편다 (`lib/queries/post.ts`의 `listPostsByAuthor`). 사용자가 요청해서 범위에 들어왔다
+- [ ] **프로필 편집 — 표시 이름만 바꾼다.** 아직 안 만들었다. 가입 때 받는 칸은 `username` 하나뿐이고
+  트리거가 그 값을 `display_name`에도 그대로 넣는다 (`supabase/migrations/0001_init.sql:36-43`).
+  그래서 두 값이 글자까지 같고, 프로필 헤더에서 같은 문자열이 두 줄로 보인다.
+  아이디는 주소이자 남이 부르는 이름이라 고정하고, 표시 이름만 고치게 한다.
+  DB는 이미 받을 준비가 돼 있다 — `display_name`은 1~30자 제약이 붙은 별도 컬럼이고
+  "본인 프로필만 수정한다" 정책이 `0001_init.sql:121-124`에 있다. 마이그레이션 없이
+  `lib/services/profile.ts`, `lib/actions/profile.ts`, 화면만 있으면 된다.
+  같이 볼 것: `bio`도 그릴 자리만 있고 채울 길이 없다. 가입 폼의 "별명" 라벨은 실제로는 아이디 칸이라
+  표시 이름이 생기면 이름을 다시 나눠야 한다. 요구 기능 6개 밖이라 착수 전에 범위 결정이 먼저다
 
 ## 6. 공통 컴포넌트
 
