@@ -42,10 +42,17 @@ export function DropdownMenuContent({
 	);
 }
 
-/** 한 줄. `danger`면 문구가 빨강이 된다 — 로그아웃처럼 되돌리기 어려운 것에만 쓴다 */
+/**
+ * 한 줄. `danger`면 문구가 빨강이 된다 — 로그아웃처럼 되돌리기 어려운 것에만 쓴다.
+ *
+ * 누른 적 없는 항목 위에서 손을 떼도 radix가 `click()`을 부른다. 메뉴가 포인터 밑으로
+ * 열리면 그것만으로 항목이 실행되므로, `pointerup`의 기본 동작을 막아 그 경로를 끈다.
+ * 선택은 항목 위에서 누르고 떼거나 키보드로만 된다.
+ */
 export function DropdownMenuItem({
 	className,
 	danger = false,
+	onPointerUp,
 	...props
 }: ComponentProps<typeof Primitive.Item> & { danger?: boolean }) {
 	return (
@@ -57,6 +64,11 @@ export function DropdownMenuItem({
 				danger ? "text-danger" : "text-fg",
 				className,
 			)}
+			// 호출자 핸들러와 합친다. 스프레드 앞에 그냥 두면 호출자가 넘긴 것이 이걸 덮어쓴다
+			onPointerUp={(event) => {
+				onPointerUp?.(event);
+				event.preventDefault();
+			}}
 			{...props}
 		/>
 	);
