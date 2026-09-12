@@ -9,8 +9,7 @@ import { cn } from "@/lib/utils/cn";
  * 카드는 여기서 한 번 그린다. 화면마다 테두리 상자를 다시 세우지 않는다 (규칙 2).
  * 카드가 남은 높이를 다 채우므로 내용이 짧아도 바닥까지 흰 면이 이어진다.
  *
- * 제목은 뒤로 버튼이 있으면 가운데, 없으면 왼쪽이다. 추천과 팔로잉은 탭이라 제목이
- * 왼쪽 위에 서고, 상세 화면은 뒤로 버튼과 균형을 맞춰 가운데에 선다.
+ * 제목은 항상 왼쪽이다. 뒤로 버튼이 있으면 그 오른쪽에 나란히 선다.
  *
  * 웹 폭만 맞춘다. 결정 0015.
  * @see docs/PLAN.md 좁은 폭 대응
@@ -35,27 +34,24 @@ export function PageShell({
 			    이보다 좁아지면 겹치는 대신 가로 스크롤이 생긴다 */}
 			<div className="flex min-w-206 flex-1 flex-col">
 				<main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4">
-					<header
-						className={cn(
-							"sticky top-0 z-10 flex h-15 shrink-0 items-center bg-background",
-							backHref ? "justify-center" : "justify-start",
-						)}
-					>
+					{/* 뒤로 버튼이 흐름 안에 서므로 제목이 그 옆으로 밀린다. 겹칠 자리가 없어
+					    제목 길이를 신경 쓰지 않아도 된다 */}
+					<header className="sticky top-0 z-10 flex h-15 shrink-0 items-center gap-1 bg-background px-2">
 						{backHref && (
 							<Link
 								aria-label="뒤로"
-								className="absolute left-2 rounded-full p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-canvas focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+								className="rounded-full p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-canvas focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 								href={backHref}
 							>
 								<ChevronLeft aria-hidden className="size-5 shrink-0" />
 							</Link>
 						)}
-						{/* 가운데일 때 좌우 여백은 뒤로 버튼 자리다. 제목이 길어도 버튼을 덮지 않는다.
-						    왼쪽일 때는 카드 안 내용의 px-6에 맞춘다 */}
+						{/* 뒤로 버튼이 없으면 카드 안 내용의 px-6에 맞춘다. 버튼이 있으면
+						    버튼의 누를 자리(p-2)가 이미 그만큼을 대신한다 */}
 						<h1
 							className={cn(
 								"min-w-0 truncate text-body font-semibold text-fg",
-								backHref ? "px-12" : "px-6",
+								backHref ? "" : "px-4",
 							)}
 						>
 							{title}
