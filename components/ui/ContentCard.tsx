@@ -7,7 +7,7 @@ type ContentCardProps = {
 	author: { username: string; display_name: string };
 	createdAt: string;
 	content: string;
-	/** 본문 아래 줄. 댓글 수가 여기 붙는다 */
+	/** 본문 아래 줄. 좋아요 버튼과 댓글 수가 여기 붙는다 */
 	footer?: ReactNode;
 	/**
 	 * 아래 칸과 한 스레드로 이어진다. 아바타 밑으로 세로선이 흐르고 구분선은 빠진다.

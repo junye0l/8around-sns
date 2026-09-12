@@ -1,3 +1,4 @@
+import { LikeButton } from "@/components/post/LikeButton";
 import { CommentCount } from "@/components/ui/CommentCount";
 import { ContentCard } from "@/components/ui/ContentCard";
 import type { FeedPost } from "@/lib/queries/post";
@@ -14,11 +15,18 @@ export function PostList({ posts }: { posts: FeedPost[] }) {
 			content={post.content}
 			createdAt={post.created_at}
 			footer={
-				<CommentCount
-					count={post.comment_count}
-					href={`/post/${post.id}`}
-					label="댓글"
-				/>
+				<>
+					<LikeButton
+						count={post.like_count}
+						liked={post.liked}
+						postId={post.id}
+					/>
+					<CommentCount
+						count={post.comment_count}
+						href={`/post/${post.id}`}
+						label="댓글"
+					/>
+				</>
 			}
 			key={post.id}
 		/>

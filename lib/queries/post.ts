@@ -8,6 +8,9 @@ export type FeedPost = {
 	content: string;
 	created_at: string;
 	comment_count: number;
+	like_count: number;
+	/** 지금 보는 사람이 이 글에 좋아요를 눌렀는가 */
+	liked: boolean;
 	author: { username: string; display_name: string };
 };
 
@@ -15,19 +18,43 @@ export type FeedPost = {
 const FEED_LIMIT = 50;
 
 /**
- * `comments(count)`는 글마다 댓글 수를 DB에서 세어 온다. 글을 읽고 나서 수를 따로
- * 물으면 N+1이 된다. `comments_post_id_idx`(0001_init.sql:88)가 그대로 받는다.
+ * 네 질의가 같은 모양을 쓴다. 한 곳만 고치면 네 화면이 같이 바뀐다 (규칙 2).
+ *
+ * `comments(count)`와 `post_likes(count)`는 글마다 수를 DB에서 세어 온다. 글을 읽고
+ * 나서 수를 따로 물으면 N+1이 된다. 댓글은 `comments_post_id_idx`(0001_init.sql:88),
+ * 좋아요는 기본키 앞부분(`0003_post_likes.sql:15`)이 받는다.
+ *
+ * `liked_by_viewer`는 컬럼이 아니라 계산 컬럼이다. 보는 사람 id를 화면에서 넘기지
+ * 않고 DB가 요청의 JWT에서 꺼낸다 (`supabase/migrations/0004_post_liked_by_viewer.sql`).
+ * 생성된 타입에서는 Functions에 있어 select 문자열의 타입 추론이 닿지 않는다.
+ * 그래서 행 모양을 `PostRow`로 직접 적는다.
+ *
+ * `profiles` 임베드에 FK 이름을 붙이는 이유: `post_likes`가 생기면서 `posts`와
+ * `profiles` 사이 관계가 둘이 됐다(작성자, 좋아요를 거친 다대다). 이름을 안 주면
+ * PostgREST가 PGRST201로 거절한다.
  */
 const POST_SELECT =
-	"id, content, created_at, author:profiles(username, display_name), comments(count)";
+	"id, content, created_at, author:profiles!posts_author_id_fkey(username, display_name), comments(count), post_likes(count), liked_by_viewer";
 
-type PostRow = Omit<FeedPost, "comment_count"> & {
+type PostRow = Omit<FeedPost, "comment_count" | "like_count" | "liked"> & {
 	comments: { count: number }[];
+	post_likes: { count: number }[];
+	liked_by_viewer: boolean;
 };
 
 // PostgREST는 집계를 배열 한 칸으로 돌려준다. 화면까지 그 모양을 들고 가지 않는다
-function toFeedPost({ comments, ...post }: PostRow): FeedPost {
-	return { ...post, comment_count: comments[0]?.count ?? 0 };
+function toFeedPost({
+	comments,
+	post_likes,
+	liked_by_viewer,
+	...post
+}: PostRow): FeedPost {
+	return {
+		...post,
+		comment_count: comments[0]?.count ?? 0,
+		like_count: post_likes[0]?.count ?? 0,
+		liked: liked_by_viewer,
+	};
 }
 
 /**
@@ -46,7 +73,8 @@ export async function listFeed(
 		.from("posts")
 		.select(POST_SELECT)
 		.order("created_at", { ascending: false })
-		.limit(FEED_LIMIT);
+		.limit(FEED_LIMIT)
+		.returns<PostRow[]>();
 
 	if (error) throw new Error(`피드를 읽지 못했다: ${error.message}`);
 
@@ -69,7 +97,8 @@ export async function getPost(
 		.from("posts")
 		.select(POST_SELECT)
 		.eq("id", id)
-		.maybeSingle();
+		.maybeSingle()
+		.returns<PostRow>();
 
 	if (error) throw new Error(`글을 읽지 못했다: ${error.message}`);
 
@@ -107,7 +136,8 @@ export async function listFollowingFeed(
 		.select(POST_SELECT)
 		.in("author_id", followingIds)
 		.order("created_at", { ascending: false })
-		.limit(FEED_LIMIT);
+		.limit(FEED_LIMIT)
+		.returns<PostRow[]>();
 
 	if (error) throw new Error(`팔로잉 피드를 읽지 못했다: ${error.message}`);
 
@@ -130,7 +160,8 @@ export async function listPostsByAuthor(
 		.select(POST_SELECT)
 		.eq("author_id", authorId)
 		.order("created_at", { ascending: false })
-		.limit(FEED_LIMIT);
+		.limit(FEED_LIMIT)
+		.returns<PostRow[]>();
 
 	if (error) throw new Error(`쓴 글을 읽지 못했다: ${error.message}`);
 

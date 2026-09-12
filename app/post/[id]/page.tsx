@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CommentThread } from "@/components/comment/CommentThread";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
+import { LikeButton } from "@/components/post/LikeButton";
 import { ComposeRow } from "@/components/ui/ComposeRow";
 import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -48,11 +49,19 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 
 	return (
 		<PageShell backHref="/" nav={<SideNav profile={profile} />} title="게시글">
-			{/* 이 글이 화면의 주인공이라 댓글 수를 다시 붙이지 않는다. 목록이 바로 아래에 있다 */}
+			{/* 댓글 수는 다시 붙이지 않는다. 이 글이 화면의 주인공이고 목록이 바로 아래에 있다.
+			    좋아요는 여기서도 누를 수 있어야 해서 남는다 */}
 			<ContentCard
 				author={post.author}
 				content={post.content}
 				createdAt={post.created_at}
+				footer={
+					<LikeButton
+						count={post.like_count}
+						liked={post.liked}
+						postId={post.id}
+					/>
+				}
 			/>
 
 			<ComposeRow

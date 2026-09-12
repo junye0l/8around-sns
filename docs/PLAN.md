@@ -62,6 +62,7 @@
 - [x] 댓글 작성 — 게시글 상세(`/post/[id]`)에서 단다
 - [x] 대댓글 — `parent_id`로 **1뎁스까지만** 편다. 게시글 화면에서 부모 아래 세로선으로 보이고, 다는 것은 `/comment/[id]`에서 한다 ([결정 0008](decisions/0008-reply-tree-on-post.md))
 - [x] 댓글 트리 변환은 `lib/utils/`의 순수 함수로 + 테스트 1개 — `comment-tree.ts`. 0007에서 한 번 지웠다가 게시글 화면이 답글까지 펴면서 되살렸다 ([결정 0008](decisions/0008-reply-tree-on-post.md))
+- [x] 좋아요 — 게시글에만 단다. 수는 `post_likes(count)`로 세어 오고, 내가 눌렀는지는 계산 컬럼 `liked_by_viewer`가 요청의 JWT에서 본다 ([결정 0020](decisions/0020-post-likes.md)). 사용자가 요청해서 범위에 들어왔다
 
 ## 5. 소셜
 
