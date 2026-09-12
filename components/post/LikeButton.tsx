@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { useOptimistic, useState } from "react";
+import { useOptimistic, useRef, useState } from "react";
 import { setPostLikeAction } from "@/lib/actions/post";
 
 /**
@@ -51,13 +51,19 @@ export function LikeButton({
 			: { liked: next, count: state.count + (next ? 1 : -1) };
 	const [shown, toggle] = useOptimistic(known, step);
 
+	// 빠르게 두 번 누르면 요청이 겹치고 응답은 순서 없이 돌아온다. 마지막으로 누른 것만 확정한다
+	const latest = useRef(0);
+
 	return (
 		<form
 			action={async (formData) => {
 				const next = !shown.liked;
+				const mine = ++latest.current;
 				toggle(next);
 				// 액션이 끝나면 `known`으로 돌아간다. 성공했으면 그 전에 `known`을 앞당긴다
 				const result = await setPostLikeAction(null, formData);
+				// 그 사이 더 누른 것이 있으면 그쪽이 확정한다. 이 응답은 버린다
+				if (mine !== latest.current) return;
 				if (result.ok) setKnown((state) => step(state, next));
 				setError(result.ok ? null : result.error);
 			}}
