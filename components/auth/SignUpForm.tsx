@@ -16,7 +16,8 @@ export function SignUpForm() {
 	const errors = failed?.errors ?? {};
 
 	return (
-		<form action={formAction} className="flex flex-col gap-2">
+		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 필드 아래에 깐다
+		<form action={formAction} className="flex flex-col gap-2" noValidate>
 			<h1 className="mb-2 text-center text-body font-semibold text-fg">
 				8around 계정 만들기
 			</h1>
