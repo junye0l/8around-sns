@@ -53,7 +53,9 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 			{replies.length > 1 ? (
 				// 세로선이 여기서 끝난다. 겹친 원이 선 끝에 서고 그 옆이 들어가는 길이다
 				<div className="flex items-center gap-3 px-6 py-3">
-					<div className="flex">
+					{/* 세로선은 위 칸의 36px 아바타 가운데(칸 왼쪽에서 18px)로 흐른다.
+					    여기 원은 24px이라 6px 밀어야 선 끝과 중심이 맞는다 */}
+					<div className="ml-1.5 flex">
 						{stacked.map(([username, author], index) => (
 							<Avatar
 								className={cn(
