@@ -50,16 +50,14 @@ export default async function ProfilePage({
 			nav={<SideNav profile={viewer} />}
 			title={profile.display_name}
 		>
-			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-				<ProfileHeader
-					action={
-						isMe ? undefined : (
-							<FollowButton following={following} targetId={profile.id} />
-						)
-					}
-					profile={profile}
-				/>
-			</div>
+			<ProfileHeader
+				action={
+					isMe ? undefined : (
+						<FollowButton following={following} targetId={profile.id} />
+					)
+				}
+				profile={profile}
+			/>
 		</PageShell>
 	);
 }

@@ -57,49 +57,47 @@ export default async function CommentPage({
 			nav={<SideNav profile={profile} />}
 			title="답글"
 		>
-			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-				{/* 본문과 아래 댓글은 세로선으로 이어진다 — 무엇에 대한 대화인지가 안 끊긴다 */}
-				<ContentCard
-					author={post.author}
-					connected
-					content={post.content}
-					createdAt={post.created_at}
-				/>
+			{/* 본문과 아래 댓글은 세로선으로 이어진다 — 무엇에 대한 대화인지가 안 끊긴다 */}
+			<ContentCard
+				author={post.author}
+				connected
+				content={post.content}
+				createdAt={post.created_at}
+			/>
 
-				{/* 답글 달 댓글. 게시글 화면과 달리 들여쓰지 않는다 — 여기서는 이 댓글이
+			{/* 답글 달 댓글. 게시글 화면과 달리 들여쓰지 않는다 — 여기서는 이 댓글이
 				    주인공이고, 옆에 나란히 설 다른 댓글이 없다 */}
-				<ContentCard
-					author={comment.author}
-					content={comment.content}
-					createdAt={comment.created_at}
-				/>
+			<ContentCard
+				author={comment.author}
+				content={comment.content}
+				createdAt={comment.created_at}
+			/>
 
-				<Composer
-					action={createCommentAction}
-					authorName={displayName}
-					maxLength={COMMENT_CONTENT_MAX}
-					placeholder={`${comment.author.username}님에게 답글 남기기`}
-					submitLabel="답글"
-				>
-					{/* 답글도 어느 글의 것인지 들고 있어야 한다 — RLS가 부모와 같은 글인지 본다
+			<Composer
+				action={createCommentAction}
+				authorName={displayName}
+				maxLength={COMMENT_CONTENT_MAX}
+				placeholder={`${comment.author.username}님에게 답글 남기기`}
+				submitLabel="답글"
+			>
+				{/* 답글도 어느 글의 것인지 들고 있어야 한다 — RLS가 부모와 같은 글인지 본다
 					    (`supabase/migrations/0001_init.sql:155-171`) */}
-					<input name="post_id" type="hidden" value={comment.post_id} />
-					<input name="parent_id" type="hidden" value={comment.id} />
-				</Composer>
+				<input name="post_id" type="hidden" value={comment.post_id} />
+				<input name="parent_id" type="hidden" value={comment.id} />
+			</Composer>
 
-				{replies.length === 0 ? (
-					<EmptyState message="아직 답글이 없어요. 먼저 남겨보세요." />
-				) : (
-					replies.map((reply) => (
-						<ContentCard
-							author={reply.author}
-							content={reply.content}
-							createdAt={reply.created_at}
-							key={reply.id}
-						/>
-					))
-				)}
-			</div>
+			{replies.length === 0 ? (
+				<EmptyState message="아직 답글이 없어요. 먼저 남겨보세요." />
+			) : (
+				replies.map((reply) => (
+					<ContentCard
+						author={reply.author}
+						content={reply.content}
+						createdAt={reply.created_at}
+						key={reply.id}
+					/>
+				))
+			)}
 		</PageShell>
 	);
 }

@@ -44,17 +44,15 @@ export default async function FollowersPage({
 			nav={<SideNav profile={viewer} />}
 			title="팔로워"
 		>
-			<div className="overflow-hidden rounded-md border border-hairline bg-canvas">
-				{users.length === 0 ? (
-					<EmptyState message="아직 팔로워가 없어요." />
-				) : (
-					<ul>
-						{users.map((user) => (
-							<UserRow key={user.username} user={user} />
-						))}
-					</ul>
-				)}
-			</div>
+			{users.length === 0 ? (
+				<EmptyState message="아직 팔로워가 없어요." />
+			) : (
+				<ul>
+					{users.map((user) => (
+						<UserRow key={user.username} user={user} />
+					))}
+				</ul>
+			)}
 		</PageShell>
 	);
 }
