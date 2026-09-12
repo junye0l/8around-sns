@@ -28,7 +28,12 @@ export function MoreMenu({ className }: { className: string }) {
 			<DropdownMenuContent>
 				{/* 서버 액션을 폼으로 부른다. radix가 항목을 div로 그리므로 버튼을 안에 둔다 */}
 				<form action={signOutAction}>
-					<DropdownMenuItem asChild danger>
+					{/* 선택 시 메뉴가 닫히면 폼이 언마운트돼 브라우저가 제출을 취소한다. 리다이렉트가 닫는다 */}
+					<DropdownMenuItem
+						asChild
+						danger
+						onSelect={(event) => event.preventDefault()}
+					>
 						<button className="w-full" type="submit">
 							<LogOut aria-hidden className="size-5 shrink-0" />
 							로그아웃
