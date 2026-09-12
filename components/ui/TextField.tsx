@@ -13,7 +13,8 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
  * 입력칸 하나와 안내 또는 에러 한 줄. 라벨은 화면에서 감추고 `placeholder`가 그 말을 대신한다,
  * 없으면 라벨 문구를 그대로 placeholder로 쓴다. Threads의 채운 상자 모양이다. 결정 0016.
  *
- * `error`가 있으면 보더가 danger로 바뀌고 `aria-invalid`가 붙는다.
+ * `error`가 있으면 보더가 danger로 바뀌고 `aria-invalid`가 붙는다. 문구를 다른 자리에 띄우는
+ * 폼은 `aria-invalid`만 넘겨서 보더만 켠다. 로그인이 그렇다.
  *
  * 상자는 `background`로 채우고 `fg-muted` 테두리를 두른다. 채움만으로는 흰 바탕과
  * 1.1:1이라 경계가 안 보이고, `hairline` 테두리는 1.23:1이다. `fg-muted`가 흰 바탕에서
@@ -24,11 +25,13 @@ export function TextField({
 	error,
 	hint,
 	placeholder,
+	"aria-invalid": ariaInvalid,
 	...props
 }: TextFieldProps) {
 	const id = useId();
 	const describedById = `${id}-desc`;
 	const description = error ?? hint;
+	const invalid = Boolean(error) || ariaInvalid === true;
 
 	return (
 		<div className="flex flex-col gap-1">
@@ -38,9 +41,9 @@ export function TextField({
 			<input
 				id={id}
 				aria-describedby={description ? describedById : undefined}
-				aria-invalid={error ? true : undefined}
+				aria-invalid={invalid || undefined}
 				className={`h-14 rounded-lg border bg-background px-4 text-body text-fg outline-none placeholder:text-fg-muted focus:border-fg ${
-					error ? "border-danger" : "border-fg-muted"
+					invalid ? "border-danger" : "border-fg-muted"
 				}`}
 				placeholder={placeholder ?? label}
 				{...props}
