@@ -17,12 +17,18 @@ import { signOutAction } from "@/lib/actions/auth";
  *
  * 로그아웃만 빨강이다. 되돌리려면 다시 로그인해야 한다.
  */
-export function MoreMenu({ className }: { className: string }) {
+export function MoreMenu({
+	className,
+	labelClassName,
+}: {
+	className: string;
+	labelClassName: string;
+}) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className={className}>
 				<Menu aria-hidden className="size-6 shrink-0" />
-				<span className="sr-only">더 보기</span>
+				<span className={labelClassName}>더 보기</span>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent>
