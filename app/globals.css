@@ -67,6 +67,10 @@
 	   길이와 이징은 기존 토큰을 그대로 쓴다. 스프링도 오버슈트도 아니다. 결정 0021 */
 	--animate-like-pop: like-pop var(--motion-fast) var(--ease-standard);
 
+	/* 로컬 확장 — 문서에 없다. 드롭다운이 열릴 때 트리거 쪽 모서리에서 펼쳐진다.
+	   길이와 이징은 기존 토큰을 그대로 쓴다. 스프링도 오버슈트도 아니다 */
+	--animate-menu-open: menu-open var(--motion-fast) var(--ease-enter);
+
 	/* 로컬 확장 — 문서 §2는 모션 토큰을 주지 않는다. 값을 지어내는 대신 쓰던 것을 유지한다 */
 	--ease-enter: cubic-bezier(0, 0, 0.2, 1);
 	--ease-exit: cubic-bezier(0.4, 0, 1, 1);
@@ -87,6 +91,14 @@
 @keyframes like-pop {
 	50% {
 		transform: scale(1.2);
+	}
+}
+
+/* 닫힐 때는 radix가 바로 언마운트한다. 여는 것만 보인다 */
+@keyframes menu-open {
+	from {
+		opacity: 0;
+		scale: 0.96;
 	}
 }
 

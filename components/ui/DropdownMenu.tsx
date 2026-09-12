@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils/cn";
  * shadcn 구조를 따라 radix 위에 우리 토큰만 입힌 얇은 껍데기.
  * 포커스, 화살표 이동, 타입어헤드, Esc 닫기는 radix가 한다 — 직접 만들지 않는다.
  *
- * 열고 닫는 애니메이션은 없다. 레이아웃이 다 선 뒤에 얹는다.
+ * 여는 애니메이션만 있다. 닫을 때는 radix가 바로 언마운트해서 보이지 않는다.
  * @see docs/PLAN.md 애니메이션 절
  */
 export const DropdownMenu = Primitive.Root;
@@ -17,6 +17,10 @@ export const DropdownMenuTrigger = Primitive.Trigger;
 /**
  * 떠 있는 면. 그림자를 쓰지 않으므로 1px 선이 분리를 맡는다.
  * 기본값은 버튼 오른쪽 위 정렬이다 — 레일이 화면 왼쪽 끝에 붙어 있어 아래로 열 자리가 없다.
+ *
+ * 열릴 때 트리거 쪽 모서리에서 펼쳐진다. 어느 모서리인지는 radix가 자리를 잡고 나서
+ * `--radix-dropdown-menu-content-transform-origin`으로 알려준다 — 위로 열리든 오른쪽으로
+ * 열리든 나온 곳에서 자란다. 상태로 거르지 않는 이유는 닫히는 순간 언마운트되기 때문이다.
  */
 export function DropdownMenuContent({
 	className,
@@ -30,7 +34,7 @@ export function DropdownMenuContent({
 			<Primitive.Content
 				align={align}
 				className={cn(
-					"z-50 min-w-56 overflow-hidden rounded-md border border-hairline bg-canvas py-1",
+					"z-50 min-w-56 origin-(--radix-dropdown-menu-content-transform-origin) animate-menu-open overflow-hidden rounded-md border border-hairline bg-canvas py-1",
 					className,
 				)}
 				collisionPadding={8}
