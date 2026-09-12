@@ -31,12 +31,7 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 
 	// 같은 사람이 여러 번 답글을 달아도 원은 하나다. Map은 처음 넣은 순서를 지킨다
 	const stacked = [
-		...new Map(
-			replies.map((reply) => [
-				reply.author.username,
-				reply.author.display_name,
-			]),
-		).values(),
+		...new Map(replies.map((reply) => [reply.author.username, reply.author])),
 	].slice(0, STACK_MAX);
 
 	return (
@@ -59,15 +54,15 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 				// 세로선이 여기서 끝난다. 겹친 원이 선 끝에 서고 그 옆이 들어가는 길이다
 				<div className="flex items-center gap-3 px-6 py-3">
 					<div className="flex">
-						{stacked.map((name, index) => (
+						{stacked.map(([username, author], index) => (
 							<Avatar
 								className={cn(
 									"size-6",
 									// 겹치는 원은 카드 바탕색 테두리로 서로를 끊는다. 그림자를 쓰지 않는다
 									index > 0 && "-ml-2 ring-2 ring-canvas",
 								)}
-								key={name}
-								name={name}
+								key={username}
+								name={author.display_name}
 							/>
 						))}
 					</div>
