@@ -7,7 +7,7 @@ import { createPostAction } from "@/lib/actions/post";
 import { POST_CONTENT_MAX } from "@/lib/utils/content";
 
 /**
- * 새 글 모달. 여는 자리는 둘이다, 레일의 `ComposeButton`과 추천 위쪽의 `ComposeRow`.
+ * 새 글 모달. 여는 자리는 둘이다, 레일의 `ComposeButton`과 추천 위쪽의 `ComposeRow`. 결정 0018.
  * 둘 다 이 안에 `DialogTrigger`를 두고, 모달과 저장 액션은 여기 하나다 (규칙 2).
  */
 export function ComposeDialog({
