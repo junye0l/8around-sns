@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-	COMMENT_CONTENT_MAX,
-	contentSchema,
-	POST_CONTENT_MAX,
-} from "./content";
+import { contentSchema } from "./content";
+import { COMMENT_CONTENT_MAX, POST_CONTENT_MAX } from "./content-limits";
 
 const post = contentSchema(POST_CONTENT_MAX);
 const parse = (value: string) => post.safeParse(value);

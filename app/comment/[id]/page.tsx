@@ -11,7 +11,7 @@ import { getComment, listCommentReplies } from "@/lib/queries/comment";
 import { getPost } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
-import { COMMENT_CONTENT_MAX } from "@/lib/utils/content";
+import { COMMENT_CONTENT_MAX } from "@/lib/utils/content-limits";
 
 export const metadata: Metadata = {
 	title: "답글",

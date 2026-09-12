@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { contentSchema, POST_CONTENT_MAX } from "@/lib/utils/content";
+import { contentSchema } from "@/lib/utils/content";
+import { POST_CONTENT_MAX } from "@/lib/utils/content-limits";
 import type { Database } from "@/types/database";
 
 export type CreatePostResult = { ok: true } | { ok: false; error: string };
