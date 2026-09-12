@@ -81,7 +81,10 @@ for (const f of code) {
 	};
 	for (const page of files.filter((f) => /^app\/.*page\.tsx$/.test(f))) {
 		const dir = dirname(page);
-		if (!covered(dir, "loading.tsx"))
+		// 데이터를 기다리지 않는 화면은 멈춰 있을 시간이 없어 loading.tsx가 뜰 일이 없다.
+		// AGENTS.md 규칙 10이 그런 폼은 버튼 비활성으로 대신한다고 적는다 (로그인, 가입)
+		const waits = /export default async function/.test(read(page));
+		if (waits && !covered(dir, "loading.tsx"))
 			fail("규칙 10", page, 0, "이 라우트를 덮는 loading.tsx가 없다");
 		if (/notFound\(\)/.test(read(page)) && !covered(dir, "not-found.tsx"))
 			fail("규칙 10", page, 0, "notFound()를 부르는데 not-found.tsx가 없다");
