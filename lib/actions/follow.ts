@@ -3,6 +3,7 @@
 import { refresh } from "next/cache";
 import { type SetFollowResult, setFollow } from "@/lib/services/follow";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionUserId } from "@/lib/supabase/session";
 
 /**
  * 팔로우 토글 진입점. 로그인 확인 → services 호출 → 화면 갱신.
@@ -17,14 +18,12 @@ export async function setFollowAction(
 ): Promise<SetFollowResult> {
 	const supabase = await createClient();
 
-	const {
-		data: { user },
-	} = await supabase.auth.getUser();
-	if (!user) {
+	const userId = await getSessionUserId(supabase);
+	if (!userId) {
 		return { ok: false, error: "로그인이 풀렸어요. 다시 로그인해 주세요" };
 	}
 
-	const result = await setFollow(supabase, user.id, {
+	const result = await setFollow(supabase, userId, {
 		targetId: formData.get("target_id"),
 		intent: formData.get("intent"),
 	});

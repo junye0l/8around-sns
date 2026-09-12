@@ -6,6 +6,7 @@ import {
 	createComment,
 } from "@/lib/services/comment";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionUserId } from "@/lib/supabase/session";
 
 /**
  * 댓글 진입점. 로그인 확인 → services 호출 → 화면 갱신.
@@ -20,14 +21,12 @@ export async function createCommentAction(
 ): Promise<CreateCommentResult> {
 	const supabase = await createClient();
 
-	const {
-		data: { user },
-	} = await supabase.auth.getUser();
-	if (!user) {
+	const userId = await getSessionUserId(supabase);
+	if (!userId) {
 		return { ok: false, error: "로그인이 풀렸어요. 다시 로그인해 주세요" };
 	}
 
-	const result = await createComment(supabase, user.id, {
+	const result = await createComment(supabase, userId, {
 		postId: formData.get("post_id"),
 		parentId: formData.get("parent_id"),
 		content: formData.get("content"),
