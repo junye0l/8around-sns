@@ -41,12 +41,14 @@ export async function createPostAction(
 }
 
 /**
- * 좋아요 토글 진입점. 로그인 확인 → services 호출 → 화면 갱신.
+ * 좋아요 토글 진입점. 로그인 확인 → services 호출. 화면은 다시 그리지 않는다.
  *
- * 하나의 액션이 양쪽을 다 한다. 누를 때와 취소할 때 인증도 갱신도 같고, 다른 것은
+ * 하나의 액션이 양쪽을 다 한다. 누를 때와 취소할 때 인증도 같고, 다른 것은
  * 서비스 안의 분기 하나뿐이다. 결정 0020.
  *
- * `refresh`를 쓰는 이유는 위와 같다.
+ * 다른 진입점과 달리 `refresh`가 없다. 버튼이 이미 앞질러 바꿔 보였고(결정 0021),
+ * 성공하면 그 값을 그대로 확정한다. 글 50개를 서버에서 다시 그려 보낼 이유가 없다.
+ * 결정 0024.
  */
 export async function setPostLikeAction(
 	_prev: SetPostLikeResult | null,
@@ -59,13 +61,10 @@ export async function setPostLikeAction(
 		return { ok: false, error: "로그인이 풀렸어요. 다시 로그인해 주세요" };
 	}
 
-	const result = await setPostLike(supabase, userId, {
+	return setPostLike(supabase, userId, {
 		postId: formData.get("post_id"),
 		intent: formData.get("intent"),
 	});
-	if (result.ok) refresh();
-
-	return result;
 }
 
 /**
