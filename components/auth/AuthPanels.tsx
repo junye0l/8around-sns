@@ -17,6 +17,9 @@ const PATH = { signup: "/signup", signin: "/login" } as const;
  * 가입 · 로그인 한 컬럼. 폼 하나만 보이고 아래 한 줄로 반대쪽으로 건너간다.
  * Threads 로그인 화면의 배치다 ([결정 0016](../../docs/decisions/0016-threads-auth.md)).
  *
+ * 바탕이 흰색이다. 카드가 없어졌으니 페이지가 곧 카드다. 회색 바탕 위에서는
+ * 입력칸 테두리 `fg-muted`도 2.72:1이라 경계로 못 서고, 흰 바탕에서만 3.04:1이 된다 (결정 0016).
+ *
  * 전환은 라우트 이동 없이 `replaceState`로 주소만 맞춘다. `/signup`과 `/login`이
  * 각자 살아 있어야 미들웨어가 보호 라우트에서 보낼 곳이 생긴다 (결정 0004에서 남긴 것).
  * 폼이 하나만 렌더되므로 덮인 폼을 `inert`로 끌 일은 없어졌다.
@@ -32,7 +35,7 @@ export function AuthPanels({ initial }: { initial: Mode }) {
 	};
 
 	return (
-		<main className="flex flex-1 flex-col items-center justify-center px-4 py-12">
+		<main className="flex flex-1 flex-col items-center justify-center bg-canvas px-4 py-12">
 			<div className="w-full max-w-sm">
 				{mode === "signup" ? <SignUpForm /> : <SignInForm />}
 

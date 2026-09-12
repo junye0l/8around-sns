@@ -15,8 +15,9 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
  *
  * `error`가 있으면 보더가 danger로 바뀌고 `aria-invalid`가 붙는다.
  *
- * 상자는 `background`로 채우고 `hairline` 테두리를 두른다. 채움만으로는 흰 바탕과
- * 1.1:1이라 경계가 안 보이고, 테두리만으로는 결정 0012가 잰 1.23:1이다. 둘을 같이 쓴다.
+ * 상자는 `background`로 채우고 `fg-muted` 테두리를 두른다. 채움만으로는 흰 바탕과
+ * 1.1:1이라 경계가 안 보이고, `hairline` 테두리는 1.23:1이다. `fg-muted`가 흰 바탕에서
+ * 3.04:1로 결정 0012의 기준을 넘는다. 그래서 이 입력칸은 흰 바탕 위에 서야 한다.
  */
 export function TextField({
 	label,
@@ -39,7 +40,7 @@ export function TextField({
 				aria-describedby={description ? describedById : undefined}
 				aria-invalid={error ? true : undefined}
 				className={`h-14 rounded-lg border bg-background px-4 text-body text-fg outline-none placeholder:text-fg-muted focus:border-fg ${
-					error ? "border-danger" : "border-hairline"
+					error ? "border-danger" : "border-fg-muted"
 				}`}
 				placeholder={placeholder ?? label}
 				{...props}
