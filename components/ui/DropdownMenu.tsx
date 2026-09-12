@@ -1,7 +1,7 @@
 "use client";
 
 import * as Primitive from "@radix-ui/react-dropdown-menu";
-import type { ComponentProps } from "react";
+import { type ComponentProps, createContext, useContext, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -11,8 +11,45 @@ import { cn } from "@/lib/utils/cn";
  * 여는 애니메이션만 있다. 닫을 때는 radix가 바로 언마운트해서 보이지 않는다.
  * @see docs/PLAN.md 애니메이션 절
  */
-export const DropdownMenu = Primitive.Root;
-export const DropdownMenuTrigger = Primitive.Trigger;
+/**
+ * 이 메뉴를 포인터로 열었는지. 닫을 때 포커스를 트리거로 되돌릴지가 여기서 갈린다.
+ * 상태가 아니라 ref다 — 값이 바뀌어도 다시 그릴 이유가 없다.
+ */
+const OpenedByPointer = createContext<{ current: boolean } | null>(null);
+
+export function DropdownMenu(props: ComponentProps<typeof Primitive.Root>) {
+	const openedByPointer = useRef(false);
+
+	return (
+		<OpenedByPointer.Provider value={openedByPointer}>
+			<Primitive.Root {...props} />
+		</OpenedByPointer.Provider>
+	);
+}
+
+/**
+ * 무엇으로 열었는지 기록한다. 핸들러를 스프레드 뒤에 두는 이유는 `DropdownMenuItem`과 같다 —
+ * 앞에 두면 호출자가 넘긴 것이 이걸 덮어쓴다.
+ */
+export function DropdownMenuTrigger(
+	props: ComponentProps<typeof Primitive.Trigger>,
+) {
+	const openedByPointer = useContext(OpenedByPointer);
+
+	return (
+		<Primitive.Trigger
+			{...props}
+			onKeyDown={(event) => {
+				props.onKeyDown?.(event);
+				if (openedByPointer) openedByPointer.current = false;
+			}}
+			onPointerDown={(event) => {
+				props.onPointerDown?.(event);
+				if (openedByPointer) openedByPointer.current = true;
+			}}
+		/>
+	);
+}
 
 /**
  * 떠 있는 면. 그림자를 쓰지 않으므로 1px 선이 분리를 맡는다.
@@ -27,8 +64,11 @@ export function DropdownMenuContent({
 	side = "right",
 	align = "end",
 	sideOffset = 8,
+	onCloseAutoFocus,
 	...props
 }: ComponentProps<typeof Primitive.Content>) {
+	const openedByPointer = useContext(OpenedByPointer);
+
 	return (
 		<Primitive.Portal>
 			<Primitive.Content
@@ -38,6 +78,13 @@ export function DropdownMenuContent({
 					className,
 				)}
 				collisionPadding={8}
+				// 마우스로 열었으면 포커스를 트리거로 되돌리지 않는다. 되돌리면 크롬이 그걸
+				// 키보드 포커스로 쳐서 파란 링이 남고, 누른 사람은 왜 떴는지 모른다.
+				// 키보드로 열었을 때는 되돌려야 한다 — 안 그러면 탭 자리를 잃는다
+				onCloseAutoFocus={(event) => {
+					onCloseAutoFocus?.(event);
+					if (openedByPointer?.current) event.preventDefault();
+				}}
 				side={side}
 				sideOffset={sideOffset}
 				{...props}
