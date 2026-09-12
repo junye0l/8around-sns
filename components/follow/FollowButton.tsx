@@ -32,7 +32,7 @@ export function FollowButton({
 	const error = result && !result.ok ? result.error : null;
 
 	return (
-		<form action={formAction} className="flex flex-col items-end gap-1">
+		<form action={formAction} className="flex flex-col gap-1">
 			<input name="target_id" type="hidden" value={targetId} />
 			<input
 				name="intent"
@@ -44,6 +44,7 @@ export function FollowButton({
 				// 토글 버튼은 AT가 아는 패턴이라 눌린 상태가 바뀌면 알아서 읽어준다.
 				// refresh로 라벨만 바뀌면 포커스가 머문 채라 조용히 지나간다
 				aria-pressed={following}
+				className="w-full"
 				loading={pending}
 				type="submit"
 				variant={following ? "outline" : "primary"}

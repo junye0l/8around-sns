@@ -16,7 +16,7 @@ export function UserRow({ user }: { user: FollowUser }) {
 	return (
 		<li className="border-hairline border-b last:border-b-0">
 			<Link
-				className="flex gap-3 p-4 transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+				className="flex gap-3 px-6 py-3 transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 				href={`/u/${user.username}`}
 			>
 				<Avatar name={user.display_name} />

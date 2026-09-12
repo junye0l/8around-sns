@@ -26,16 +26,17 @@ function CountLink({
 			className="-m-2 rounded-md p-2 text-body-sm text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 			href={href}
 		>
-			<span className="font-semibold text-fg tabular-nums">{count}</span>{" "}
-			{label}
+			{label} <span className="tabular-nums">{count}</span>
 		</Link>
 	);
 }
 
 /**
- * 프로필 맨 위 칸. 이름, 별명, 소개, 팔로워 · 팔로잉 수가 선다.
+ * 프로필 맨 위 칸. 왼쪽에 이름과 별명, 오른쪽에 큰 아바타, 그 아래 소개와
+ * 팔로워 · 팔로잉 수, 맨 아래 전폭 버튼. 레퍼런스(Threads)의 배치다.
+ * 검정 버튼과 여백 치수는 결정 0015를 따른다.
  *
- * 오른쪽 자리는 부르는 쪽이 채운다. 남의 프로필이면 팔로우 버튼이 오고
+ * 아래 자리는 부르는 쪽이 채운다. 남의 프로필이면 팔로우 버튼이 오고
  * 내 프로필이면 비어 있다 — 이 컴포넌트가 "누가 보고 있는지"를 알 필요가 없다.
  */
 export function ProfileHeader({
@@ -43,46 +44,41 @@ export function ProfileHeader({
 	action,
 }: {
 	profile: ProfileDetail;
-	/** 오른쪽 위에 설 것. 팔로우 버튼이 여기 들어온다 */
+	/** 맨 아래 전폭으로 설 것. 팔로우 버튼이 여기 들어온다 */
 	action?: ReactNode;
 }) {
 	return (
-		<section className="flex gap-3 border-hairline border-b p-4">
-			<Avatar name={profile.display_name} />
-
-			{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 시각이 잘린다 */}
-			<div className="min-w-0 flex-1">
-				<div className="flex items-start gap-4">
-					<div className="min-w-0 flex-1">
-						<p className="truncate text-body font-semibold text-fg">
-							{profile.display_name}
-						</p>
-						<p className="truncate text-body-sm text-fg-muted">
-							@{profile.username}
-						</p>
-					</div>
-					{action}
+		<section className="border-hairline border-b px-6 py-5">
+			<div className="flex items-start gap-4">
+				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 아바타가 잘린다 */}
+				<div className="min-w-0 flex-1">
+					<p className="truncate text-title text-fg">{profile.display_name}</p>
+					<p className="truncate text-body text-fg">@{profile.username}</p>
 				</div>
-
-				{profile.bio && (
-					<p className="mt-2 whitespace-pre-wrap break-words text-body text-fg">
-						{profile.bio}
-					</p>
-				)}
-
-				<div className="mt-3 flex gap-6">
-					<CountLink
-						count={profile.follower_count}
-						href={`/u/${profile.username}/followers`}
-						label="팔로워"
-					/>
-					<CountLink
-						count={profile.following_count}
-						href={`/u/${profile.username}/following`}
-						label="팔로잉"
-					/>
-				</div>
+				{/* 84px. 레퍼런스 프로필 아바타의 관측치이고 4px 그리드 위에 있다. 글자도 같이 키운다 */}
+				<Avatar className="size-21 text-title" name={profile.display_name} />
 			</div>
+
+			{profile.bio && (
+				<p className="mt-3 whitespace-pre-wrap break-words text-body text-fg">
+					{profile.bio}
+				</p>
+			)}
+
+			<div className="mt-3 flex gap-6">
+				<CountLink
+					count={profile.follower_count}
+					href={`/u/${profile.username}/followers`}
+					label="팔로워"
+				/>
+				<CountLink
+					count={profile.following_count}
+					href={`/u/${profile.username}/following`}
+					label="팔로잉"
+				/>
+			</div>
+
+			{action && <div className="mt-4">{action}</div>}
 		</section>
 	);
 }
