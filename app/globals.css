@@ -10,7 +10,6 @@
 @theme {
 	/* §2 Color Palette & Roles — bg-canvas, text-fg, border-hairline 처럼 쓴다 */
 	--color-primary: #3182f6; /* TDS interaction blue. 포커스 링에만 쓴다, 결정 0010 · 0015 */
-	--color-brand-tint: #e8f3ff; /* marketing weak background */
 
 	--color-canvas: #ffffff; /* 카드·입력면. on-primary 텍스트도 이 값이다 */
 	--color-background: #f2f4f6; /* surface, 페이지 바탕 */

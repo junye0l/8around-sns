@@ -16,8 +16,10 @@ export function SignInForm() {
 	const errors = failed?.errors ?? {};
 
 	return (
-		<form action={formAction} className="flex flex-col gap-4">
-			<h1 className="text-center text-title text-fg">로그인</h1>
+		<form action={formAction} className="flex flex-col gap-2">
+			<h1 className="mb-2 text-center text-body font-semibold text-fg">
+				8around 계정으로 로그인
+			</h1>
 
 			{failed?.formError && (
 				<p className="text-body-sm text-danger" role="alert">
@@ -45,7 +47,7 @@ export function SignInForm() {
 				type="password"
 			/>
 
-			<Button className="mt-2 w-full" loading={pending} type="submit">
+			<Button className="mt-2 h-14 w-full" loading={pending} type="submit">
 				{pending ? "로그인하는 중" : "로그인"}
 			</Button>
 		</form>
