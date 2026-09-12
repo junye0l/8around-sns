@@ -28,8 +28,10 @@ type ComposerProps = {
 };
 
 /**
- * 입력칸. 아바타 옆에 이름이 서고 그 아래로 입력과 버튼이 온다.
+ * 입력칸. 아바타 옆에 이름이 서고 그 아래로 입력이, 오른쪽 끝 아래에 버튼이 온다.
  * 모달과 추천 피드가 같은 모양을 쓴다.
+ *
+ * **포커스 링이 없다.** 캐럿이 포커스를 말한다. 결정 0017.
  *
  * **글자수 카운터를 두지 않는다.** 손대는 순간 없던 줄이 생겨 아래가 밀렸다.
  * 상한은 `maxLength`가 조용히 막고, 진짜 방어는 서버와 DB 제약이 한다 (규칙 9).
@@ -87,7 +89,7 @@ export function Composer({
 					{placeholder}
 				</label>
 				<textarea
-					className="mt-0.5 w-full resize-none text-body text-fg placeholder:text-fg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+					className="mt-0.5 w-full resize-none text-body text-fg outline-none placeholder:text-fg-muted"
 					disabled={pending}
 					id={id}
 					// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
@@ -105,13 +107,11 @@ export function Composer({
 						{error}
 					</p>
 				)}
-
-				<div className="mt-2 flex justify-end">
-					<Button loading={pending} size="sm" type="submit">
-						{submitLabel}
-					</Button>
-				</div>
 			</div>
+
+			<Button className="self-end" loading={pending} size="sm" type="submit">
+				{submitLabel}
+			</Button>
 		</form>
 	);
 }
