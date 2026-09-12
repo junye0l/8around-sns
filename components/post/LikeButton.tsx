@@ -1,15 +1,15 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { useActionState } from "react";
+import { useOptimistic, useState } from "react";
 import { setPostLikeAction } from "@/lib/actions/post";
-import type { SetPostLikeResult } from "@/lib/services/post";
 
 /**
  * 좋아요 토글. 누르면 채워지고 한 번 더 누르면 비워진다. 게시글에만 붙는다.
  *
- * 지금 상태는 서버가 준다. 액션이 끝나면 `refresh`가 화면을 다시 그리므로 버튼이
- * 자기 상태를 따로 들고 있지 않는다 — `FollowButton`과 같은 이유다.
+ * 누르는 즉시 반영한다. 서버 왕복을 기다리면 손가락과 화면 사이에 빈 시간이 생기고,
+ * 그 사이 같은 버튼을 다시 누르게 된다. 실패하면 서버가 준 값으로 되돌아오고 문구가 뜬다.
+ * 결정 0021.
  *
  * 누른 상태는 색이 아니라 채움으로 말한다. 빨강(`danger`)은 파괴적 동작과 에러의
  * 색이라 가져오지 않았다. 결정 0020.
@@ -22,49 +22,55 @@ export function LikeButton({
 	count,
 }: {
 	postId: string;
-	/** 지금 좋아요를 누른 상태인가. 눌렀을 때의 의도가 여기서 나온다 */
+	/** 서버가 아는 지금 상태. 누르면 이 값을 앞질러 먼저 바꾼다 */
 	liked: boolean;
 	count: number;
 }) {
-	const [result, formAction, pending] = useActionState<
-		SetPostLikeResult | null,
-		FormData
-	>(setPostLikeAction, null);
+	const [error, setError] = useState<string | null>(null);
+	// 누르기 전에는 애니메이션을 걸지 않는다. 걸면 이미 누른 글이 화면에 뜰 때마다 튄다
+	const [pressed, setPressed] = useState(false);
 
-	const error = result && !result.ok ? result.error : null;
+	const [shown, toggle] = useOptimistic(
+		{ liked, count },
+		(state, next: boolean) => ({
+			liked: next,
+			count: state.count + (next ? 1 : -1),
+		}),
+	);
 
 	return (
-		<form action={formAction}>
+		<form
+			action={async (formData) => {
+				toggle(!shown.liked);
+				// 액션이 끝날 때까지 위 값이 유지된다. 끝나면 서버가 준 값으로 돌아간다
+				const result = await setPostLikeAction(null, formData);
+				setError(result.ok ? null : result.error);
+			}}
+		>
 			<input name="post_id" type="hidden" value={postId} />
-			<input name="intent" type="hidden" value={liked ? "unlike" : "like"} />
+			<input
+				name="intent"
+				type="hidden"
+				value={shown.liked ? "unlike" : "like"}
+			/>
 
 			<button
-				// 진행 중에도 살려둔다. 포커스된 요소가 disabled가 되면 브라우저가
-				// 포커스를 body로 떨어뜨린다 (`components/ui/Button.tsx`와 같은 판단)
-				aria-busy={pending || undefined}
-				aria-disabled={pending || undefined}
 				// 토글 버튼은 AT가 아는 패턴이라 눌린 상태가 바뀌면 읽어준다.
 				// 아이콘만 바뀌면 포커스가 머문 채라 조용히 지나간다
-				aria-label={`좋아요 ${count}개`}
-				aria-pressed={liked}
-				className={`inline-flex items-center gap-1 rounded-full p-2 text-body-sm transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:bg-hairline aria-busy:cursor-progress ${liked ? "text-fg" : "text-fg-muted"}`}
-				onClick={(event) => {
-					// 두 번 빠르게 눌러도 요청은 하나다. 겹쳐 들어와도 DB에서 행은
-					// 하나지만(기본키), 화면이 두 번 깜빡이는 것까지 막는다
-					if (pending) event.preventDefault();
-				}}
+				aria-label={`좋아요 ${shown.count}개`}
+				aria-pressed={shown.liked}
+				className={`inline-flex items-center gap-1 rounded-full p-2 text-body-sm transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:bg-hairline ${shown.liked ? "text-fg" : "text-fg-muted"}`}
+				onClick={() => setPressed(true)}
 				type="submit"
 			>
 				<Heart
 					aria-hidden
-					className={`size-5 shrink-0 ${liked ? "fill-current" : ""}`}
+					className={`size-5 shrink-0 ${shown.liked ? "fill-current" : ""} ${pressed && shown.liked ? "animate-like-pop" : ""}`}
 				/>
-				{/* 0이면 숫자를 감춘다. 옆의 댓글 수와 같은 규칙이고, aria-label은 여전히 "0개"를 읽는다 */}
-				{count > 0 && (
-					<span aria-hidden className="tabular-nums">
-						{count}
-					</span>
-				)}
+				{/* 0도 보인다. 옆의 댓글 수와 같은 규칙이다 */}
+				<span aria-hidden className="tabular-nums">
+					{shown.count}
+				</span>
 			</button>
 
 			{error && (
