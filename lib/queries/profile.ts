@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSessionUserId } from "@/lib/supabase/session";
 import type { Database } from "@/types/database";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -25,19 +26,20 @@ export async function isUsernameTaken(
  *
  * `user_metadata.username`을 읽지 않는다 — 그건 가입 때 넣은 사본이고,
  * 별명의 출처는 `profiles` 테이블이다 (규칙 3).
+ *
+ * 사용자 id는 네트워크 없이 꺼낸다. 프록시가 이미 이 요청의 세션을 서버에 확인했으므로
+ * 여기서 한 번 더 묻는 것은 왕복 하나를 그냥 버리는 일이었다. 결정 0023.
  */
 export async function getCurrentProfile(
 	supabase: SupabaseClient<Database>,
 ): Promise<Pick<Profile, "id" | "username" | "display_name"> | null> {
-	const {
-		data: { user },
-	} = await supabase.auth.getUser();
-	if (!user) return null;
+	const userId = await getSessionUserId(supabase);
+	if (!userId) return null;
 
 	const { data } = await supabase
 		.from("profiles")
 		.select("id, username, display_name")
-		.eq("id", user.id)
+		.eq("id", userId)
 		.maybeSingle();
 
 	return data;
