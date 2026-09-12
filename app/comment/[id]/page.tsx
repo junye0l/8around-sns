@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { RepliesHeading } from "@/components/comment/RepliesHeading";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
 import { Composer } from "@/components/ui/Composer";
 import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { createCommentAction } from "@/lib/actions/comment";
 import { getComment, listCommentReplies } from "@/lib/queries/comment";
 import { getPost } from "@/lib/queries/post";
@@ -87,7 +87,7 @@ export default async function CommentPage({
 				<input name="parent_id" type="hidden" value={comment.id} />
 			</Composer>
 
-			<RepliesHeading label="답글" />
+			<SectionHeading label="답글" />
 
 			{replies.length === 0 ? (
 				<EmptyState message="아직 답글이 없어요. 먼저 남겨보세요." />
