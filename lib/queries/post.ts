@@ -113,3 +113,26 @@ export async function listFollowingFeed(
 
 	return { posts: data.map(toFeedPost), followsAnyone: true };
 }
+
+/**
+ * 한 사람이 쓴 글. 정렬과 개수는 추천 피드와 같다. 프로필 화면이 헤더 아래에 편다.
+ *
+ * `posts_author_id_idx`(`supabase/migrations/0001_init.sql:69`)가 필터를 받는다.
+ *
+ * 실패하면 던진다. 화면의 에러 상태는 `app/error.tsx`가 받는다 (규칙 10).
+ */
+export async function listPostsByAuthor(
+	supabase: SupabaseClient<Database>,
+	authorId: string,
+): Promise<FeedPost[]> {
+	const { data, error } = await supabase
+		.from("posts")
+		.select(POST_SELECT)
+		.eq("author_id", authorId)
+		.order("created_at", { ascending: false })
+		.limit(FEED_LIMIT);
+
+	if (error) throw new Error(`쓴 글을 읽지 못했다: ${error.message}`);
+
+	return data.map(toFeedPost);
+}

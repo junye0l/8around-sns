@@ -69,7 +69,7 @@
 - [x] 팔로우 / 언팔로우 토글 — 프로필 화면 한 곳에서 한다. 의도를 버튼이 보내고 중복은 무시한다 (결정 0011)
 - [x] 팔로워 · 팔로잉 수와 목록 — 수를 누르면 `/u/[username]/followers` · `/following`으로 간다
 - [x] 팔로잉 기준 피드 필터 — `/following`. 팔로우 목록을 먼저 읽고 `in`으로 거른다 (`lib/queries/post.ts`의 `listFollowingFeed`)
-- [ ] 프로필 화면에 그 사람이 쓴 글 — 요청 범위 밖이라 아직 자리가 없다
+- [x] 프로필 화면에 그 사람이 쓴 글 — 헤더 아래에 최신순으로 편다 (`lib/queries/post.ts`의 `listPostsByAuthor`). 사용자가 요청해서 범위에 들어왔다
 
 ## 6. 공통 컴포넌트
 

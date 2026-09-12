@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { CommentCount } from "@/components/ui/CommentCount";
-import { ContentCard } from "@/components/ui/ContentCard";
+import { PostList } from "@/components/post/PostList";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listFollowingFeed } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
@@ -42,21 +41,7 @@ export default async function FollowingPage() {
 					}
 				/>
 			) : (
-				feed.posts.map((post) => (
-					<ContentCard
-						author={post.author}
-						content={post.content}
-						createdAt={post.created_at}
-						footer={
-							<CommentCount
-								count={post.comment_count}
-								href={`/post/${post.id}`}
-								label="댓글"
-							/>
-						}
-						key={post.id}
-					/>
-				))
+				<PostList posts={feed.posts} />
 			)}
 		</PageShell>
 	);

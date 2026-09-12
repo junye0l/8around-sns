@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { CommentCount } from "@/components/ui/CommentCount";
+import { PostList } from "@/components/post/PostList";
 import { Composer } from "@/components/ui/Composer";
-import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { createPostAction } from "@/lib/actions/post";
 import { listFeed } from "@/lib/queries/post";
@@ -48,21 +47,7 @@ export default async function Home() {
 			{posts.length === 0 ? (
 				<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />
 			) : (
-				posts.map((post) => (
-					<ContentCard
-						author={post.author}
-						content={post.content}
-						createdAt={post.created_at}
-						footer={
-							<CommentCount
-								count={post.comment_count}
-								href={`/post/${post.id}`}
-								label="댓글"
-							/>
-						}
-						key={post.id}
-					/>
-				))
+				<PostList posts={posts} />
 			)}
 		</PageShell>
 	);
