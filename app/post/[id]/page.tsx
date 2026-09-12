@@ -4,6 +4,7 @@ import { CommentThread } from "@/components/comment/CommentThread";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
 import { LikeButton } from "@/components/post/LikeButton";
+import { PostMenu } from "@/components/post/PostMenu";
 import { ComposeRow } from "@/components/ui/ComposeRow";
 import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -61,6 +62,15 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 						liked={post.liked}
 						postId={post.id}
 					/>
+				}
+				menu={
+					post.author.username === profile?.username ? (
+						<PostMenu
+							authorName={post.author.display_name}
+							content={post.content}
+							postId={post.id}
+						/>
+					) : undefined
 				}
 			/>
 

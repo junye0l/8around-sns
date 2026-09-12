@@ -73,7 +73,7 @@ export default async function ProfilePage({
 					}
 				/>
 			) : (
-				<PostList posts={posts} />
+				<PostList posts={posts} viewerUsername={viewer?.username} />
 			)}
 		</PageShell>
 	);

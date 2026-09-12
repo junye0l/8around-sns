@@ -103,3 +103,84 @@ export async function setPostLike(
 
 	return { ok: true };
 }
+
+export type UpdatePostResult = { ok: true } | { ok: false; error: string };
+
+const updatePostSchema = z.object({
+	postId: z.uuid("사라진 글이에요"),
+	content: contentSchema(POST_CONTENT_MAX),
+});
+
+/**
+ * 글 수정. 검증은 진입점이 아니라 여기서 한다 — 브라우저 검증은 친절함이지
+ * 방어가 아니다(규칙 9). Next를 모르므로 테스트에서 그대로 부를 수 있다.
+ *
+ * 작성자를 받지 않는다. "이 글이 내 글인가"는 RLS가 본다
+ * ("본인 게시글만 수정한다", `supabase/migrations/0001_init.sql:137-140`).
+ * 앱 코드에 같은 체크를 한 벌 더 두지 않는다 (규칙 9).
+ *
+ * 남의 글을 고치려 하면 RLS가 행을 0개로 만들 뿐 에러를 주지 않는다.
+ * `select()`로 바뀐 행을 받아 그 경우를 문구로 구분한다.
+ */
+export async function updatePost(
+	supabase: SupabaseClient<Database>,
+	input: { postId: unknown; content: unknown },
+): Promise<UpdatePostResult> {
+	const parsed = updatePostSchema.safeParse(input);
+	if (!parsed.success) {
+		return { ok: false, error: parsed.error.issues[0].message };
+	}
+
+	const { data, error } = await supabase
+		.from("posts")
+		.update({ content: parsed.data.content })
+		.eq("id", parsed.data.postId)
+		.select("id")
+		.maybeSingle();
+
+	if (error) {
+		return {
+			ok: false,
+			error: "글을 고치지 못했어요. 잠시 뒤에 다시 해주세요",
+		};
+	}
+	if (!data) return { ok: false, error: "내가 쓴 글만 고칠 수 있어요" };
+
+	return { ok: true };
+}
+
+export type DeletePostResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * 글 삭제. 달린 댓글과 좋아요는 외래키의 `on delete cascade`가 같이 지운다
+ * (`supabase/migrations/0001_init.sql:77`, `0003_post_likes.sql:7`).
+ *
+ * 권한과 0행 판정은 `updatePost`와 같다
+ * ("본인 게시글만 지운다", `supabase/migrations/0001_init.sql:142-144`).
+ */
+export async function deletePost(
+	supabase: SupabaseClient<Database>,
+	input: unknown,
+): Promise<DeletePostResult> {
+	const parsed = z.uuid("사라진 글이에요").safeParse(input);
+	if (!parsed.success) {
+		return { ok: false, error: parsed.error.issues[0].message };
+	}
+
+	const { data, error } = await supabase
+		.from("posts")
+		.delete()
+		.eq("id", parsed.data)
+		.select("id")
+		.maybeSingle();
+
+	if (error) {
+		return {
+			ok: false,
+			error: "글을 지우지 못했어요. 잠시 뒤에 다시 해주세요",
+		};
+	}
+	if (!data) return { ok: false, error: "내가 쓴 글만 지울 수 있어요" };
+
+	return { ok: true };
+}

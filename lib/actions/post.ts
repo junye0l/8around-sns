@@ -4,8 +4,12 @@ import { refresh } from "next/cache";
 import {
 	type CreatePostResult,
 	createPost,
+	type DeletePostResult,
+	deletePost,
 	type SetPostLikeResult,
 	setPostLike,
+	type UpdatePostResult,
+	updatePost,
 } from "@/lib/services/post";
 import { createClient } from "@/lib/supabase/server";
 
@@ -60,6 +64,61 @@ export async function setPostLikeAction(
 		postId: formData.get("post_id"),
 		intent: formData.get("intent"),
 	});
+	if (result.ok) refresh();
+
+	return result;
+}
+
+/**
+ * 수정 진입점. 로그인 확인 → services 호출 → 화면 갱신.
+ *
+ * 소유권은 여기서 보지 않는다. RLS가 본다 (규칙 9). `lib/services/post.ts`의 `updatePost` 참고.
+ *
+ * `refresh`를 쓰는 이유는 위와 같다.
+ */
+export async function updatePostAction(
+	_prev: UpdatePostResult | null,
+	formData: FormData,
+): Promise<UpdatePostResult> {
+	const supabase = await createClient();
+
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+	if (!user) {
+		return { ok: false, error: "로그인이 풀렸어요. 다시 로그인해 주세요" };
+	}
+
+	const result = await updatePost(supabase, {
+		postId: formData.get("post_id"),
+		content: formData.get("content"),
+	});
+	if (result.ok) refresh();
+
+	return result;
+}
+
+/**
+ * 삭제 진입점. 로그인 확인 → services 호출 → 화면 갱신.
+ *
+ * 소유권은 여기서 보지 않는다. RLS가 본다 (규칙 9). `lib/services/post.ts`의 `deletePost` 참고.
+ *
+ * `refresh`를 쓰는 이유는 위와 같다.
+ */
+export async function deletePostAction(
+	_prev: DeletePostResult | null,
+	formData: FormData,
+): Promise<DeletePostResult> {
+	const supabase = await createClient();
+
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+	if (!user) {
+		return { ok: false, error: "로그인이 풀렸어요. 다시 로그인해 주세요" };
+	}
+
+	const result = await deletePost(supabase, formData.get("post_id"));
 	if (result.ok) refresh();
 
 	return result;

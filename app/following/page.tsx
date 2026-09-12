@@ -41,7 +41,7 @@ export default async function FollowingPage() {
 					}
 				/>
 			) : (
-				<PostList posts={feed.posts} />
+				<PostList posts={feed.posts} viewerUsername={profile?.username} />
 			)}
 		</PageShell>
 	);
