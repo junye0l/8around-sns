@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { FollowTabs } from "@/components/profile/FollowTabs";
 import { UserRow } from "@/components/profile/UserRow";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listFollowing } from "@/lib/queries/follow";
@@ -20,8 +19,8 @@ export async function generateMetadata({
 /**
  * 이 사람이 팔로우하는 사람들.
  *
- * 제목은 그 사람의 이름이고, 어느 목록인지는 맨 위 탭 줄이 말한다. 탭에서 반대쪽
- * 목록으로 바로 건너간다.
+ * 제목에 누구인지를 넣지 않는다 — 뒤로 버튼이 바로 그 프로필을 가리키고,
+ * `PageShell`에는 부제 자리가 없다. 긴 별명을 제목에 넣으면 줄이 넘친다.
  *
  * 로딩과 없는 사람은 윗 폴더의 `loading.tsx` · `not-found.tsx`가 받는다 (규칙 10).
  */
@@ -43,10 +42,8 @@ export default async function FollowingPage({
 		<PageShell
 			backHref={`/u/${profile.username}`}
 			nav={<SideNav profile={viewer} />}
-			title={profile.display_name}
+			title="팔로잉"
 		>
-			<FollowTabs current="following" profile={profile} />
-
 			{users.length === 0 ? (
 				<EmptyState message="아직 팔로우한 사람이 없어요." />
 			) : (
