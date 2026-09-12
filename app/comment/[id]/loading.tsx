@@ -12,7 +12,7 @@ export default function CommentLoading() {
 		<PageShell backHref="/" title="답글">
 			{[0, 1, 2].map((row) => (
 				<div
-					className="flex gap-3 border-hairline border-b px-6 py-3 last:border-b-0"
+					className="flex gap-3 border-hairline border-b px-6 py-4 last:border-b-0"
 					key={row}
 				>
 					<Skeleton className="size-9 shrink-0 rounded-full" />

@@ -36,14 +36,15 @@ export function ContentCard({
 }: ContentCardProps) {
 	return (
 		<article
-			className={`flex gap-3 px-6 py-3 ${connected ? "" : "border-hairline border-b last:border-b-0"}`}
+			className={`flex gap-3 px-6 py-4 ${connected ? "" : "border-hairline border-b last:border-b-0"}`}
 		>
 			<div className="flex flex-col items-center gap-2">
 				<Avatar name={author.display_name} />
 
-				{/* 칸 사이가 위아래 패딩 12px씩 = 24px 벌어져 있다. 그만큼 아래로 넘겨야
-				    선이 다음 아바타에 닿는다 (`-mb-6`, 4px 그리드 위의 값) */}
-				{connected && <div className="-mb-6 w-px flex-1 bg-hairline" />}
+				{/* 칸 사이가 위아래 패딩 16px씩 = 32px 벌어져 있다. 그만큼 아래로 넘겨야
+				    선이 다음 아바타에 닿는다 (`-mb-8`, 4px 그리드 위의 값).
+				    위 패딩을 바꾸면 이 값도 같이 바꾼다 */}
+				{connected && <div className="-mb-8 w-px flex-1 bg-hairline" />}
 			</div>
 
 			{/* min-w-0 이 없으면 긴 이름이 flex 칸을 밀어내 시각이 잘린다 */}
