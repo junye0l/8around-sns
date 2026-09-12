@@ -21,6 +21,8 @@ type ComposerProps = {
 	placeholder: string;
 	submitLabel: string;
 	maxLength: number;
+	/** 처음 채워둘 본문. 수정할 때 지금 글이 여기로 들어온다 */
+	initialContent?: string;
 	/** 액션에 같이 보낼 숨은 입력. 댓글은 여기에 post_id를 싣는다 */
 	children?: ReactNode;
 	/** 저장에 성공했을 때. 모달이 이걸로 닫힌다 */
@@ -51,6 +53,7 @@ export function Composer({
 	placeholder,
 	submitLabel,
 	maxLength,
+	initialContent = "",
 	children,
 	onSuccess,
 }: ComposerProps) {
@@ -58,7 +61,7 @@ export function Composer({
 		ComposerResult | null,
 		FormData
 	>(action, null);
-	const [content, setContent] = useState("");
+	const [content, setContent] = useState(initialContent);
 	const id = useId();
 
 	// 성공했을 때만 비운다. result는 액션이 끝날 때마다 새 객체라 이걸로 구분된다

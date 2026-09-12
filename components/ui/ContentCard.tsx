@@ -9,6 +9,8 @@ type ContentCardProps = {
 	content: string;
 	/** 본문 아래 줄. 좋아요 버튼과 댓글 수가 여기 붙는다 */
 	footer?: ReactNode;
+	/** 오른쪽 위 모서리. 내 글이면 더보기 메뉴가 여기 선다 */
+	menu?: ReactNode;
 	/**
 	 * 아래 칸과 한 스레드로 이어진다. 아바타 밑으로 세로선이 흐르고 구분선은 빠진다.
 	 * @see docs/decisions/0008-reply-tree-on-post.md
@@ -29,6 +31,7 @@ export function ContentCard({
 	createdAt,
 	content,
 	footer,
+	menu,
 	connected = false,
 }: ContentCardProps) {
 	return (
@@ -57,6 +60,10 @@ export function ContentCard({
 					<time className="shrink-0 text-fg-muted" dateTime={createdAt}>
 						{formatRelativeTime(createdAt)}
 					</time>
+
+					{/* -my-2 -mr-2 는 아이콘 버튼의 누를 자리(p-2)만큼 되돌린다. 메뉴가 있는 칸과
+					    없는 칸의 높이가 같아지고, 아이콘이 카드 오른쪽 여백에 맞춰 선다 */}
+					{menu && <div className="-my-2 -mr-2 ml-auto self-start">{menu}</div>}
 				</div>
 
 				{/* 줄바꿈은 살리고, 띄어쓰기 없는 긴 문자열은 칸을 넘지 않게 끊는다 */}
