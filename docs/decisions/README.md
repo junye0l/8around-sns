@@ -48,3 +48,4 @@
 | [0022](0022-post-edit-delete.md) | 내 글을 수정하고 지운다 | 확정 |
 | [0023](0023-session-claims-local.md) | 화면과 액션은 세션을 서버에 다시 묻지 않는다 | 확정 |
 | [0024](0024-like-without-refresh.md) | 좋아요는 화면을 다시 그리지 않는다 | 확정 |
+| [0025](0025-following-feed-in-db.md) | 팔로잉 피드는 DB가 한 번에 거른다 | 확정 |
