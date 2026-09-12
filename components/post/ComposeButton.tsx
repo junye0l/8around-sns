@@ -15,9 +15,11 @@ import { POST_CONTENT_MAX } from "@/lib/utils/content";
  */
 export function ComposeButton({
 	className,
+	labelClassName,
 	authorName,
 }: {
 	className: string;
+	labelClassName: string;
 	/** 아바타에 쓸 이름. 입력칸 왼쪽에 선다 */
 	authorName: string;
 }) {
@@ -30,7 +32,7 @@ export function ComposeButton({
 		<Dialog onOpenChange={setOpen} open={open}>
 			<DialogTrigger className={className}>
 				<Plus aria-hidden className="size-6 shrink-0" />
-				<span className="sr-only">새로운 게시글</span>
+				<span className={labelClassName}>새로운 게시글</span>
 			</DialogTrigger>
 
 			<DialogContent title="새로운 게시글">
