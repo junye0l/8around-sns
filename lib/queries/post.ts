@@ -17,9 +17,14 @@ const FEED_LIMIT = 50;
 /**
  * `comments(count)`는 글마다 댓글 수를 DB에서 세어 온다. 글을 읽고 나서 수를 따로
  * 물으면 N+1이 된다. `comments_post_id_idx`(0001_init.sql:88)가 그대로 받는다.
+ *
+ * 작성자 임베드에 FK 이름을 붙인다. `post_likes`가 `posts`와 `profiles`를 잇는
+ * 조인 테이블이라 PostgREST가 둘 사이 관계를 둘로 본다 — 이름이 없으면
+ * "more than one relationship was found"로 거절한다. `follows`가 이미 같은 이유로
+ * 이름을 붙이고 있다 (`lib/queries/follow.ts:16`).
  */
 const POST_SELECT =
-	"id, content, created_at, author:profiles(username, display_name), comments(count)";
+	"id, content, created_at, author:profiles!posts_author_id_fkey(username, display_name), comments(count)";
 
 type PostRow = Omit<FeedPost, "comment_count"> & {
 	comments: { count: number }[];
