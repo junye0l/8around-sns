@@ -25,6 +25,7 @@ export function CommentCount({
 			href={href}
 		>
 			<MessageCircle aria-hidden className="size-5 shrink-0" />
+			{/* 0이면 숫자를 감춘다. 레퍼런스가 그렇고, aria-label은 여전히 "0개"를 읽는다 */}
 			{count > 0 && (
 				<span aria-hidden className="tabular-nums">
 					{count}
