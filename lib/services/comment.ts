@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { COMMENT_CONTENT_MAX, contentSchema } from "@/lib/utils/content";
+import { contentSchema } from "@/lib/utils/content";
+import { COMMENT_CONTENT_MAX } from "@/lib/utils/content-limits";
 import type { Database } from "@/types/database";
 
 export type CreateCommentResult = { ok: true } | { ok: false; error: string };

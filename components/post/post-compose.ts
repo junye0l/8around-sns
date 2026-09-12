@@ -1,5 +1,5 @@
 import { createPostAction } from "@/lib/actions/post";
-import { POST_CONTENT_MAX } from "@/lib/utils/content";
+import { POST_CONTENT_MAX } from "@/lib/utils/content-limits";
 
 /**
  * 새 글 모달의 설정. 레일 버튼과 추천 위쪽 줄이 같은 모달을 여므로 값은 여기 한 곳에 있다 (규칙 2).
