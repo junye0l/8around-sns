@@ -14,6 +14,7 @@ export function SignInForm() {
 
 	const failed = result && !result.ok ? result : null;
 	const errors = failed?.errors ?? {};
+	const message = failed?.formError ?? errors.email ?? errors.password;
 
 	return (
 		<form action={formAction} className="flex flex-col gap-2">
@@ -21,16 +22,11 @@ export function SignInForm() {
 				8around 계정으로 로그인
 			</h1>
 
-			{failed?.formError && (
-				<p className="text-body-sm text-danger" role="alert">
-					{failed.formError}
-				</p>
-			)}
-
 			<TextField
+				// 문구는 아래 한 자리에서만 띄운다. 여기서는 표시만 남긴다
+				aria-invalid={errors.email ? true : undefined}
 				autoComplete="email"
 				disabled={pending}
-				error={errors.email}
 				label="이메일"
 				name="email"
 				placeholder="you@example.com"
@@ -38,16 +34,25 @@ export function SignInForm() {
 				type="email"
 			/>
 			<TextField
+				aria-invalid={errors.password ? true : undefined}
 				autoComplete="current-password"
 				disabled={pending}
-				error={errors.password}
 				label="비밀번호"
 				name="password"
 				required
 				type="password"
 			/>
 
-			<Button className="mt-2 h-14 w-full" loading={pending} type="submit">
+			{/* 빈 자리를 늘 잡아둬서 문구가 떠도 버튼이 밀리지 않는다. body-sm 한 줄이 21px이라 그리드에서 24px을 쓴다 */}
+			<div className="min-h-6">
+				{message && (
+					<p className="text-body-sm text-danger" role="alert">
+						{message}
+					</p>
+				)}
+			</div>
+
+			<Button className="h-14 w-full" loading={pending} type="submit">
 				{pending ? "로그인하는 중" : "로그인"}
 			</Button>
 		</form>
