@@ -3,9 +3,8 @@ import { notFound } from "next/navigation";
 import { FollowButton } from "@/components/follow/FollowButton";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
+import { PostList } from "@/components/post/PostList";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
-import { CommentCount } from "@/components/ui/CommentCount";
-import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { isFollowing } from "@/lib/queries/follow";
@@ -74,21 +73,7 @@ export default async function ProfilePage({
 					}
 				/>
 			) : (
-				posts.map((post) => (
-					<ContentCard
-						author={post.author}
-						content={post.content}
-						createdAt={post.created_at}
-						footer={
-							<CommentCount
-								count={post.comment_count}
-								href={`/post/${post.id}`}
-								label="댓글"
-							/>
-						}
-						key={post.id}
-					/>
-				))
+				<PostList posts={posts} />
 			)}
 		</PageShell>
 	);
