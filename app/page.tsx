@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { ComposeRow } from "@/components/post/ComposeRow";
 import { PostList } from "@/components/post/PostList";
+import { ComposeRow } from "@/components/ui/ComposeRow";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { createPostAction } from "@/lib/actions/post";
 import { listFeed } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
+import { POST_CONTENT_MAX } from "@/lib/utils/content";
 
 export const metadata: Metadata = {
 	title: "추천",
@@ -34,7 +36,14 @@ export default async function Home() {
 
 	return (
 		<PageShell nav={<SideNav profile={profile} />} title="추천">
-			<ComposeRow authorName={displayName} />
+			<ComposeRow
+				action={createPostAction}
+				authorName={displayName}
+				maxLength={POST_CONTENT_MAX}
+				placeholder="무슨 생각을 하고 있나요?"
+				submitLabel="게시"
+				title="새로운 게시글"
+			/>
 
 			{posts.length === 0 ? (
 				<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />

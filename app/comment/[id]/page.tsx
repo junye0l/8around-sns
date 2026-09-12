@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/PageShell";
 import { SideNav } from "@/components/layout/SideNav";
-import { Composer } from "@/components/ui/Composer";
+import { ComposeRow } from "@/components/ui/ComposeRow";
 import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * 답글 화면 — 위에서부터 게시글 본문 · 답글 달 댓글 · 입력칸 · 이미 달린 답글.
+ * 답글 화면 — 위에서부터 게시글 본문 · 답글 달 댓글 · 입력 줄 · 이미 달린 답글.
+ * 입력 줄은 누르면 모달을 연다 ([결정 0019](../../../docs/decisions/0019-comment-compose-modal.md)).
  * 본문을 남겨두는 이유는 무엇에 대한 대화인지가 화면을 옮겨도 안 끊기게 하려는 것이다
  * ([결정 0008](../../../docs/decisions/0008-reply-tree-on-post.md)).
  *
@@ -74,18 +75,19 @@ export default async function CommentPage({
 				createdAt={comment.created_at}
 			/>
 
-			<Composer
+			<ComposeRow
 				action={createCommentAction}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
 				placeholder={`${comment.author.username}님에게 답글 남기기`}
 				submitLabel="답글"
+				title="답글"
 			>
 				{/* 답글도 어느 글의 것인지 들고 있어야 한다 — RLS가 부모와 같은 글인지 본다
 					    (`supabase/migrations/0001_init.sql:155-171`) */}
 				<input name="post_id" type="hidden" value={comment.post_id} />
 				<input name="parent_id" type="hidden" value={comment.id} />
-			</Composer>
+			</ComposeRow>
 
 			<SectionHeading label="답글" />
 
