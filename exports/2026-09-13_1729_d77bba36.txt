@@ -6123,3 +6123,537 @@ code 0)
      └ 41 skills · 6.2k tokens
 
      /context all to expand
+
+❯ /export                                                                       
+  ⎿  Conversation exported to: /Users/junyeol/Documents/8around-sns/2026-09-13-0
+     03219-command-namegoalcommand-name.txt
+❯ 세션 마무리하기위해 export 진행했음. 브랜치 생성 후 파일 형식 지켜서 pr 생성  
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ 확인 결과 접미사는 세션 스크래치패드 id 앞 8자리인 f90b9d12이고, 검사가 막힌
+  건 export가 80칸에서 줄바꿈해 UUID가 잘렸기 때문이었습니다. 현재 세션
+  d77bba36으로 옮긴 뒤 커밋, 푸시, PR까지 진행하겠습니다. · summarized
+
+⏺ Bash(set -e
+      new=/Users/junyeol/Documents/8around-sns/2026-09-13-003219-command-namegoa
+      lcommand-name.txt…)
+  ⎿  옮김 → exports/2026-09-13_0032_d77bba36.txt (6124줄, 368KB)
+     harness-check: 통과
+     a491a1e docs: 글 수정·삭제와 성능 최적화 세션 대화 기록을 남긴다
+     … +7 lines (ctrl+o to expand)
+  ⎿  2 files changed (binary, mode only or too large to show)
+
+⏺ #55 올렸습니다 — https://github.com/junye0l/8around-sns/pull/55
+
+  - 파일: exports/2026-09-13_0032_d77bba36.txt (6124줄, 368KB). 이름 규칙은 이전
+    기록과 같이 날짜_시각_세션앞자리 — 접미사는 세션 스크래치패드 id 앞
+    8자리로, exports/2026-09-12_0400_f90b9d12.txt:324에서 같은 규칙을
+    확인했습니다
+  - 자격 증명 스캔: JWT 형태 0, Supabase 호스트 0(세션 중 일부러 출력하지
+    않았습니다), sb-* 쿠키 0, ANON_KEY=값 0, password 0
+  - verify 통과. 브랜치 docs/perf-session-export, 커밋 a491a1e
+
+  보고서 아티팩트 삭제는 확인 창에서 취소하셨길래 그대로 두었습니다. 지우고
+  싶으시면 말씀해 주세요.
+
+✻ Churned for 1m 46s · done 12:34 AM
+
+※ recap: Wrapping up the session: all UI fixes and the five performance prescriptions are merged, and the conversation export is up as PR #55 awaiting CI and review. Next action: merge #55 once its checks pass.
+
+⏺ Background command "Wait for production deploy of merged main, then probe"
+completed (exit code 0)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ 머지 뒤 프로덕션 프로브 결과입니다.
+
+  함수 (POST /signup, 무효 액션 id)
+    x-vercel-id: icn1::icn1::…   833ms (콜드) → 181ms → 168ms
+  프록시만 (GET / → 307)
+    143ms · 158ms · 145ms
+
+  함수는 계속 서울에서 돌고, 웜 상태 함수 응답이 170~180ms입니다. 하나 정직하게
+  적어두면 — 배포 완료를 확인하는 폴링이 "배포 완료" 출력 없이 10분 제한으로
+  끝난 뒤 프로브가 돌았습니다. 그래서 이 숫자가 머지된 코드(9ce1872)를 서빙하는
+  배포인지는 확인하지 못했습니다. 이 프로브는 어차피 로그인 없이 프록시와 함수
+  리전만 보는 것이라, 처방 2~4의 효과(왕복 수 감소)는 여기 안 나옵니다. 그건
+  로그인 상태의 화면 TTFB에서만 보입니다.
+
+  열린 것: #55 (세션 기록). 그 외 진행 중인 작업은 없습니다.
+
+✻ Sautéed for 15s · done 12:38 AM
+
+※ recap: 8around SNS UI 개선과 성능 최적화 작업을 끝냈고, PR #46~#54는 전부 main에 머지됐습니다. 마지막으로 세션 기록 PR #55를 올려둔 상태라, CI 통과 확인 후 머지하면 됩니다.
+
+❯ 지금 배포 관련 소모량이 다 됐다는건가?                                        
+
+⏺ 아닙니다. "10분 제한"은 제가 짠 대기 스크립트의 반복 횟수 상한(15초 ×
+  40회)이지 Vercel 쪽 한도가 아닙니다. 배포가 실제로 됐는지 지금 바로 확인해
+  보겠습니다.
+  ⎿  Interrupted · What should Claude do instead?
+
+❯ 아니 그게 아니라 24시간 한정량을 다 했나봐 디플로이먼트                       
+
+  Read 1 file, ran 2 shell commands, wrote 1 memory (ctrl+o to expand)
+
+⏺ 네, 맞습니다. 확인했습니다.
+
+  #55 Vercel 코멘트: limited - try again in 24 hours
+                     (more than 100, code: "api-deployments-free-per-day")
+
+  지금 상태
+
+  ┌─────────────────────┬───────────────────────────────────────────────────┐
+  │                     │                                                   │
+  ├─────────────────────┼───────────────────────────────────────────────────┤
+  │ 마지막 성공         │ ed911fc — #51(getClaims) 머지분, 15:27:05         │
+  │ 프로덕션 배포       │                                                   │
+  ├─────────────────────┼───────────────────────────────────────────────────┤
+  │ 프로덕션에 안       │ #52 zod 분리, #53 좋아요 refresh, #54 팔로잉 RPC  │
+  │ 올라간 것           │ (67c7868~`9ce1872`)                               │
+  ├─────────────────────┼───────────────────────────────────────────────────┤
+  │ #55 프리뷰          │ 안 만들어짐                                       │
+  ├─────────────────────┼───────────────────────────────────────────────────┤
+  │ 오늘 이 레포에서    │ 78개 (GitHub 기록 기준. 한도는 계정 전체라 다른   │
+  │ 만든 배포           │ 프로젝트 것도 합산)                               │
+  └─────────────────────┴───────────────────────────────────────────────────┘
+
+  아까 제가 "배포 완료를 확인 못 했다"고 한 게 이것이었습니다 — 배포가 늦은 게
+  아니라 아예 안 만들어진 거였습니다. 그 뒤 찍은 프로브 수치(함수 170~180ms)는
+  #51까지만 들어간 배포를 본 것이라, 처방 3·4·5의 효과는 아직 프로덕션에
+  없습니다.
+
+  원인은 제 작업 방식입니다. 푸시 한 번이 프리뷰 배포 하나, 머지 한 번이
+  프로덕션 배포 하나인데, 오늘 PR 10개를 올리면서 리뷰 반영 푸시와 스택 브랜치
+  머지-푸시를 커밋 단위로 잘게 냈습니다. 특히 스택에서 앞 브랜치를 고칠 때 뒤
+  브랜치 셋을 각각 푸시한 것이 컸습니다. 다음부터는 한 브랜치 여러 커밋을 한
+  번에 푸시하고, 스택 수정은 머지를 다 태운 뒤 마지막에 한꺼번에 밀겠습니다.
+  메모리에 적어뒀습니다.
+
+  풀리는 방법. Vercel은 자동으로 다시 시도하지 않습니다. 24시간 뒤(내일 15:27
+  이후)에 main에 뭔가 들어가면 그 시점의 main 전체가 배포됩니다 — #55를 내일 
+  머지하면 그 한 번으로 #52~#54까지 다 올라갑니다. 더 빨리 필요하면 그때 Vercel
+  대시보드에서 9ce1872 Redeploy를 눌러도 됩니다. 빈 커밋으로 main을 건드리는 건
+  안 합니다.
+
+  지금 제가 할 수 있는 건 없습니다. 한도가 풀리기 전엔 푸시도 배포를 못 만드니
+  오늘은 여기까지가 맞습니다.
+
+✻ Brewed for 1m 12s · done 12:46 AM
+
+❯ 아 그러면 배포를 조금 멈춰놨어야했나 싶기도 하네                              
+
+⏺ Fetch(https://vercel.com/docs/project-configuration/git-settings)
+  ⎿  Received 5.4KB (200 OK)
+
+⏺ Fetch(https://vercel.com/docs/project-configuration/ignored-build-step)
+  ⎿  Received 0 bytes (404 Not Found)
+
+⏺ Fetch(https://vercel.com/docs/project-configuration/project-settings)
+  ⎿  Received 12.6KB (200 OK)
+
+⏺ 한 가지는 확인하고 답하려고 Vercel 문서를 봤습니다. 결론은 "멈춰놨어도
+  소용없었다"에 가깝습니다.
+
+  Vercel의 Ignored Build Step(빌드 건너뛰기)이 그 용도로 보이지만, 문서에 이렇게
+  적혀 있습니다:
+
+  ▎ Canceled builds are counted as full deployments as they execute a build 
+  ▎ command in the build step. This means that any canceled builds initiated 
+  ▎ using the ignore build step will still count towards your deployment quotas.
+
+  빌드를 취소해도 배포 한 개로 셉니다. 그래서 설정으로 멈추는 건 답이 아니었고,
+  실제 레버는 푸시와 머지 횟수 하나뿐이었습니다. 같은 SHA를 다시 푸시하면 새
+  배포를 안 만든다는 것 말고는 절약 규칙이 없습니다.
+
+  오늘 이 레포에서 78개가 나갔는데, 되짚어보면 줄일 수 있던 건 제 쪽입니다:
+
+  - 리뷰 지적 고칠 때 브랜치마다 따로 푸시 — #46, #47, #48, #50 각각
+  - 스택 PR에서 앞 브랜치를 고치고 뒤 브랜치 셋을 각각 푸시 (#52 수정 → #53,
+    #54까지 3번)
+  - PR 하나당 프리뷰 1 + 머지 1은 피할 수 없는 것
+
+  브랜치당 한 번, 스택 수정은 머지 다 태운 뒤 마지막에 한꺼번에 밀었으면
+  절반쯤이었을 겁니다. 이건 메모리에 적어뒀으니 다음부턴 그렇게 합니다.
+
+  내일 15:27 이후 #55 머지하면 그 한 번으로 #52~#54까지 프로덕션에 올라갑니다.
+
+✻ Churned for 46s · done 12:48 AM
+
+❯ 아니 그니까 내 말은 버셀 연결을 끊어놓고 나중에 한꺼번에 디플로이먼트         
+  시켜야하나 고민중                                                             
+
+⏺ 연결을 끊는 건 권하지 않겠습니다. 근거와 선택지를 놓고 보면 이렇습니다.
+
+  근거
+  - 오늘 78개는 비정상적인 하루였습니다 — PR 10개에 리뷰 반영 푸시와 스택
+    머지-푸시를 커밋 단위로 잘게 냈습니다. 평소처럼 하루 PR 2~3개면 10~20개
+    선이라 100에 한참 못 미칩니다
+  - Vercel 문서상 절약 장치는 없습니다. 빌드를 취소해도 셉니다. 셀 수 있는 건
+    푸시 횟수뿐입니다
+
+  A. Git 연결을 끊고 수동으로 한꺼번에 배포
+  - 배포 수는 확실히 줄어듭니다. 원할 때 vercel --prod 한 번
+  - 잃는 것: PR마다 뜨던 프리뷰 URL. 지금 PR 체크리스트의 "프리뷰 URL에서 직접
+    눌러봤다"가 빈 칸이 됩니다
+  - 위험: vercel --prod는 로컬 트리를 올립니다. 커밋 안 한 것, main이 아닌
+    브랜치가 프로덕션에 갈 수 있습니다. "main은 항상 배포 가능"이라는 규칙이
+    "프로덕션 = main"과 분리됩니다
+  - 끊었다 다시 잇는 것도 손이 갑니다
+
+  B. 연결은 두고 푸시 습관만 바꾼다
+  - 브랜치당 푸시 한 번(PR 열 때), 리뷰 반영 한 번, 스택 수정은 뒤 브랜치 다
+    태운 뒤 마지막에 한 번
+  - 오늘 같은 날도 이 규칙이면 30개 안팎이었습니다
+  - 프리뷰와 "프로덕션 = main"이 그대로 유지됩니다
+  - 비용: 없음. 제가 지키면 됩니다
+
+  추천: B. 오늘 문제는 연결 방식이 아니라 제 푸시 패턴이었고, 그건 이미 메모리에
+  적어 고쳤습니다. A는 한 번 겪은 일 때문에 프리뷰와 배포 안전장치를 상시로
+  포기하는 셈입니다.
+
+  정말 폭주하는 날(오늘처럼 세션 하나에 PR 열 개)이 예상되면, 그날만 PR을 로컬
+  브랜치에 쌓아두고 저녁에 몰아서 푸시하는 것으로 충분합니다. 연결을 끊을
+  필요까지는 없습니다.
+
+✻ Churned for 29s · done 12:52 AM
+
+❯ 버셀 무료 플랜 하루 디플로이먼트 횟수 몇번인지 찾아줘                         
+
+⏺ Fetch(https://vercel.com/docs/limits)
+  ⎿  Received 50.8KB (200 OK)
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Vercel 공식 문서(vercel.com/docs/limits, 2026-09-03 갱신) 기준입니다.
+
+  ┌──────────────┬────────┬────────┬───────┐
+  │     플랜     │  하루  │ 시간당 │ 5분당 │
+  ├──────────────┼────────┼────────┼───────┤
+  │ Hobby (무료) │ 100    │ 100    │ 60    │
+  ├──────────────┼────────┼────────┼───────┤
+  │ Pro          │ 6,000  │ 450    │ 120   │
+  ├──────────────┼────────┼────────┼───────┤
+  │ Enterprise   │ 24,000 │ 1,800  │ 300   │
+  └──────────────┴────────┴────────┴───────┘
+
+  문서 원문:
+
+  ▎ You are able to deploy 100 times every 86400 seconds (1 day). Should you hit
+  ▎ the rate limit, you will need to wait another day before you can deploy 
+  ▎ again.
+
+  세 가지 짚어둘 점:
+
+  - 단위가 owner, 즉 계정 전체입니다. 이 레포만이 아니라 dante-web 등 같은
+    계정의 다른 프로젝트 배포도 합산됩니다. 오늘 이 레포에서 78개였는데 100을
+    넘긴 건 그래서입니다
+  - **고정 창(86400초)**입니다. 자정에 리셋되는 게 아니라 한도를 친 시점부터
+    하루를 기다립니다. 문서가 "wait another day"라고 적은 그대로입니다
+  - 앞서 확인한 대로 Ignored Build Step으로 취소한 빌드도 이 숫자에 들어갑니다
+
+  Pro는 하루 6,000이라 이 문제가 사실상 사라지지만, 오늘 같은 날이 아니면 무료
+  100으로 충분합니다.
+
+✻ Baked for 21s · done 12:53 AM
+
+❯ 프로젝트당인것 같은디                                                         
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ 문서상으로는 프로젝트가 아니라 계정 단위입니다. 근거 두 개입니다.
+
+  1. 문서의 Scope 열. vercel.com/docs/limits의 rate limit 표에 각 한도의 적용
+  범위가 적혀 있습니다.
+
+  | Deployments per day (Free).   | 100  | 86400 | `owner` |
+  | Deployments per day (Pro).    | 6000 | 86400 | `owner` |
+
+  범례:
+
+  ▎ owner - Rate limit applies to the team or to an individual user, depending 
+  ▎ on the resource.
+  ▎ project - Rate limit applies to an individual project.
+
+  project 범위가 따로 정의돼 있는데, 배포 한도는 그걸 안 쓰고 owner입니다.
+  Hobby는 팀이 없으니 "individual user" = 계정 하나입니다.
+
+  2. 오늘 숫자. 이 레포의 GitHub 배포 기록은 오늘 78개입니다. 프로젝트당 100이면
+  아직 22개 여유가 있어야 하는데 한도에 걸렸습니다. 같은 계정의 다른
+  프로젝트(dante-web — 아까 3000번 포트에 그쪽 dev 서버가 떠 있었습니다) 배포가
+  합산됐다고 보면 맞아떨어집니다.
+
+  그래서 이 레포에서 아무리 아껴도 다른 프로젝트가 많이 밀면 같이 막힙니다.
+  반대로 말하면 어느 한쪽만 조심해서는 안 되고, 계정 전체로 하루 100입니다.
+
+✻ Cogitated for 23s · done 12:55 AM
+
+❯ 버셀 플랜 업그레이드 어떻게해? 가격도 알려줘                                  
+
+⏺ Fetch(https://vercel.com/docs/plans/pro-plan)
+  ⎿  Received 11.5KB (200 OK)
+
+⏺ Fetch(https://vercel.com/docs/plans)
+  ⎿  Received 7.5KB (200 OK)
+
+⏺ Fetch(https://vercel.com/docs/plans/hobby)
+  ⎿  Received 11.3KB (200 OK)
+
+⏺ Fetch(https://vercel.com/docs/plans/pro-plan/trials)
+  ⎿  Received 8.8KB (200 OK)
+
+⏺ Vercel 공식 문서 기준입니다 (2026-08~09 갱신).
+
+  가격
+
+  ┌────────────────┬───────┬───────────────────────────────────────────────┐
+  │                │ Hobby │                      Pro                      │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ 월 요금        │ 무료  │ $20/월 (플랫폼 요금, 부가세 별도)             │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ 포함           │ —     │ 배포 가능한 시트 1개 + $20 사용량 크레딧      │
+  │                │       │ (매월 리셋, 이월 안 됨)                       │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ 추가 시트      │ —     │ $20/월/명. 읽기 전용 Viewer는 무료            │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ 하루 배포      │ 100   │ 6,000                                         │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ 함수 리전      │ 1개   │ 5개                                           │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ Fast Data      │ 100   │ 1 TB 포함                                     │
+  │ Transfer       │ GB    │                                               │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ 런타임 로그    │ 1시간 │ 1일                                           │
+  ├────────────────┼───────┼───────────────────────────────────────────────┤
+  │ 이메일 지원    │ —     │ 있음                                          │
+  └────────────────┴───────┴───────────────────────────────────────────────┘
+
+  혼자 쓰면 월 $20입니다. 크레딧 $20이 같이 들어오므로 트래픽이 이 규모면 추가
+  과금은 안 나옵니다. 크레딧 초과분은 종량제로 붙고, 기본 알림 한도가 $200에
+  걸려 있습니다.
+
+  업그레이드 절차 (문서 그대로)
+
+  1. 대시보드 → 팀 스위처에서 업그레이드할 팀 선택
+  2. Settings → Billing
+  3. Plan 아래 Upgrade 버튼. 개인 계정이면 여기서 Create a Team 또는 Upgrade a 
+     Team을 눌러 팀을 먼저 만들어야 할 수 있습니다
+  4. (선택) 팀원 추가 — 개발자 시트 $20/명, Viewer 무료
+  5. 카드 입력
+  6. Confirm and Upgrade
+
+  먼저 써볼 수 있는 것: Pro 트라이얼
+
+  - 14일 무료, 계정당 1회. 팀 스위처 → Create Team → 다이얼로그에서 Pro Trial
+    선택
+  - 카드 없이 시작 가능. 카드 미등록이면 끝날 때 자동으로 Hobby로 돌아가고 과금
+    없음 — 문서 원문: "If a trial finishes and you haven't set payment method,
+    you will not get charged."
+  - 트라이얼 제한 표에 하루 배포 수 제한은 따로 없습니다. 일반 Pro 한도(6,000)를
+    따릅니다. 제한은 CPU 16시간, 함수 호출 100만/월 같은 사용량 쪽이고, 이 앱
+    규모면 안 닿습니다
+  - 빠지는 기능: Log drains, Observability Plus, 첫해 무료 도메인 — 지금 안 쓰는
+    것들
+
+  정직하게 덧붙이면
+
+  오늘 한도를 친 건 하루에 PR 10개를 커밋 단위로 밀어낸 비정상적인 날이었습니다.
+  평소 하루 PR 2~3개면 100 안에서 여유롭고, 푸시 습관은 이미 고쳤습니다. 그래서
+  $20/월이 꼭 필요하진 않습니다. 다만 Hobby는 약관상 "non-commercial, personal
+  use only"라, 이 서비스를 실제로 운영할 계획이면 그 이유로 Pro가 맞습니다.
+  결정을 미루고 싶으면 트라이얼 14일이 비용 0으로 판단할 시간을 줍니다.
+
+✻ Crunched for 45s · done 12:56 AM
+
+❯ ㅊ 14일 무료, 계정당 1회. 팀 스위처 → Create Team → 다이얼로그에서 Pro Trial  
+  선택                                                                          
+                                                                                
+  이거를 하고싶은데 만든 상태에서는 안되나                                      
+
+⏺ Fetch(https://vercel.com/docs/projects/managing-projects)
+  ⎿  Received 11.5KB (200 OK)
+
+⏺ Fetch(https://vercel.com/kb/guide/how-do-i-transfer-a-project-to-another-verce
+       l-team)
+  ⎿  Received 0 bytes (404 Not Found)
+
+⏺ Fetch(https://vercel.com/docs/projects/transfer-project)
+  ⎿  Received 0 bytes (404 Not Found)
+
+⏺ Fetch(https://vercel.com/docs/accounts/create-a-team)
+  ⎿  Received 18.4KB (200 OK)
+
+⏺ Fetch(https://vercel.com/docs/projects/transfers)
+  ⎿  Received 0 bytes (404 Not Found)
+
+⏺ 프로젝트 이전 문서를 찾는 중인데 URL이 계속 404라, 확인된 것부터 답하고 못
+  찾은 건 못 찾았다고 하겠습니다.
+
+  질문에 대한 답: 됩니다. 이미 프로젝트가 있는 상태여도 Pro 트라이얼을 시작할 수
+  있습니다. 다만 트라이얼은 "팀"에 붙는 것이라, 새 팀을 만들고 거기서
+  트라이얼을 켠 뒤 프로젝트를 그 팀으로 옮기는 형태입니다. 지금 개인(Hobby)
+  계정을 그 자리에서 트라이얼로 바꾸는 버튼은 문서에 없습니다.
+
+  문서 원문(/docs/plans/pro-plan/trials):
+
+  ▎ 1. Select the team switcher from the dashboard. From the bottom of the list 
+  ▎ select Create Team.
+  ▎ 2. Name your team
+  ▎ 3. Select the Pro Trial option from the dialog. If this option does not 
+  ▎ appear, it means you have already reached your limit of one trial
+
+  순서
+
+  1. 팀 스위처 → Create Team → 이름 입력 → Pro Trial 선택
+  2. 대시보드에서 8around-new-sns 프로젝트 → Settings → General 아래쪽에서 새
+     팀으로 이전(Transfer)
+  3. 이전 후 Git 연결·환경변수를 한 번 확인. 특히 NEXT_PUBLIC_SUPABASE_URL,
+     NEXT_PUBLIC_SUPABASE_ANON_KEY 두 개가 새 팀 프로젝트에 그대로 있는지 봐야
+     합니다 (키 이름만 확인하시면 됩니다. 값은 제가 보지 않습니다)
+
+  확인된 사실
+
+  - 트라이얼 14일, 계정당 1회. 카드 없이 시작 가능하고, 카드 미등록이면 끝날 때
+    자동으로 Hobby로 돌아가며 과금 없음
+  - 트라이얼 제한 표에 하루 배포 수 제한은 없습니다 — 일반 Pro의 6,000을
+    따릅니다. 제한은 CPU 16시간, 함수 호출 100만/월 같은 사용량 쪽이라 이 앱
+    규모면 안 닿습니다
+  - Hobby 팀은 계정당 하나뿐이라, 나중에 Pro를 내리려면 팀을 합치거나 하나를
+    지워야 합니다
+
+  확인 못 한 것
+
+  프로젝트 이전 시 무엇이 그대로 넘어가는지(배포 기록, 도메인, 환경변수, Git
+  연결)를 적은 공식 문서 페이지를 못 찾았습니다 — 후보 URL 세 개가 다
+  404였습니다. 그래서 위 2~3번 단계는 대시보드에 Transfer 항목이 있다는 전제로
+  쓴 것이고, 이전 후 환경변수·Git 연결·배포 도메인은 직접 확인하시는 게
+  안전합니다.
+
+  오늘 배포 한도는 이미 찼으니, 트라이얼로 팀을 옮기면 새 팀 기준으로 한도가
+  풀리는지도 옮겨보고 확인할 부분입니다.
+
+✻ Cooked for 1m 16s · done 12:58 AM
+
+❯ Resource is limited - try again in 24 hours (more than 100, code:             
+  "api-deployments-free-per-day").                                              
+                                                                                
+  이렇게 적혀있었구나                                                           
+
+⏺ 네, #55 PR의 Vercel 코멘트에 그 메시지가 그대로 찍혀 있었습니다.
+
+  Resource is limited - try again in 24 hours
+  (more than 100, code: "api-deployments-free-per-day")
+
+  api-deployments-free-per-day — 문서의 "Deployments per day (Free): 100,
+  Duration 86400초" 항목과 같은 코드입니다. "try again in 24 hours"도 문서의
+  "you will need to wait another day" 그대로고요. 자정 리셋이 아니라 한도를 친
+  시점(오늘 15:27쯤)부터 24시간입니다.
+
+  정리하면 지금 상태는:
+
+  - main의 9ce1872(#52~#54 머지분)가 프로덕션에 못 올라감. 마지막 성공 배포는
+    ed911fc(#51까지)
+  - #55(세션 기록)는 프리뷰 없이 열려 있음
+  - 내일 15:27 이후 #55를 머지하면 그 한 번으로 main 전체가 배포됩니다
+
+  Pro 트라이얼로 새 팀을 만들어 프로젝트를 옮기면 그 팀 기준으로 6,000 한도가
+  적용되니 오늘 안에 풀 수도 있습니다. 다만 그건 프로젝트 이전이 얽혀서, 급하지
+  않으면 내일 #55 머지 한 번이 제일 깔끔합니다.
+
+✻ Baked for 9s · done 1:00 AM
+
+※ recap: 8around SNS 성능 최적화와 UI 개선 작업을 마쳤고, 처방 다섯 개가 모두 main에 머지됐습니다. 다음 할 일은 세션 기록 PR #55 머지인데, Vercel 무료 배포 한도(하루 100회)에 걸려 내일 15:27 이후에 하면 됩니다.
+❯ 지금 현재 빌드 리밋 끝났는지 확인 가능해?                                     
+
+⏺ Stopped watching Artifact: "8around 렌더링 진단" (connection lost)
+
+⏺ 배포를 새로 만들지 않고(한도를 한 번 더 쓰지 않도록) 기록만 봅니다.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ 정확히는 확인할 수 없습니다. 한도 잔량을 알려주는 곳은 Vercel API인데 토큰이
+  없고, 실제로 배포를 한 번 시도해 보는 것 말고는 판정할 방법이 없습니다.
+  기록으로 알 수 있는 것만 정리합니다.
+
+  앞서 드린 시각 정정. "내일 15:27"은 UTC였습니다. 한국 시각으로는:
+
+  ┌─────────────────────┬─────────────┬─────────────┐
+  │                     │     UTC     │     KST     │
+  ├─────────────────────┼─────────────┼─────────────┤
+  │ 마지막 성공 배포    │ 09-12 15:27 │ 09-13 00:27 │
+  ├─────────────────────┼─────────────┼─────────────┤
+  │ 첫 실패(#55 코멘트) │ 09-12 15:34 │ 09-13 00:34 │
+  ├─────────────────────┼─────────────┼─────────────┤
+  │ 그로부터 24시간     │ 09-13 15:34 │ 09-14 00:34 │
+  ├─────────────────────┼─────────────┼─────────────┤
+  │ 지금                │ 09-13 08:21 │ 09-13 17:21 │
+  └─────────────────────┴─────────────┴─────────────┘
+
+  풀렸는지는 한도가 어떻게 세는지에 달렸습니다. 문서는 "100 times every 86400
+  seconds"라고만 적어서 둘 중 어느 쪽인지 못 박지 않습니다.
+
+  - 최근 24시간 이동 창이면: 이 레포의 최근 24시간 배포는 39개로 줄었습니다(어제
+    오전 것들이 창 밖으로 빠짐). 다른 프로젝트 배포까지 합쳐 100 아래면 이미 
+    풀렸을 수 있습니다
+  - 한도 친 시점부터 24시간 고정이면: 오늘 밤 00:34 KST까지 막혀 있습니다
+
+  다른 프로젝트(dante-web 등)의 배포 수는 제가 볼 수 없어서 이동 창이라 해도
+  확정은 못 합니다.
+
+  확인하는 가장 싼 방법: Vercel 대시보드 → 8around-new-sns → Deployments →
+  ed911fc 옆 … → Redeploy를 누르면 되는데, 이왕이면 main 최신인 9ce1872를 올리는
+  게 목적이니 #55를 머지해 보시는 게 낫습니다. 풀렸으면 그 한 번으로
+  #52~#54까지 프로덕션에 올라가고, 안 풀렸으면 같은 에러 메시지가 뜨고
+  끝입니다(실패한 시도가 추가로 막는 건 없습니다). 머지할까요?
+
+✻ Cogitated for 1m 17s · done 5:22 PM
+
+※ recap: Goal is getting the performance fixes (#52–#54, already merged) onto production, which is blocked by Vercel's free 100-deploys-per-day limit. Next step: merge #55, which either redeploys all of main or shows the same limit error.
+
+❯ 머지 진행했음 지켜보자                                                        
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Monitor(Vercel production deploy of 07ed6dc)
+  ⎿  Monitor started · task b2obvddki · timeout 900s
+
+⏺ #55 머지 확인했습니다 — 07ed6dc, 08:25:49 UTC(17:25 KST). 이 커밋의 Vercel
+  프로덕션 배포 상태를 10초 간격으로 지켜보고 있습니다. 배포가 만들어지는지,
+  한도 에러로 막히는지 결론 나면 바로 알려드리겠습니다.
+
+✻ Cogitated for 45s · done 5:26 PM
+
+⏺ Monitor event: "Vercel production deploy of 07ed6dc"
+
+⏺ Monitor "Vercel production deploy of 07ed6dc" stream ended
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ 한도 풀렸고 배포 성공했습니다.
+
+  07ed6dc (#55 머지) → 배포 6419352063: success, Deployment has completed
+
+  이 한 번으로 main 전체가 올라갔으니 #52 zod 분리, #53 좋아요 refresh 제거, #54
+  팔로잉 DB 함수까지 이제 프로덕션에 있습니다. 배포 직후 확인:
+
+  ┌──────────────────┬────────────────────────────────────────────────┐
+  │       요청       │                      결과                      │
+  ├──────────────────┼────────────────────────────────────────────────┤
+  │ GET /login       │ 200                                            │
+  ├──────────────────┼────────────────────────────────────────────────┤
+  │ GET / (비로그인) │ 307 → 로그인으로                               │
+  ├──────────────────┼────────────────────────────────────────────────┤
+  │ 함수 POST ×2     │ x-vercel-id: icn1::icn1:: — 함수 서울에서 실행 │
+  └──────────────────┴────────────────────────────────────────────────┘
+
+  첫 요청 400~760ms는 새 배포 콜드스타트라 대표값이 아닙니다.
+
+  알게 된 것 하나: 한도는 "막힌 시점부터 24시간"이 아니라 최근 24시간 이동 
+  창이었습니다. 앞서 "오늘 밤 00:34 KST까지 막혀 있을 수 있다"고 했는데,
+  실제로는 어제 오전 배포들이 창 밖으로 빠지면서 17:25 KST에 이미 풀려
+  있었습니다. 메모리에 반영했습니다.
+
+  로그인 상태에서 추천·팔로잉 화면 한 번씩 눌러보시면 처방이 다 들어간
+  프로덕션을 보실 수 있습니다.
+
+✻ Brewed for 1m 17s · done 5:28 PM
