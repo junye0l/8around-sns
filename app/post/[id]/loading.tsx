@@ -1,25 +1,22 @@
 import { PageShell } from "@/components/layout/PageShell";
-import { Skeleton } from "@/components/ui/Skeleton";
+import {
+	ComposeRowSkeleton,
+	ContentCardSkeleton,
+	SectionHeadingSkeleton,
+} from "@/components/ui/Skeleton";
 
 /**
- * 상세 화면의 첫 페인트. `app/loading.tsx`는 제목이 "추천"이라 여기까지 쓰지 못한다.
- *
+ * 상세 화면의 첫 페인트. 글 한 칸, 댓글 입력 줄, "댓글" 제목줄, 댓글 칸의 순서와
+ * 높이를 `page.tsx`와 같게 둔다. 댓글 칸은 답글이 없는 모양이다.
  */
 export default function PostLoading() {
 	return (
 		<PageShell backHref="/" title="게시글">
-			{[0, 1, 2].map((row) => (
-				<div
-					className="flex gap-3 border-hairline border-b px-6 py-4 last:border-b-0"
-					key={row}
-				>
-					<Skeleton className="size-9 shrink-0 rounded-full" />
-					<div className="flex flex-1 flex-col gap-2">
-						<Skeleton className="h-4 w-32" />
-						<Skeleton className="h-4 w-full" />
-						<Skeleton className="h-4 w-3/4" />
-					</div>
-				</div>
+			<ContentCardSkeleton actions={1} />
+			<ComposeRowSkeleton />
+			<SectionHeadingSkeleton />
+			{[0, 1].map((row) => (
+				<ContentCardSkeleton actions={1} key={row} />
 			))}
 		</PageShell>
 	);
