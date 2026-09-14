@@ -51,6 +51,10 @@ export function DropdownMenuTrigger(
 			}}
 			ref={(node) => {
 				if (opener) opener.current.node = node;
+				// 스프레드 뒤라 부르는 쪽 ref를 덮는다. 그 ref에도 같이 넘긴다
+				const { ref } = props;
+				if (typeof ref === "function") ref(node);
+				else if (ref) ref.current = node;
 			}}
 		/>
 	);

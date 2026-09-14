@@ -20,6 +20,8 @@ export type ComposeDialogProps = Omit<
 	/** 밖에서 여닫을 때만 준다. 주면 열림 상태의 출처가 부르는 쪽으로 넘어간다 */
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
+	/** 닫힐 때 포커스를 돌려줄 곳이 트리거가 아닐 때 준다. 밖에서 여는 자리가 쓴다 */
+	onCloseAutoFocus?: (event: Event) => void;
 };
 
 /**
@@ -38,6 +40,7 @@ export function ComposeDialog({
 	trigger,
 	open: openProp,
 	onOpenChange,
+	onCloseAutoFocus,
 	...composer
 }: ComposeDialogProps) {
 	const [openState, setOpenState] = useState(false);
@@ -54,6 +57,7 @@ export function ComposeDialog({
 
 			{/* 기본은 첫 버튼(취소)에 포커스가 간다. 쓰려고 연 창이라 입력칸으로 보낸다 */}
 			<DialogContent
+				onCloseAutoFocus={onCloseAutoFocus}
 				onOpenAutoFocus={(event) => {
 					event.preventDefault();
 					(event.currentTarget as HTMLElement | null)
