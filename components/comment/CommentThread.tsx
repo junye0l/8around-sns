@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/ContentMenu";
 import { GROUP_ROW } from "@/components/ui/GroupList";
 import type { CommentReply, PostComment } from "@/lib/queries/comment";
+import { commentHref } from "@/lib/utils/back-target";
 import { formatRelativeTime } from "@/lib/utils/relative-time";
 
 /**
@@ -19,12 +20,15 @@ export function CommentThread({
 	comment,
 	viewerId,
 	config = COMMENT_MENU,
+	from,
 }: {
 	comment: CommentReply | PostComment;
 	/** 지금 보는 사람의 id. 없으면 어느 행에도 메뉴가 붙지 않는다 */
 	viewerId?: string;
 	/** 더 보기가 무엇을 고치고 지우는지. 답글 행은 `REPLY_MENU` */
 	config?: ContentMenuConfig;
+	/** 게시글 상세가 받은 온 화면. 답글 링크에 실어 돌아올 때 뒤로 가기 이름이 남는다 */
+	from?: string;
 }) {
 	const replies = "replies" in comment ? comment.replies.length : 0;
 
@@ -62,7 +66,7 @@ export function CommentThread({
 				{replies > 0 && (
 					<Link
 						className="-m-1 mt-0.5 inline-block rounded-lg p-1 text-subhead font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97"
-						href={`/comment/${comment.id}`}
+						href={commentHref(comment.id, from)}
 					>
 						답글 {replies}개 보기
 					</Link>

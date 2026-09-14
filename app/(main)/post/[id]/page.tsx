@@ -122,6 +122,7 @@ export default async function PostPage({
 					{comments.map((comment) => (
 						<CommentThread
 							comment={comment}
+							from={back.href}
 							key={comment.id}
 							viewerId={profile?.id}
 						/>

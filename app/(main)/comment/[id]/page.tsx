@@ -13,6 +13,7 @@ import { getComment, listCommentReplies } from "@/lib/queries/comment";
 import { getPost } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
+import { backTarget, postHref } from "@/lib/utils/back-target";
 import { COMMENT_CONTENT_MAX } from "@/lib/utils/content-limits";
 
 export const metadata: Metadata = {
@@ -31,13 +32,16 @@ export const metadata: Metadata = {
  * 순서대로 읽는 이유는 `app/(main)/post/[id]/page.tsx`와 같다. 이 화면에서 댓글을 지우면
  * 그 자리에 404가 뜬다 (결정 0022, 0037).
  *
+ * 게시글로 돌아가는 링크는 주소의 `from`을 다시 싣는다 (`lib/utils/back-target.ts`).
+ *
  * 로딩은 `loading.tsx`, 없는 댓글은 `not-found.tsx`, 에러는 `app/error.tsx`가 받는다 (규칙 10).
  * @see docs/DESIGN.md 댓글 상세
  */
 export default async function CommentPage({
 	params,
+	searchParams,
 }: PageProps<"/comment/[id]">) {
-	const { id } = await params;
+	const [{ id }, { from }] = await Promise.all([params, searchParams]);
 	const supabase = await createClient();
 
 	const comment = await getComment(supabase, id);
@@ -53,7 +57,8 @@ export default async function CommentPage({
 	if (!post) notFound();
 
 	const displayName = profile?.display_name ?? "나";
-	const postHref = `/post/${comment.post_id}`;
+	// 게시글이 실어 준 온 화면을 되돌려 실어야 게시글의 뒤로 가기 이름이 남는다
+	const toPost = postHref(comment.post_id, backTarget(from).href);
 
 	const compose = {
 		action: createCommentAction,
@@ -79,12 +84,12 @@ export default async function CommentPage({
 	);
 
 	return (
-		<PageShell backHref={postHref} backLabel="게시글" title="댓글">
+		<PageShell backHref={toPost} backLabel="게시글" title="댓글">
 			<div className="flex flex-col gap-3">
 				<article className="rounded-card bg-canvas px-5 py-4 shadow-card">
 					<Link
 						className="-mx-1 block truncate rounded-lg px-1 text-footnote text-fg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-						href={postHref}
+						href={toPost}
 					>
 						{post.author.display_name} · {post.content}
 					</Link>

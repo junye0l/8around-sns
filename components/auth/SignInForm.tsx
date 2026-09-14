@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { FormError } from "@/components/auth/FormError";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
+import { useFocusFirstInvalid } from "@/hooks/useFocusFirstInvalid";
 import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { signInAction } from "@/lib/actions/auth";
 import type { SignInResult } from "@/lib/services/auth";
@@ -28,11 +29,7 @@ export function SignInForm() {
 	const failed = result && !result.ok ? result : null;
 	const errors = failed?.errors ?? {};
 
-	const form = useRef<HTMLFormElement>(null);
-	useEffect(() => {
-		if (!result) return;
-		form.current?.querySelector<HTMLElement>("[aria-invalid]")?.focus();
-	}, [result]);
+	const form = useFocusFirstInvalid(result);
 
 	return (
 		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 칸 아래에 띄운다
