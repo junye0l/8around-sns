@@ -47,7 +47,7 @@ export function ContentCardSkeleton({
 	return (
 		<div
 			className={cn(
-				"flex gap-3 px-6 py-4",
+				"flex gap-3 px-4 py-4 md:px-6",
 				!connected && "border-hairline border-b last:border-b-0",
 			)}
 		>
@@ -90,7 +90,7 @@ function ActionSkeleton() {
  */
 export function ComposeRowSkeleton() {
 	return (
-		<div className="flex items-center gap-3 border-hairline border-b px-6 py-4">
+		<div className="flex items-center gap-3 border-hairline border-b px-4 py-4 md:px-6">
 			<Skeleton className="size-9 shrink-0 rounded-full" />
 			<div className="text-body">
 				<SkeletonLine className="w-48" />
@@ -105,7 +105,7 @@ export function ComposeRowSkeleton() {
  */
 export function SectionHeadingSkeleton() {
 	return (
-		<div className="border-hairline border-b px-6 py-3 text-body-sm">
+		<div className="border-hairline border-b px-4 py-3 md:px-6 text-body-sm">
 			<div className="h-lh" />
 		</div>
 	);

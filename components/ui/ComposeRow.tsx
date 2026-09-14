@@ -22,7 +22,7 @@ export function ComposeRow(props: Omit<ComposeDialogProps, "trigger">) {
 		<ComposeDialog
 			{...props}
 			trigger={
-				<div className="flex items-center gap-3 border-hairline border-b px-6 py-4">
+				<div className="flex items-center gap-3 border-hairline border-b px-4 py-4 md:px-6">
 					<Avatar path={props.authorAvatar} />
 					{/* -m-2 p-2 는 글자를 움직이지 않고 누를 자리만 넓힌다. 아바타와의 12px 간격이
 					    그대로 남는다. `ContentCard`의 이름 링크가 쓰는 방식과 같다 */}

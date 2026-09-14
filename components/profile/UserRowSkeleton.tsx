@@ -7,7 +7,7 @@ import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
  */
 export function UserRowSkeleton() {
 	return (
-		<div className="flex gap-3 border-hairline border-b px-6 py-3 last:border-b-0">
+		<div className="flex gap-3 border-hairline border-b px-4 py-3 md:px-6 last:border-b-0">
 			<Skeleton className="size-9 shrink-0 rounded-full" />
 			<div className="min-w-0 flex-1 text-body-sm">
 				<SkeletonLine className="w-24" />

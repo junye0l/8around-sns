@@ -10,7 +10,8 @@ import { BrandMark } from "@/components/ui/BrandMark";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * 왼쪽 아이콘 레일. 로고가 위, 항목이 가운데, 더 보기가 아래다. 웹 폭만 맞춘다.
+ * 왼쪽 아이콘 레일. 로고가 위, 항목이 가운데, 더 보기가 아래다.
+ * 768px 미만에서는 같은 항목이 화면 아래 탭바로 내려간다. 결정 0033.
  *
  * 항목은 추천, 새로운 게시글, 팔로잉, 좋아요, 프로필뿐이다. 글 목록인 셋을 붙여 두고 내 프로필을 맨 끝에 둔다. 검색, 알림, 메시지는 범위 밖이라
  * 자리를 만들지 않는다.
@@ -31,11 +32,11 @@ import { cn } from "@/lib/utils/cn";
  */
 // px-3은 접힌 48px 칸에서 24px 아이콘을 가운데 놓는 값이라 펼칠 때 정렬 클래스를 바꾸지 않는다
 const ITEM =
-	"flex size-12 items-center gap-3 rounded-lg px-3 text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary group-hover:w-full group-has-focus-visible:w-full";
+	"flex size-12 items-center gap-3 rounded-lg px-3 text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:group-hover:w-full md:group-has-focus-visible:w-full";
 
 // focus-within이 아니라 has-focus-visible이다. 마우스 클릭도 링크에 포커스를 남겨서 레일이 안 접힌다
 const LABEL =
-	"sr-only group-hover:not-sr-only group-hover:whitespace-nowrap group-has-focus-visible:not-sr-only group-has-focus-visible:whitespace-nowrap";
+	"sr-only md:group-hover:not-sr-only md:group-hover:whitespace-nowrap md:group-has-focus-visible:not-sr-only md:group-has-focus-visible:whitespace-nowrap";
 
 const CURRENT = "text-fg";
 
@@ -49,10 +50,13 @@ export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 	const pathname = usePathname();
 
 	return (
-		<nav className="group fixed inset-y-0 left-0 z-20 flex w-19 flex-col overflow-hidden px-3.5 py-4 text-body transition-all duration-[var(--motion-fast)] ease-(--ease-standard) hover:w-60 hover:bg-background has-focus-visible:w-60 has-focus-visible:bg-background">
-			<BrandMark />
+		// 768 미만은 화면 아래 탭바다. 로고와 더 보기는 빠지고 더 보기는 `PageShell` 제목줄로 간다
+		<nav className="group fixed inset-x-0 bottom-0 z-20 flex h-16 items-center overflow-hidden border-hairline border-t bg-canvas px-2 text-body transition-all duration-[var(--motion-fast)] ease-(--ease-standard) md:inset-x-auto md:inset-y-0 md:left-0 md:h-auto md:w-19 md:flex-col md:items-stretch md:border-t-0 md:bg-transparent md:px-3.5 md:py-4 md:hover:w-60 md:hover:bg-background md:has-focus-visible:w-60 md:has-focus-visible:bg-background">
+			<div className="max-md:hidden">
+				<BrandMark />
+			</div>
 
-			<div className="my-auto flex flex-col gap-2">
+			<div className="flex flex-1 justify-around md:my-auto md:flex-none md:flex-col md:justify-start md:gap-2">
 				<Link
 					aria-current={pathname === "/" ? "page" : undefined}
 					className={cn(ITEM, pathname === "/" && CURRENT)}
@@ -89,7 +93,7 @@ export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 				</Suspense>
 			</div>
 
-			<MoreMenu className={ITEM} labelClassName={LABEL} />
+			<MoreMenu className={cn(ITEM, "max-md:hidden")} labelClassName={LABEL} />
 		</nav>
 	);
 }

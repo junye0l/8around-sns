@@ -4,7 +4,7 @@
  */
 export function SectionHeading({ label }: { label: string }) {
 	return (
-		<h2 className="border-hairline border-b px-6 py-3 text-body-sm font-semibold text-fg">
+		<h2 className="border-hairline border-b px-4 py-3 md:px-6 text-body-sm font-semibold text-fg">
 			{label}
 		</h2>
 	);

@@ -16,7 +16,7 @@ import {
 export default function ProfileLoading() {
 	return (
 		<PageShell backHref="/" title="프로필">
-			<div className="border-hairline border-b px-6 py-5">
+			<div className="border-hairline border-b px-4 py-5 md:px-6">
 				<div className="flex items-start gap-4">
 					<div className="min-w-0 flex-1">
 						<div className="text-title">
