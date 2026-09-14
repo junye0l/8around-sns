@@ -108,7 +108,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 - [x] 모든 화면에 로딩, 빈 상태, 없음, 에러 네 가지 (AGENTS.md 규칙 10) — 6개 라우트 대조 완료 ([결정 0012](decisions/0012-a11y-pass.md))
 - [ ] 낙관적 업데이트 — 팔로우 토글, 댓글 작성. 좋아요는 먼저 넣었다 ([결정 0021](decisions/0021-like-optimistic.md))
 - [ ] 전환은 `--motion-fast`(150ms) / `--motion-standard`(250ms), 이징은 `--ease-enter` / `--ease-exit` / `--ease-standard` 셋만
-- [x] `prefers-reduced-motion` 존중 — `app/globals.css:100-106`이 `motion-*`를 전부 0ms로 내린다 (DESIGN.md §3 Reduce motion)
+- [x] `prefers-reduced-motion` 존중 — `app/globals.css:100-106`이 `motion-*`를 전부 0ms로 내린다 (`docs/DESIGN.md` 움직임)
 - [x] **태블릿 · 모바일 대응** — 로그인 뒤 화면은 768px 미만에서 레일이 아래 탭바로 내려간다 ([결정 0033](decisions/0033-responsive-shell.md)). 로그인, 회원가입 화면은 모바일에서 로고가 가운데, 건너가는 줄이 바닥에 선다 ([결정 0034](decisions/0034-auth-responsive.md))
 
 ## 8. 애니메이션
@@ -126,8 +126,25 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 
 - [ ] 심사 시나리오 E2E 1개 — 가입 → 로그인 → 글 작성 → 댓글 → 대댓글 → 팔로우
 - [ ] 위 시나리오를 **배포 URL에서 사람 손으로** 한 번 통과
-- [ ] `docs/DESIGN.md` §1 Do/Don't + Principles를 화면마다 대조 — 파랑은 동작에만, 그림자 없음, 4px 그리드
+- [ ] `docs/DESIGN.md` 원칙을 화면마다 대조 — 보라는 동작에만, 그림자는 라이트에서 둘만, 4px 그리드
 - [ ] README — 배포 URL, 체험 경로, 테스트 계정, 로컬 실행 방법
+
+## 10. 디자인 리뉴얼 (소프트 서피스)
+
+값과 화면 구성은 `docs/DESIGN.md`, 이유는 [결정 0041](decisions/0041-soft-surface.md). 한 단계가 PR 하나다.
+단계마다 390px과 1280px 폭, 라이트와 다크를 Playwright로 열어 DESIGN.md와 대조하고 스크린샷으로 보고한다 (AGENTS.md 규칙 16).
+
+- [ ] 1. 토큰과 공통 컴포넌트 — `app/globals.css` 토큰 교체, `lib/utils/tone.ts`와 테스트, `Button`, `TextField`, `Avatar`,
+  `EmptyState`(icon, title, description, action), `Skeleton`, `Dialog`(sheet), `DropdownMenu`. 여러 기능에 걸쳐 한 PR로 묶는다 (규칙 11 예외).
+  Toss 문서를 인용하던 코드 주석(`app/globals.css`, `components/ui/Button.tsx`)도 여기서 고친다. 쓰지 않게 되는 토큰(`--blur-rail` 등)을 지운다
+- [ ] 2. 뼈대 — `app/(main)/layout.tsx`, `PageShell`, `SideNav`(768, 1024, 1280px), 하단 탭, `MoreMenu`(시트, 디자인 세그먼트)
+- [ ] 3. 인증 — `/login`, `/signup`. 버튼 비활성 조건, 에러 문구 분기, 첫 에러 칸 포커스
+- [ ] 4. 피드 — 추천, 팔로잉, 좋아요, `ContentCard`, `ComposeRow`, `ComposeDialog`, `LikeButton`, `CommentCount`, 빈 상태 문구와 버튼
+- [ ] 5. 글과 댓글 — `/post/[id]`, `/comment/[id]`, `CommentThread`, 입력줄, 삭제 확인
+- [ ] 6. 프로필 — `/u/[id]`, `ProfileHeader`, `ProfileEditDialog`, `InterestsField`, 팔로워·팔로잉 목록(행 팔로우 버튼), 내 프로필 요약 칸, 404와 에러
+
+1과 2가 먼저 머지된다. 3~6은 서로 파일이 겹치지 않아 병렬로 진행할 수 있다.
+각 단계가 끝나면 `/impeccable polish <라우트>`로 DESIGN.md와 어긋난 곳을 한 번 훑는다.
 
 ---
 

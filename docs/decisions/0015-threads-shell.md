@@ -1,6 +1,6 @@
 # 0015. 화면 뼈대를 Threads 모양으로 바꾸고 버튼을 흑백으로 옮긴다
 
-- 상태: 일부 대체됨 → [0028](0028-sidenav-in-layout.md), [0033](0033-responsive-shell.md)
+- 상태: 대체됨 → [0028](0028-sidenav-in-layout.md), [0033](0033-responsive-shell.md), [0041](0041-soft-surface.md)
 - 날짜: 2026-09-12
 
 ## 맥락
