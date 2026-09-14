@@ -71,6 +71,7 @@
 - [x] 팔로워 · 팔로잉 수와 목록 — 수를 누르면 `/u/[username]/followers` · `/following`으로 간다
 - [x] 팔로잉 기준 피드 필터 — `/following`. 팔로우 목록을 먼저 읽고 `in`으로 거른다 (`lib/queries/post.ts`의 `listFollowingFeed`)
 - [x] 프로필 화면에 그 사람이 쓴 글 — 헤더 아래에 최신순으로 편다 (`lib/queries/post.ts`의 `listPostsByAuthor`). 사용자가 요청해서 범위에 들어왔다
+- [x] 좋아요한 글 피드 — `/likes`. 누른 시각의 역순이고 `post_likes`에서 출발해 글을 임베드한다 (`lib/queries/post.ts`의 `listLikedFeed`, [결정 0029](decisions/0029-liked-feed-from-post-likes.md)). 사용자가 요청해서 범위에 들어왔다
 - [x] 프로필 편집 — 내 프로필의 팔로우 버튼 자리에 "프로필 편집" 버튼, 모달에서 표시 이름과 프로필 이미지를 바꾼다.
   아이디(`username`)는 주소라 고정이다. 이미지는 Storage `avatars` 버킷에 두고 프로필에는 경로만 저장한다
   (`supabase/migrations/0007_profile_avatars.sql`, [결정 0030](decisions/0030-profile-avatar-upload.md)). 사용자가 요청해서 범위에 들어왔다.
@@ -96,7 +97,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 - [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다. 카운터 없음, 높이 고정 ([결정 0014](decisions/0014-composer-layout.md))
 - [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
 - [x] `PageShell` — 가운데 카드 컬럼 · 붙박이 제목줄. 카드 상자도 여기서 그린다 ([결정 0015](decisions/0015-threads-shell.md)). 레일은 `app/(main)/layout.tsx`가 그린다 ([결정 0028](decisions/0028-sidenav-in-layout.md))
-- [x] `SideNav` — 왼쪽 아이콘 레일. 로고 · 추천 · 새로운 게시글 · 팔로잉 · 프로필, 하단에 더 보기(로그아웃). `TabBar`는 모바일 대응 때 §7에서 같이 본다
+- [x] `SideNav` — 왼쪽 아이콘 레일. 로고 · 추천 · 새로운 게시글 · 팔로잉 · 좋아요 · 프로필, 하단에 더 보기(로그아웃). `TabBar`는 모바일 대응 때 §7에서 같이 본다
 - [x] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
 - [x] `EmptyState` — 한 줄 문구. 버튼은 받지 않는다(세 화면 모두 위에 입력칸이 있다). 같은 마크업이 세 번째로 나타나 올렸다 (규칙 2)
 - [ ] `Spinner` — 아직 쓸 화면이 없다. `loading.tsx` 스켈레톤이 첫 페인트를 받는다
