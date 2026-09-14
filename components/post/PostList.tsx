@@ -43,6 +43,7 @@ export function PostList({
 			menu={
 				post.author.username === viewerUsername ? (
 					<PostMenu
+						authorAvatar={post.author.avatar_path}
 						authorName={post.author.display_name}
 						content={post.content}
 						postId={post.id}

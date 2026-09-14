@@ -5,6 +5,7 @@ import type { Database } from "@/types/database";
 export type FollowUser = {
 	username: string;
 	display_name: string;
+	avatar_path: string | null;
 	bio: string | null;
 };
 
@@ -13,9 +14,9 @@ export type FollowUser = {
  * 제약 이름의 출처는 `types/database.ts`의 `Relationships`다.
  */
 const FOLLOWER_SELECT =
-	"user:profiles!follows_follower_id_fkey(username, display_name, bio)";
+	"user:profiles!follows_follower_id_fkey(username, display_name, avatar_path, bio)";
 const FOLLOWING_SELECT =
-	"user:profiles!follows_following_id_fkey(username, display_name, bio)";
+	"user:profiles!follows_following_id_fkey(username, display_name, avatar_path, bio)";
 
 /** 한 번에 읽어올 개수. 페이지네이션은 범위 밖이라 첫 장만 본다 */
 const LIST_LIMIT = 100;

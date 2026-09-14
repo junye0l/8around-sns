@@ -34,7 +34,11 @@ export default async function Home() {
 
 	return (
 		<PageShell title="추천">
-			<ComposeRow {...POST_COMPOSE} authorName={displayName} />
+			<ComposeRow
+				{...POST_COMPOSE}
+				authorAvatar={profile?.avatar_path}
+				authorName={displayName}
+			/>
 
 			{posts.length === 0 ? (
 				<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />

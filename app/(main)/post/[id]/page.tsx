@@ -65,6 +65,7 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 				menu={
 					post.author.username === profile?.username ? (
 						<PostMenu
+							authorAvatar={post.author.avatar_path}
 							authorName={post.author.display_name}
 							content={post.content}
 							postId={post.id}
@@ -75,6 +76,7 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 
 			<ComposeRow
 				action={createCommentAction}
+				authorAvatar={profile?.avatar_path}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
 				placeholder={`${post.author.username}님에게 답글 남기기`}

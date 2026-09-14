@@ -32,13 +32,16 @@ export async function isUsernameTaken(
  */
 export async function getCurrentProfile(
 	supabase: SupabaseClient<Database>,
-): Promise<Pick<Profile, "id" | "username" | "display_name"> | null> {
+): Promise<Pick<
+	Profile,
+	"id" | "username" | "display_name" | "avatar_path"
+> | null> {
 	const userId = await getSessionUserId(supabase);
 	if (!userId) return null;
 
 	const { data } = await supabase
 		.from("profiles")
-		.select("id, username, display_name")
+		.select("id, username, display_name, avatar_path")
 		.eq("id", userId)
 		.maybeSingle();
 
@@ -48,7 +51,7 @@ export async function getCurrentProfile(
 /** 프로필 화면의 주인공. 팔로워 · 팔로잉 수를 같이 들고 온다 */
 export type ProfileDetail = Pick<
 	Profile,
-	"id" | "username" | "display_name" | "bio"
+	"id" | "username" | "display_name" | "avatar_path" | "bio"
 > & {
 	follower_count: number;
 	following_count: number;
@@ -62,7 +65,7 @@ export type ProfileDetail = Pick<
  * 그건 수만 보여주는 자리에 목록을 통째로 끌고 오는 일이다.
  */
 const PROFILE_DETAIL_SELECT =
-	"id, username, display_name, bio, followers:follows!follows_following_id_fkey(count), following:follows!follows_follower_id_fkey(count)";
+	"id, username, display_name, avatar_path, bio, followers:follows!follows_following_id_fkey(count), following:follows!follows_follower_id_fkey(count)";
 
 type ProfileDetailRow = Omit<
 	ProfileDetail,

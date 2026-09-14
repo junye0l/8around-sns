@@ -32,12 +32,15 @@ export function PostMenu({
 	postId,
 	content,
 	authorName,
+	authorAvatar,
 }: {
 	postId: string;
 	/** 지금 본문. 수정 모달이 이걸 채운 채로 열린다 */
 	content: string;
 	/** 수정 모달 아바타에 쓸 이름 */
 	authorName: string;
+	/** 수정 모달 아바타에 쓸 `profiles.avatar_path` */
+	authorAvatar: string | null;
 }) {
 	const [editing, setEditing] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -70,6 +73,7 @@ export function PostMenu({
 			<ComposeDialog
 				{...POST_COMPOSE}
 				action={updatePostAction}
+				authorAvatar={authorAvatar}
 				authorName={authorName}
 				initialContent={content}
 				onOpenChange={setEditing}

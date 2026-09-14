@@ -9,7 +9,11 @@ export type CommentReply = {
 	parent_id: string | null;
 	content: string;
 	created_at: string;
-	author: { username: string; display_name: string };
+	author: {
+		username: string;
+		display_name: string;
+		avatar_path: string | null;
+	};
 };
 
 /** 최상위 댓글. 자기 답글을 달고 다닌다 ([결정 0008](../../docs/decisions/0008-reply-tree-on-post.md)) */
@@ -19,10 +23,10 @@ export type PostComment = CommentReply & { replies: CommentReply[] };
 export type CommentDetail = CommentReply & { post_id: string };
 
 const COMMENT_SELECT =
-	"id, parent_id, content, created_at, author:profiles(username, display_name)";
+	"id, parent_id, content, created_at, author:profiles(username, display_name, avatar_path)";
 
 const COMMENT_DETAIL_SELECT =
-	"id, parent_id, post_id, content, created_at, author:profiles(username, display_name)";
+	"id, parent_id, post_id, content, created_at, author:profiles(username, display_name, avatar_path)";
 
 /**
  * 한 글에 달린 댓글과 답글. 한 번에 읽고 앱에서 두 층으로 접는다.
