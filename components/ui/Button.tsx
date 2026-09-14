@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils/cn";
  * 진행 중(`aria-busy`)은 꺼진 색을 칠하지 않고 변형 색 그대로 스피너만 돈다.
  *
  * `outline`은 리뉴얼 전 변형이다. 쓰는 화면이 옮겨가면 지운다.
+ * radix 항목처럼 요소를 직접 그려야 하는 자리는 `buttonStyles`로 같은 모양만 가져간다.
  * @see docs/decisions/0010-focus-ring-primary.md
  */
-const button = cva(
+export const buttonStyles = cva(
 	"relative inline-flex items-center justify-center rounded-full font-bold transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97 active:brightness-92 aria-disabled:cursor-not-allowed aria-disabled:active:scale-100 aria-disabled:active:brightness-100 aria-disabled:not-aria-busy:bg-hairline aria-disabled:not-aria-busy:text-fg-disabled aria-busy:cursor-progress",
 	{
 		variants: {
@@ -36,7 +37,7 @@ const button = cva(
 );
 
 type ButtonProps = ComponentProps<"button"> &
-	VariantProps<typeof button> & {
+	VariantProps<typeof buttonStyles> & {
 		/**
 		 * 진행 중. 글자 자리에 스피너가 서서 폭이 그대로다. 누름을 막는다.
 		 * 요소를 `disabled`로 만들지 않는다 — 포커스된 요소가 disabled가 되면
@@ -63,7 +64,7 @@ export function Button({
 	onClick,
 	...props
 }: ButtonProps) {
-	const classes = cn(button({ size, variant }), className);
+	const classes = cn(buttonStyles({ size, variant }), className);
 	const blocked = loading || disabled;
 
 	if (href) {

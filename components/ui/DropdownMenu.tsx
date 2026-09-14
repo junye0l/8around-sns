@@ -1,7 +1,6 @@
 "use client";
 
 import * as Primitive from "@radix-ui/react-dropdown-menu";
-import { Check, ChevronRight } from "lucide-react";
 import { type ComponentProps, createContext, useContext, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
 
@@ -153,67 +152,25 @@ export function DropdownMenuSeparator({
 	);
 }
 
-/** 안에 메뉴를 하나 더 품는 묶음. 트리거와 떠 있는 면을 짝으로 쓴다 */
-export const DropdownMenuSub = Primitive.Sub;
-
-/** 하위 메뉴를 여는 줄. 누르거나 올리거나 오른쪽 화살표 키로 연다 */
-export function DropdownMenuSubTrigger({
-	className,
-	children,
-	...props
-}: ComponentProps<typeof Primitive.SubTrigger>) {
-	return (
-		<Primitive.SubTrigger className={cn(ITEM, className)} {...props}>
-			{children}
-			<ChevronRight aria-hidden className="ml-auto size-5 shrink-0" />
-		</Primitive.SubTrigger>
-	);
-}
-
-/** 하위 메뉴의 떠 있는 면. 겉모습은 `DropdownMenuContent`와 같다 */
-export function DropdownMenuSubContent({
-	className,
-	sideOffset = 8,
-	...props
-}: ComponentProps<typeof Primitive.SubContent>) {
-	return (
-		<Primitive.Portal>
-			<Primitive.SubContent
-				className={cn(SURFACE, className)}
-				collisionPadding={8}
-				sideOffset={sideOffset}
-				{...props}
-			/>
-		</Primitive.Portal>
-	);
-}
-
-/** 하나만 고르는 줄 묶음. `value`와 `onValueChange`를 받는다 */
+/** 하나만 고르는 칸 묶음. `value`와 `onValueChange`를 받는다 */
 export const DropdownMenuRadioGroup = Primitive.RadioGroup;
 
 /**
- * 고를 수 있는 한 줄. 고른 줄은 오른쪽에 체크가 선다.
+ * 고를 수 있는 칸 하나. 모양은 부르는 쪽이 `className`으로 준다. 켜진 칸은 `aria-checked`가 붙는다.
+ * 세그먼트처럼 한 줄에 나란히 두어도 위아래 화살표 키로 옮겨 다닌다.
  * 손을 뗄 때 실행되지 않게 막는 이유는 `DropdownMenuItem`과 같다.
  */
 export function DropdownMenuRadioItem({
-	className,
-	children,
 	onPointerUp,
 	...props
 }: ComponentProps<typeof Primitive.RadioItem>) {
 	return (
 		<Primitive.RadioItem
-			className={cn(ITEM, className)}
 			onPointerUp={(event) => {
 				onPointerUp?.(event);
 				event.preventDefault();
 			}}
 			{...props}
-		>
-			{children}
-			<Primitive.ItemIndicator className="ml-auto">
-				<Check aria-hidden className="size-5 shrink-0" />
-			</Primitive.ItemIndicator>
-		</Primitive.RadioItem>
+		/>
 	);
 }

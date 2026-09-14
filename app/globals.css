@@ -87,10 +87,6 @@
 	--radius-menu: 18px;
 	--radius-field: 16px;
 
-	/* 로컬 확장 — 문서에 없다. 리뉴얼 전 레일(components/layout/SideNav.tsx)이 쓴다. 결정 0035.
-	   리뉴얼 2단계에서 레일이 바뀌면 지운다 */
-	--blur-rail: 12px;
-
 	/* 그림자. 다크는 색을 투명으로 두어 그림자 없이 면 색으로 나눈다 */
 	--shadow-card: 0 1px 2px light-dark(rgb(20 20 40 / 5%), transparent);
 	--shadow-raised: 0 12px 36px light-dark(rgb(20 20 40 / 16%), transparent);

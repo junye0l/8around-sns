@@ -1,11 +1,18 @@
+const SIZES = {
+	30: "size-7.5 rounded-lg text-headline",
+	44: "size-11 rounded-xl text-title",
+} as const;
+
 /**
- * 로고 자리. 48px 칸 가운데 글자 "8" 하나다.
- * 왼쪽 레일(`components/layout/SideNav.tsx`)과 인증 화면(`components/auth/AuthPanels.tsx`)이
- * 같은 왼쪽 위 자리에 둔다. 로그인 전후로 로고가 움직이지 않는다. 768px 미만은 레일이 없어 인증 화면이 가운데에 둔다, 결정 0034.
+ * 로고 마크. `primary-fill` 사각형 안에 흰 "8" 하나다.
+ * 메뉴 맨 위(`components/layout/SideNav.tsx`)는 30px, 인증 화면(`components/auth/AuthPanels.tsx`)은 44px이다.
+ * @see docs/DESIGN.md 탭과 메뉴
  */
-export function BrandMark() {
+export function BrandMark({ size = 44 }: { size?: keyof typeof SIZES }) {
 	return (
-		<span className="flex size-12 items-center justify-center text-title text-fg">
+		<span
+			className={`flex shrink-0 items-center justify-center bg-primary-fill font-extrabold text-on-primary ${SIZES[size]}`}
+		>
 			8
 		</span>
 	);
