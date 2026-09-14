@@ -38,7 +38,7 @@ export default function ProfileLoading() {
 			<SectionHeadingSkeleton />
 
 			{[0, 1, 2].map((row) => (
-				<ContentCardSkeleton actions key={row} />
+				<ContentCardSkeleton actions={2} key={row} />
 			))}
 		</PageShell>
 	);
