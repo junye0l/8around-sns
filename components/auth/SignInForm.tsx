@@ -18,8 +18,8 @@ export function SignInForm() {
 
 	return (
 		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 아래 자리에 띄운다
-		<form action={formAction} className="flex flex-col gap-2" noValidate>
-			<h1 className="mb-2 text-center text-body font-semibold text-fg">
+		<form action={formAction} className="flex flex-col gap-4" noValidate>
+			<h1 className="text-center text-body font-semibold text-fg">
 				8around 계정으로 로그인
 			</h1>
 
