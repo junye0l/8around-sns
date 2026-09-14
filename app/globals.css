@@ -114,6 +114,23 @@
 	color-scheme: dark;
 }
 
+/*
+ * 테마를 바꿀 때 옛 화면과 새 화면을 한 장씩 겹쳐 흐리게 넘긴다 (components/layout/MoreMenu.tsx).
+ * 겹치는 동안 요소별 색 전환을 끈다. 켜 두면 새 화면 안에서 버튼 채움만 옛 색에서 따라오며 튄다. 결정 0041
+ */
+:root[data-theme-switching] *,
+:root[data-theme-switching] *::before,
+:root[data-theme-switching] *::after {
+	/* biome-ignore lint/complexity/noImportantStyles: 유틸리티 클래스의 transition을 이기려면 필요하다 */
+	transition: none !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: var(--motion-standard);
+	animation-timing-function: var(--ease-standard);
+}
+
 /* 로컬 확장 — durations. duration-[var(--motion-fast)] 로 참조한다 */
 :root {
 	--motion-instant: 0ms;

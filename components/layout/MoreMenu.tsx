@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/DropdownMenu";
 import { signOutAction } from "@/lib/actions/auth";
 import { setThemeAction } from "@/lib/actions/theme";
-import { parseTheme } from "@/lib/utils/theme";
+import { parseTheme, type Theme } from "@/lib/utils/theme";
 
 /**
  * "더 보기". 레일 맨 아래에, 모바일에서는 `PageShell` 제목줄 오른쪽에 선다.
@@ -73,6 +73,31 @@ export function MoreMenu({
 	);
 }
 
+/**
+ * 화면 전체를 한 장으로 겹쳐 바꾼다. 요소마다 두면 `transition-colors`가 있는 것만 늦게 따라와
+ * 바탕은 이미 바뀌었는데 버튼 채움은 옛 색으로 남는다. 겹치는 동안은 그 전환을 끈다. 결정 0041
+ */
+function applyTheme(theme: Theme) {
+	const root = document.documentElement;
+	const set = () => {
+		if (theme === "system") delete root.dataset.theme;
+		else root.dataset.theme = theme;
+	};
+
+	// 모르는 브라우저는 겹치지 않고 바로 바꾼다
+	if (!document.startViewTransition) return set();
+
+	root.dataset.themeSwitching = "";
+	const transition = document.startViewTransition(set);
+	latestTransition = transition;
+	// 빨리 연달아 고르면 앞 전환이 건너뛰어지며 먼저 끝난다. 뒤 전환이 겹치는 중에 전환을 다시 켜지 않게 마지막 것만 푼다
+	transition.finished.finally(() => {
+		if (latestTransition === transition) delete root.dataset.themeSwitching;
+	});
+}
+
+let latestTransition: ViewTransition | null = null;
+
 const THEMES = [
 	{ value: "dark", label: "다크" },
 	{ value: "light", label: "라이트" },
@@ -91,9 +116,7 @@ function ThemeOptions() {
 			onValueChange={(value) => {
 				// 서버 응답을 기다리지 않고 바로 바꾼다. 응답으로 다시 그려질 때도 같은 값이 온다
 				const next = parseTheme(value);
-				const root = document.documentElement;
-				if (next === "system") delete root.dataset.theme;
-				else root.dataset.theme = next;
+				applyTheme(next);
 				setTheme(next);
 				setThemeAction(next);
 			}}
