@@ -230,6 +230,10 @@ export type Database = {
 					isSetofReturn: true;
 				};
 			};
+			like_count: {
+				Args: { post: Database["public"]["Tables"]["posts"]["Row"] };
+				Returns: number;
+			};
 			liked_by_viewer: {
 				Args: { post: Database["public"]["Tables"]["posts"]["Row"] };
 				Returns: boolean;
