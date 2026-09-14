@@ -72,6 +72,7 @@ export default async function CommentPage({
 
 			<ComposeRow
 				action={createCommentAction}
+				authorAvatar={profile?.avatar_path}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
 				placeholder={`${comment.author.username}님에게 답글 남기기`}

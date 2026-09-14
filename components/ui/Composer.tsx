@@ -14,6 +14,8 @@ type ComposerResult = { ok: true } | { ok: false; error: string };
 
 type ComposerProps = {
 	authorName: string;
+	/** 아바타에 쓸 `profiles.avatar_path`. 없으면 기본 아이콘이다 */
+	authorAvatar?: string | null;
 	action: (
 		prev: ComposerResult | null,
 		formData: FormData,
@@ -49,6 +51,7 @@ type ComposerProps = {
  */
 export function Composer({
 	authorName,
+	authorAvatar,
 	action,
 	placeholder,
 	submitLabel,
@@ -80,7 +83,7 @@ export function Composer({
 			className="flex gap-3 border-hairline border-b px-6 py-3 last:border-b-0"
 		>
 			{children}
-			<Avatar name={authorName} />
+			<Avatar path={authorAvatar} />
 
 			{/* min-w-0 이 없으면 긴 이름이 flex 칸을 밀어내 시각이 잘린다 */}
 			<div className="min-w-0 flex-1">

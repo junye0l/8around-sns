@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { FollowButton } from "@/components/follow/FollowButton";
 import { PageShell } from "@/components/layout/PageShell";
 import { PostList } from "@/components/post/PostList";
+import { ProfileEditDialog } from "@/components/profile/ProfileEditDialog";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -50,7 +51,12 @@ export default async function ProfilePage({
 		<PageShell backHref="/" title={profile.display_name}>
 			<ProfileHeader
 				action={
-					isMe ? undefined : (
+					isMe ? (
+						<ProfileEditDialog
+							avatarPath={profile.avatar_path}
+							displayName={profile.display_name}
+						/>
+					) : (
 						<FollowButton following={following} targetId={profile.id} />
 					)
 				}

@@ -4,7 +4,11 @@ import { Avatar } from "@/components/ui/Avatar";
 import { formatRelativeTime } from "@/lib/utils/relative-time";
 
 type ContentCardProps = {
-	author: { username: string; display_name: string };
+	author: {
+		username: string;
+		display_name: string;
+		avatar_path: string | null;
+	};
 	createdAt: string;
 	content: string;
 	/** 본문 아래 줄. 좋아요 버튼과 댓글 수가 여기 붙는다 */
@@ -39,7 +43,7 @@ export function ContentCard({
 			className={`flex gap-3 px-6 py-4 ${connected ? "" : "border-hairline border-b last:border-b-0"}`}
 		>
 			<div className="flex flex-col items-center gap-2">
-				<Avatar name={author.display_name} />
+				<Avatar path={author.avatar_path} />
 
 				{/* 칸 사이가 위아래 패딩 16px씩 = 32px 벌어져 있다. 그만큼 아래로 넘겨야
 				    선이 다음 아바타에 닿는다 (`-mb-8`, 4px 그리드 위의 값).

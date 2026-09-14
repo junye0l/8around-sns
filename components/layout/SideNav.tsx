@@ -39,7 +39,11 @@ const LABEL =
 
 const CURRENT = "text-fg";
 
-type NavProfile = { username: string; display_name: string } | null;
+type NavProfile = {
+	username: string;
+	display_name: string;
+	avatar_path: string | null;
+} | null;
 
 export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 	const pathname = usePathname();
@@ -96,6 +100,7 @@ function ComposeItem({ profile }: { profile: Promise<NavProfile> }) {
 
 	return (
 		<ComposeButton
+			authorAvatar={me.avatar_path}
 			authorName={me.display_name}
 			className={`${ITEM} bg-background`}
 			labelClassName={LABEL}

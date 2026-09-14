@@ -19,7 +19,7 @@ export function UserRow({ user }: { user: FollowUser }) {
 				className="flex gap-3 px-6 py-3 transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 				href={`/u/${user.username}`}
 			>
-				<Avatar name={user.display_name} />
+				<Avatar path={user.avatar_path} />
 
 				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 시각이 잘린다 */}
 				<div className="min-w-0 flex-1">

@@ -36,15 +36,15 @@ function CountLink({
  * 팔로워 · 팔로잉 수, 맨 아래 전폭 버튼. 레퍼런스(Threads)의 배치다.
  * 검정 버튼과 여백 치수는 결정 0015를 따른다.
  *
- * 아래 자리는 부르는 쪽이 채운다. 남의 프로필이면 팔로우 버튼이 오고
- * 내 프로필이면 비어 있다 — 이 컴포넌트가 "누가 보고 있는지"를 알 필요가 없다.
+ * 아래 자리는 부르는 쪽이 채운다. 남의 프로필이면 팔로우 버튼, 내 프로필이면
+ * 프로필 편집 버튼이 온다. 둘 다 40px이다. 이 컴포넌트가 "누가 보고 있는지"를 알 필요가 없다.
  */
 export function ProfileHeader({
 	profile,
 	action,
 }: {
 	profile: ProfileDetail;
-	/** 맨 아래 전폭으로 설 것. 팔로우 버튼이 여기 들어온다 */
+	/** 맨 아래 전폭으로 설 것. 팔로우 버튼이나 프로필 편집 버튼이 들어온다 */
 	action?: ReactNode;
 }) {
 	return (
@@ -55,8 +55,8 @@ export function ProfileHeader({
 					<p className="truncate text-title text-fg">{profile.display_name}</p>
 					<p className="truncate text-body text-fg">@{profile.username}</p>
 				</div>
-				{/* 84px. 레퍼런스 프로필 아바타의 관측치이고 4px 그리드 위에 있다. 글자도 같이 키운다 */}
-				<Avatar className="size-21 text-title" name={profile.display_name} />
+				{/* 84px. 레퍼런스 프로필 아바타의 관측치이고 4px 그리드 위에 있다 */}
+				<Avatar className="size-21" eager path={profile.avatar_path} />
 			</div>
 
 			{profile.bio && (

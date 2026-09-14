@@ -11,3 +11,16 @@
  */
 export const POST_CONTENT_MAX = 2000;
 export const COMMENT_CONTENT_MAX = 1000;
+
+/** 표시 이름 1~30자(`supabase/migrations/0001_init.sql`의 `profiles_display_name_length`) */
+export const DISPLAY_NAME_MAX = 30;
+
+/** 프로필 이미지 상한. 버킷의 `file_size_limit`과 같다(`supabase/migrations/0007_profile_avatars.sql`) */
+export const AVATAR_MAX_BYTES = 500 * 1024;
+
+/** 프로필 이미지 형식과 확장자. 버킷의 `allowed_mime_types`, 경로 제약 `profiles_avatar_path_format`과 같다 */
+export const AVATAR_TYPES = {
+	"image/jpeg": "jpg",
+	"image/png": "png",
+	"image/webp": "webp",
+} as const;

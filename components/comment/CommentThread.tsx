@@ -66,7 +66,7 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 									index > 0 && "-ml-2 ring-2 ring-canvas",
 								)}
 								key={username}
-								name={author.display_name}
+								path={author.avatar_path}
 							/>
 						))}
 					</div>

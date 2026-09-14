@@ -13,15 +13,19 @@ export function ComposeButton({
 	className,
 	labelClassName,
 	authorName,
+	authorAvatar,
 }: {
 	className: string;
 	labelClassName: string;
-	/** 아바타에 쓸 이름. 입력칸 왼쪽에 선다 */
+	/** 입력칸 왼쪽에 서는 이름 */
 	authorName: string;
+	/** 이름 옆 아바타에 쓸 `profiles.avatar_path` */
+	authorAvatar: string | null;
 }) {
 	return (
 		<ComposeDialog
 			{...POST_COMPOSE}
+			authorAvatar={authorAvatar}
 			authorName={authorName}
 			trigger={
 				<DialogTrigger className={className}>

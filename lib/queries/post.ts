@@ -11,7 +11,11 @@ export type FeedPost = {
 	like_count: number;
 	/** 지금 보는 사람이 이 글에 좋아요를 눌렀는가 */
 	liked: boolean;
-	author: { username: string; display_name: string };
+	author: {
+		username: string;
+		display_name: string;
+		avatar_path: string | null;
+	};
 };
 
 /** 한 번에 읽어올 개수. 무한 스크롤은 범위 밖이라 첫 장만 본다 */
@@ -34,7 +38,7 @@ const FEED_LIMIT = 50;
  * PostgREST가 PGRST201로 거절한다.
  */
 const POST_SELECT =
-	"id, content, created_at, author:profiles!posts_author_id_fkey(username, display_name), comments(count), post_likes(count), liked_by_viewer";
+	"id, content, created_at, author:profiles!posts_author_id_fkey(username, display_name, avatar_path), comments(count), post_likes(count), liked_by_viewer";
 
 type PostRow = Omit<FeedPost, "comment_count" | "like_count" | "liked"> & {
 	comments: { count: number }[];
