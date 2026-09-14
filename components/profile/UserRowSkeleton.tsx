@@ -11,7 +11,6 @@ export function UserRowSkeleton() {
 			<Skeleton className="size-9 shrink-0 rounded-full" />
 			<div className="min-w-0 flex-1 text-body-sm">
 				<SkeletonLine className="w-24" />
-				<SkeletonLine className="w-16" />
 			</div>
 		</div>
 	);

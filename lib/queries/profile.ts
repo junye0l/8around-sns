@@ -1,21 +1,24 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { z } from "zod";
 import { getSessionUserId } from "@/lib/supabase/session";
+import { escapeLike } from "@/lib/utils/escape-like";
 import type { Database } from "@/types/database";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 /**
- * 별명이 이미 쓰이고 있는지 본다.
+ * 별명이 이미 쓰이고 있는지 본다. 대소문자는 가리지 않는다. DB의 유일성도 `lower(display_name)`로 걸려 있다
+ * (`supabase/migrations/0009_display_name_unique.sql`).
  * `profiles`는 "프로필은 누구나 본다"(0001_init.sql:117-119) 정책이라 익명으로도 조회된다.
  */
-export async function isUsernameTaken(
+export async function isDisplayNameTaken(
 	supabase: SupabaseClient<Database>,
-	username: string,
+	displayName: string,
 ): Promise<boolean> {
 	const { data } = await supabase
 		.from("profiles")
 		.select("id")
-		.eq("username", username)
+		.ilike("display_name", escapeLike(displayName))
 		.maybeSingle();
 
 	return data !== null;
@@ -24,7 +27,7 @@ export async function isUsernameTaken(
 /**
  * 지금 로그인한 사람의 프로필. 세션이 없으면 null이다.
  *
- * `user_metadata.username`을 읽지 않는다 — 그건 가입 때 넣은 사본이고,
+ * `user_metadata.display_name`을 읽지 않는다 — 그건 가입 때 넣은 사본이고,
  * 별명의 출처는 `profiles` 테이블이다 (규칙 3).
  *
  * 사용자 id는 네트워크 없이 꺼낸다. 프록시가 이미 이 요청의 세션을 서버에 확인했으므로
@@ -32,16 +35,13 @@ export async function isUsernameTaken(
  */
 export async function getCurrentProfile(
 	supabase: SupabaseClient<Database>,
-): Promise<Pick<
-	Profile,
-	"id" | "username" | "display_name" | "avatar_path"
-> | null> {
+): Promise<Pick<Profile, "id" | "display_name" | "avatar_path"> | null> {
 	const userId = await getSessionUserId(supabase);
 	if (!userId) return null;
 
 	const { data } = await supabase
 		.from("profiles")
-		.select("id, username, display_name, avatar_path")
+		.select("id, display_name, avatar_path")
 		.eq("id", userId)
 		.maybeSingle();
 
@@ -51,7 +51,7 @@ export async function getCurrentProfile(
 /** 프로필 화면의 주인공. 팔로워 · 팔로잉 수를 같이 들고 온다 */
 export type ProfileDetail = Pick<
 	Profile,
-	"id" | "username" | "display_name" | "avatar_path" | "bio"
+	"id" | "display_name" | "avatar_path" | "bio"
 > & {
 	follower_count: number;
 	following_count: number;
@@ -65,7 +65,7 @@ export type ProfileDetail = Pick<
  * 그건 수만 보여주는 자리에 목록을 통째로 끌고 오는 일이다.
  */
 const PROFILE_DETAIL_SELECT =
-	"id, username, display_name, avatar_path, bio, followers:follows!follows_following_id_fkey(count), following:follows!follows_follower_id_fkey(count)";
+	"id, display_name, avatar_path, bio, followers:follows!follows_following_id_fkey(count), following:follows!follows_follower_id_fkey(count)";
 
 type ProfileDetailRow = Omit<
 	ProfileDetail,
@@ -76,21 +76,23 @@ type ProfileDetailRow = Omit<
 };
 
 /**
- * 별명으로 찾는 프로필. 없으면 null이고, 화면은 그걸 404로 바꾼다.
+ * id로 찾는 프로필. 없으면 null이고, 화면은 그걸 404로 바꾼다.
  *
- * 주소가 uuid가 아니라 별명이라 `getPost`(`lib/queries/post.ts:61`)가 하는
- * 캐스팅 방어가 필요 없다. `username`은 text라 어떤 값이 와도 없는 것으로 끝난다.
+ * id를 먼저 검사한다. uuid가 아닌 주소가 오면 Postgres가 캐스팅에서 터져(22P02) 에러 화면으로 샌다.
+ * 없는 사람과 이상한 주소는 같은 결과여야 한다. `getPost`(`lib/queries/post.ts`)와 같다.
  *
  * 실패하면 던진다. 화면의 에러 상태는 `app/error.tsx`가 받는다 (규칙 10).
  */
 export async function getProfile(
 	supabase: SupabaseClient<Database>,
-	username: string,
+	id: string,
 ): Promise<ProfileDetail | null> {
+	if (!z.uuid().safeParse(id).success) return null;
+
 	const { data, error } = await supabase
 		.from("profiles")
 		.select(PROFILE_DETAIL_SELECT)
-		.eq("username", username)
+		.eq("id", id)
 		.maybeSingle();
 
 	if (error) throw new Error(`프로필을 읽지 못했다: ${error.message}`);

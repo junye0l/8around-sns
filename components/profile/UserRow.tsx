@@ -17,7 +17,7 @@ export function UserRow({ user }: { user: FollowUser }) {
 		<li className="border-hairline border-b last:border-b-0">
 			<Link
 				className="flex gap-3 px-6 py-3 transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
-				href={`/u/${user.username}`}
+				href={`/u/${user.id}`}
 			>
 				<Avatar path={user.avatar_path} />
 
@@ -25,9 +25,6 @@ export function UserRow({ user }: { user: FollowUser }) {
 				<div className="min-w-0 flex-1">
 					<p className="truncate text-body-sm font-semibold text-fg">
 						{user.display_name}
-					</p>
-					<p className="truncate text-body-sm text-fg-muted">
-						@{user.username}
 					</p>
 					{user.bio && (
 						<p className="mt-1 line-clamp-2 break-words text-body-sm text-fg">

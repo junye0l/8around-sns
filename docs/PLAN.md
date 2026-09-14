@@ -66,17 +66,18 @@
 
 ## 5. 소셜
 
-- [x] 프로필 화면 — `/u/[username]`. 글 · 댓글의 이름을 누르면 간다 ([결정 0011](decisions/0011-profile-routes.md))
+- [x] 프로필 화면 — `/u/[id]`. 글 · 댓글의 이름을 누르면 간다 ([결정 0011](decisions/0011-profile-routes.md), [0032](decisions/0032-nickname-as-handle.md))
 - [x] 팔로우 / 언팔로우 토글 — 프로필 화면 한 곳에서 한다. 의도를 버튼이 보내고 중복은 무시한다 (결정 0011)
-- [x] 팔로워 · 팔로잉 수와 목록 — 수를 누르면 `/u/[username]/followers` · `/following`으로 간다
+- [x] 팔로워 · 팔로잉 수와 목록 — 수를 누르면 `/u/[id]/followers` · `/following`으로 간다
 - [x] 팔로잉 기준 피드 필터 — `/following`. 팔로우 목록을 먼저 읽고 `in`으로 거른다 (`lib/queries/post.ts`의 `listFollowingFeed`)
 - [x] 프로필 화면에 그 사람이 쓴 글 — 헤더 아래에 최신순으로 편다 (`lib/queries/post.ts`의 `listPostsByAuthor`). 사용자가 요청해서 범위에 들어왔다
 - [x] 좋아요한 글 피드 — `/likes`. 누른 시각의 역순이고 `post_likes`에서 출발해 글을 임베드한다 (`lib/queries/post.ts`의 `listLikedFeed`, [결정 0029](decisions/0029-liked-feed-from-post-likes.md)). 사용자가 요청해서 범위에 들어왔다
-- [x] 프로필 편집 — 내 프로필의 팔로우 버튼 자리에 "프로필 편집" 버튼, 모달에서 표시 이름과 프로필 이미지를 바꾼다.
-  아이디(`username`)는 주소라 고정이다. 이미지는 Storage `avatars` 버킷에 두고 프로필에는 경로만 저장한다
+- [x] 프로필 편집 — 내 프로필의 팔로우 버튼 자리에 "프로필 편집" 버튼, 모달에서 별명과 프로필 이미지를 바꾼다.
+  별명은 겹치지 않는다(대소문자 무시). 이미지는 Storage `avatars` 버킷에 두고 프로필에는 경로만 저장한다
   (`supabase/migrations/0007_profile_avatars.sql`, [결정 0030](decisions/0030-profile-avatar-upload.md)). 사용자가 요청해서 범위에 들어왔다.
-  나중에 편집할 칸이 늘면 모달에서 화면으로 옮길 수 있다. `bio`는 아직 채울 길이 없다.
-  가입 폼의 "별명" 라벨은 실제로는 아이디 칸이라 이름을 다시 나누는 일이 남아 있다
+  나중에 편집할 칸이 늘면 모달에서 화면으로 옮길 수 있다. `bio`는 아직 채울 길이 없다
+- [ ] **아이디(`username`) 컬럼 지우기** — 별명이 사람을 가리키는 이름이고 주소는 id다([결정 0032](decisions/0032-nickname-as-handle.md)).
+  0009가 컬럼을 nullable로 넓혔고 새 코드는 쓰지 않는다. 이 코드가 배포된 뒤 다음 마이그레이션이 컬럼, 형식 제약, 트리거의 username을 지운다
 
 ## 6. 공통 컴포넌트
 

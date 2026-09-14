@@ -14,11 +14,11 @@ import type { FeedPost } from "@/lib/queries/post";
  */
 export function PostList({
 	posts,
-	viewerUsername,
+	viewerId,
 }: {
 	posts: FeedPost[];
-	/** 지금 보는 사람의 별명. 없으면 어느 글에도 메뉴가 붙지 않는다 */
-	viewerUsername?: string;
+	/** 지금 보는 사람의 id. 없으면 어느 글에도 메뉴가 붙지 않는다 */
+	viewerId?: string;
 }) {
 	return posts.map((post) => (
 		<ContentCard
@@ -41,7 +41,7 @@ export function PostList({
 			}
 			key={post.id}
 			menu={
-				post.author.username === viewerUsername ? (
+				post.author.id === viewerId ? (
 					<PostMenu
 						authorAvatar={post.author.avatar_path}
 						authorName={post.author.display_name}

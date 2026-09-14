@@ -22,7 +22,7 @@ export async function signUpAction(
 	const result = await signUp(supabase, {
 		email: formData.get("email"),
 		password: formData.get("password"),
-		username: formData.get("username"),
+		display_name: formData.get("display_name"),
 	});
 
 	if (!result.ok) return result;

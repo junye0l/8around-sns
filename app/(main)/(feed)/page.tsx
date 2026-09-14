@@ -29,8 +29,7 @@ export default async function Home() {
 	]);
 
 	// 미들웨어가 세션을 보장하지만 프로필 조회가 빌 수는 있다. 화면을 통째로 접지 않는다
-	const username = profile?.username ?? "나";
-	const displayName = profile?.display_name ?? username;
+	const displayName = profile?.display_name ?? "나";
 
 	return (
 		<PageShell title="추천">
@@ -43,7 +42,7 @@ export default async function Home() {
 			{posts.length === 0 ? (
 				<EmptyState message="아직 올라온 글이 없어요. 첫 글을 남겨보세요." />
 			) : (
-				<PostList posts={posts} viewerUsername={profile?.username} />
+				<PostList posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
 import { signUpAction } from "@/lib/actions/auth";
 import type { SignUpResult } from "@/lib/services/auth";
+import { DISPLAY_NAME_MAX } from "@/lib/utils/content-limits";
 
 export function SignUpForm() {
 	const [result, formAction, pending] = useActionState<
@@ -31,13 +32,13 @@ export function SignUpForm() {
 				type="email"
 			/>
 			<TextField
-				autoComplete="username"
+				autoComplete="nickname"
 				disabled={pending}
-				error={errors.username}
-				hint="영문 소문자, 숫자, 밑줄로 3~20자"
+				error={errors.display_name}
+				hint={`${DISPLAY_NAME_MAX}자까지, 다른 사람과 겹치지 않게`}
 				label="별명"
-				name="username"
-				placeholder="hong_gil_dong"
+				maxLength={DISPLAY_NAME_MAX}
+				name="display_name"
 				required
 			/>
 			<TextField

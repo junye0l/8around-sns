@@ -1,14 +1,17 @@
 import type { AuthError, SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { isUsernameTaken } from "@/lib/queries/profile";
-import { usernameSchema } from "@/lib/utils/username";
+import { isDisplayNameTaken } from "@/lib/queries/profile";
+import {
+	DISPLAY_NAME_TAKEN,
+	displayNameSchema,
+} from "@/lib/utils/display-name";
 import type { Database } from "@/types/database";
 
 export const signUpSchema = z.object({
 	email: z.email("이메일 주소를 다시 확인해 주세요"),
 	// supabase/config.toml:181 minimum_password_length = 6
 	password: z.string().min(6, "비밀번호는 6자 이상으로 만들어 주세요"),
-	username: usernameSchema,
+	display_name: displayNameSchema,
 });
 
 export const signInSchema = z.object({
@@ -87,7 +90,7 @@ function fromAuthCode(error: AuthError): SignUpResult | null {
  * 가입. `profiles`에 직접 쓰지 않는다 — `on_auth_user_created` 트리거가
  * 같은 트랜잭션에서 만든다(0001_init.sql:49-51). 여기서 또 쓰면 중복이다.
  *
- * display_name은 받지 않는다. 트리거가 username으로 채운다(0001_init.sql:40-43).
+ * 별명은 메타데이터의 `display_name`으로 넘기고 트리거가 `profiles`에 옮긴다(0001_init.sql:40-43). 결정 0032.
  */
 export async function signUp(
 	supabase: SupabaseClient<Database>,
@@ -101,17 +104,17 @@ export async function signUp(
 			ok: false,
 			errors: {
 				email: fieldErrors.email?.[0],
-				username: fieldErrors.username?.[0],
+				display_name: fieldErrors.display_name?.[0],
 				password: fieldErrors.password?.[0],
 			},
 		};
 	}
 
-	const { email, password, username } = parsed.data;
+	const { email, password, display_name } = parsed.data;
 	const { error } = await supabase.auth.signUp({
 		email,
 		password,
-		options: { data: { username } },
+		options: { data: { display_name } },
 	});
 
 	if (!error) return { ok: true };
@@ -122,10 +125,10 @@ export async function signUp(
 	// 별명이 겹치면 트리거가 터지면서 가입 전체가 롤백되는데, 그때 돌아오는 건
 	// `unexpected_failure`라 무엇이 깨졌는지 알려주지 않는다. 짐작하지 말고
 	// 실제 상태를 한 번 확인해서 판정한다.
-	if (await isUsernameTaken(supabase, username)) {
+	if (await isDisplayNameTaken(supabase, display_name)) {
 		return {
 			ok: false,
-			errors: { username: "이미 쓰고 있는 별명이에요. 다른 별명으로 해주세요" },
+			errors: { display_name: DISPLAY_NAME_TAKEN },
 		};
 	}
 

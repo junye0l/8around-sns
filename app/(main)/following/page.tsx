@@ -46,7 +46,7 @@ export default async function FollowingPage() {
 					}
 				/>
 			) : (
-				<PostList posts={posts} viewerUsername={profile?.username} />
+				<PostList posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);

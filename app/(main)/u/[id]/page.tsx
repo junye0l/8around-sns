@@ -12,13 +12,10 @@ import { listPostsByAuthor } from "@/lib/queries/post";
 import { getCurrentProfile, getProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
 
-/** 주소의 별명만 쓴다. 제목을 위해 프로필을 한 번 더 읽지 않는다 */
-export async function generateMetadata({
-	params,
-}: PageProps<"/u/[username]">): Promise<Metadata> {
-	const { username } = await params;
-	return { title: `@${username}` };
-}
+// 주소가 id라 제목에 쓸 사람 이름이 없다. 제목을 위해 프로필을 한 번 더 읽지 않는다
+export const metadata: Metadata = {
+	title: "프로필",
+};
 
 /**
  * 프로필 — 누구인지와 팔로워 · 팔로잉 수, 그 아래 이 사람이 쓴 글. 수를 누르면
@@ -29,15 +26,13 @@ export async function generateMetadata({
  *
  * 로딩은 `loading.tsx`, 없는 사람은 `not-found.tsx`, 에러는 `app/error.tsx`가 받는다 (규칙 10).
  */
-export default async function ProfilePage({
-	params,
-}: PageProps<"/u/[username]">) {
-	const { username } = await params;
+export default async function ProfilePage({ params }: PageProps<"/u/[id]">) {
+	const { id } = await params;
 	const supabase = await createClient();
 
 	const [viewer, profile] = await Promise.all([
 		getCurrentProfile(supabase),
-		getProfile(supabase, username),
+		getProfile(supabase, id),
 	]);
 	if (!profile) notFound();
 
@@ -74,7 +69,7 @@ export default async function ProfilePage({
 					}
 				/>
 			) : (
-				<PostList posts={posts} viewerUsername={viewer?.username} />
+				<PostList posts={posts} viewerId={viewer?.id} />
 			)}
 		</PageShell>
 	);

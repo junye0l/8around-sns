@@ -32,7 +32,7 @@ function CountLink({
 }
 
 /**
- * 프로필 맨 위 칸. 왼쪽에 이름과 별명, 오른쪽에 큰 아바타, 그 아래 소개와
+ * 프로필 맨 위 칸. 왼쪽에 별명, 오른쪽에 큰 아바타, 그 아래 소개와
  * 팔로워 · 팔로잉 수, 맨 아래 전폭 버튼. 레퍼런스(Threads)의 배치다.
  * 검정 버튼과 여백 치수는 결정 0015를 따른다.
  *
@@ -53,7 +53,6 @@ export function ProfileHeader({
 				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 아바타가 잘린다 */}
 				<div className="min-w-0 flex-1">
 					<p className="truncate text-title text-fg">{profile.display_name}</p>
-					<p className="truncate text-body text-fg">@{profile.username}</p>
 				</div>
 				{/* 84px. 레퍼런스 프로필 아바타의 관측치이고 4px 그리드 위에 있다 */}
 				<Avatar className="size-21" eager path={profile.avatar_path} />
@@ -68,12 +67,12 @@ export function ProfileHeader({
 			<div className="mt-3 flex gap-6">
 				<CountLink
 					count={profile.follower_count}
-					href={`/u/${profile.username}/followers`}
+					href={`/u/${profile.id}/followers`}
 					label="팔로워"
 				/>
 				<CountLink
 					count={profile.following_count}
-					href={`/u/${profile.username}/following`}
+					href={`/u/${profile.id}/following`}
 					label="팔로잉"
 				/>
 			</div>

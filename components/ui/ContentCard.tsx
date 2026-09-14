@@ -5,7 +5,7 @@ import { formatRelativeTime } from "@/lib/utils/relative-time";
 
 type ContentCardProps = {
 	author: {
-		username: string;
+		id: string;
 		display_name: string;
 		avatar_path: string | null;
 	};
@@ -58,7 +58,7 @@ export function ContentCard({
 					    링크로 감싸면 이름 없는 링크가 하나 더 생긴다 */}
 					<Link
 						className="-m-1 min-w-0 truncate rounded-md p-1 font-semibold text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-						href={`/u/${author.username}`}
+						href={`/u/${author.id}`}
 					>
 						{author.display_name}
 					</Link>

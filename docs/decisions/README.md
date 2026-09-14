@@ -34,7 +34,7 @@
 | [0008](0008-reply-tree-on-post.md) | 답글은 게시글 화면에서 보고, 다는 것은 자기 화면에서 한다 | 확정 |
 | [0009](0009-toss-tds-tokens.md) | 디자인 토큰의 출처를 Toss TDS로 옮긴다 | 확정 |
 | [0010](0010-focus-ring-primary.md) | 키보드 포커스 링은 primary를 쓴다 | 확정 |
-| [0011](0011-profile-routes.md) | 프로필은 `/u/[username]`에 두고, 팔로우 목록은 그 아래 자기 라우트로 편다 | 확정 |
+| [0011](0011-profile-routes.md) | 프로필은 `/u/[username]`에 두고, 팔로우 목록은 그 아래 자기 라우트로 편다 | 일부 대체됨 → 0032 |
 | [0012](0012-a11y-pass.md) | 접근성 지적을 토큰 안에서만 고치고, 토큰 자체가 걸리는 둘은 남겨둔다 | 확정 |
 | [0013](0013-sidebar-overlays.md) | 드롭다운과 모달은 radix에서 가져오고, 글쓰기 진입점을 레일에 둔다 | 일부 대체됨 → 0018 |
 | [0014](0014-composer-layout.md) | 글자수 카운터를 버리고 입력칸 높이를 고정한다 | 확정 |
@@ -55,3 +55,4 @@
 | [0029](0029-liked-feed-from-post-likes.md) | 좋아요한 글 피드는 `post_likes`에서 출발해 글을 임베드한다 | 확정 |
 | [0030](0030-profile-avatar-upload.md) | 프로필 이미지는 Storage에 두고, 브라우저가 줄여서 Server Action으로 올린다 | 확정 |
 | [0031](0031-post-likes-private.md) | 누가 좋아요했는지는 본인만 보고, 수는 계산 컬럼이 준다 | 확정 |
+| [0032](0032-nickname-as-handle.md) | 아이디를 없애고 별명을 유일한 이름으로, 주소는 id로 한다 | 확정 |

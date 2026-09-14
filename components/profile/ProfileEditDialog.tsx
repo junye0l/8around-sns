@@ -52,7 +52,7 @@ async function shrink(file: File): Promise<Blob> {
 }
 
 /**
- * 내 프로필의 "프로필 편집" 버튼과 모달. 이름과 프로필 이미지를 바꾼다. 아이디는 주소라 고정이다.
+ * 내 프로필의 "프로필 편집" 버튼과 모달. 별명과 프로필 이미지를 바꾼다.
  * 남의 프로필에서 팔로우 버튼이 서는 자리에 같은 높이(40px)로 선다.
  *
  * 모달은 `components/ui/Dialog.tsx`를 쓴다. 포커스 가두기, Esc, 닫힌 뒤 버튼으로 포커스 돌려주기는 radix가 한다.
@@ -75,7 +75,7 @@ export function ProfileEditDialog({
 				</Button>
 			</DialogTrigger>
 
-			{/* 기본은 첫 버튼(취소)에 포커스가 간다. 고치려고 연 창이라 이름 칸으로 보낸다 */}
+			{/* 기본은 첫 버튼(취소)에 포커스가 간다. 고치려고 연 창이라 별명 칸으로 보낸다 */}
 			<DialogContent
 				className="max-w-md"
 				onOpenAutoFocus={(event) => {
@@ -197,7 +197,7 @@ function ProfileEditForm({
 			<TextField
 				disabled={pending}
 				error={nameError}
-				label="이름"
+				label="별명"
 				// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
 				maxLength={DISPLAY_NAME_MAX}
 				name="display_name"
