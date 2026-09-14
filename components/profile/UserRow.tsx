@@ -1,38 +1,61 @@
 import Link from "next/link";
+import { FollowButton } from "@/components/follow/FollowButton";
 import { Avatar } from "@/components/ui/Avatar";
+import { GROUP_ROW } from "@/components/ui/GroupList";
 import type { FollowUser } from "@/lib/queries/follow";
 
 /**
- * 사람 목록의 한 줄. 누르면 그 사람의 프로필로 간다.
+ * 사람 목록의 한 행. 아바타 36, 이름, 소개 한 줄, 오른쪽 팔로우 버튼. 행 전체가 그 사람의 프로필 링크다.
  * 팔로워와 팔로잉 두 화면이 같은 모양이라 하나를 같이 쓴다 (규칙 2).
  *
- * 줄 안에 팔로우 버튼을 두지 않는다. 팔로우는 프로필 화면에서 한다 — 목록마다
- * 버튼을 세우면 같은 동작이 두 곳에 생기고, 목록은 "누가 있는지"만 답하면 된다.
+ * 링크 안에 버튼을 넣을 수 없어 링크를 행 뒤에 깔고 버튼만 누름을 다시 받는다 (`components/ui/ContentCard.tsx`와 같다).
+ * 내 행에는 버튼이 없다. 소개가 없으면 이름만 세로 가운데에 선다.
  *
- * `li`로 나오므로 부르는 쪽이 `ul`로 감싼다. 목록을 목록으로 읽어야 스크린리더가
- * 항목 수를 알려주고 항목 단위로 건너뛴다.
+ * `li`로 나오므로 부르는 쪽이 `GroupList`에 넣는다. 결정 0012.
+ * @see docs/DESIGN.md 팔로워 · 팔로잉
  */
-export function UserRow({ user }: { user: FollowUser }) {
+export function UserRow({
+	user,
+	following,
+	isMe,
+}: {
+	user: FollowUser;
+	/** 보는 사람이 이 사람을 팔로우 중인가 */
+	following: boolean;
+	isMe: boolean;
+}) {
 	return (
-		<li className="border-hairline border-b last:border-b-0">
+		<li className="relative">
 			<Link
-				className="flex gap-3 px-4 py-3 md:px-6 transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+				aria-label={user.display_name}
+				className="absolute inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
 				href={`/u/${user.id}`}
+			/>
+			<div
+				className={`pointer-events-none relative flex items-center gap-3 ${GROUP_ROW}`}
 			>
-				<Avatar path={user.avatar_path} />
-
-				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 시각이 잘린다 */}
+				<Avatar
+					name={user.display_name}
+					path={user.avatar_path}
+					seed={user.id}
+					size={36}
+				/>
 				<div className="min-w-0 flex-1">
-					<p className="truncate text-body-sm font-semibold text-fg">
+					<p className="truncate text-callout font-bold text-fg">
 						{user.display_name}
 					</p>
 					{user.bio && (
-						<p className="mt-1 line-clamp-2 break-words text-body-sm text-fg">
+						<p className="line-clamp-1 break-keep text-subhead font-normal text-fg-muted wrap-anywhere">
 							{user.bio}
 						</p>
 					)}
 				</div>
-			</Link>
+				{!isMe && (
+					<div className="pointer-events-auto shrink-0">
+						<FollowButton following={following} size="sm" targetId={user.id} />
+					</div>
+				)}
+			</div>
 		</li>
 	);
 }

@@ -5,7 +5,18 @@ import { extendTailwindMerge } from "tailwind-merge";
  * `@theme`의 타입 스케일 이름. `app/globals.css`의 `--text-*`와 같아야 한다.
  * 어긋나면 `npm run harness`가 잡는다.
  */
-export const FONT_SIZES = ["h1", "h2", "h3", "title", "body", "body-sm"];
+export const FONT_SIZES = [
+	"large-title",
+	"title",
+	"headline",
+	"body",
+	"callout",
+	"subhead",
+	"footnote",
+	"caption",
+	"chip",
+	"name",
+];
 
 const merge = extendTailwindMerge({
 	extend: { classGroups: { "font-size": [{ text: FONT_SIZES }] } },

@@ -1,12 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { FormError } from "@/components/auth/FormError";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
+import { useFocusFirstInvalid } from "@/hooks/useFocusFirstInvalid";
 import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { signInAction } from "@/lib/actions/auth";
 import type { SignInResult } from "@/lib/services/auth";
 
+/**
+ * 로그인 폼. 칸이 다 차기 전까지 버튼이 꺼져 있고, 보내는 중에는 칸도 꺼진다.
+ * 칸 에러는 칸 아래에, 칸에 묶이지 않는 에러는 버튼 위에 선다. 제출 뒤 첫 에러 칸으로 포커스가 간다.
+ * @see docs/DESIGN.md 로그인, 회원가입
+ */
 export function SignInForm() {
 	const [result, formAction, pending] = useSubmitAction<SignInResult | null>(
 		signInAction,
@@ -16,35 +23,34 @@ export function SignInForm() {
 	// 칸을 state로 든다. React는 함수 action이 끝나면 폼을 비워서, 비밀번호 하나 틀려도 이메일까지 다시 써야 했다
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	// 비밀번호는 공백도 글자다. 이메일만 공백뿐이면 빈 칸으로 친다
+	const filled = email.trim() !== "" && password !== "";
 
 	const failed = result && !result.ok ? result : null;
 	const errors = failed?.errors ?? {};
-	const message = failed?.formError ?? errors.email ?? errors.password;
+
+	const form = useFocusFirstInvalid(result);
 
 	return (
-		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 아래 자리에 띄운다
-		<form action={formAction} className="flex flex-col gap-4" noValidate>
-			<h1 className="mb-4 text-title text-fg">로그인</h1>
-
-			<TextField
-				// 문구는 아래 한 자리에서만 띄운다. 여기서는 빨간 테두리만 켠다
-				aria-invalid={errors.email ? true : undefined}
-				autoComplete="email"
-				readOnly={pending}
-				label="이메일"
-				name="email"
-				onChange={(event) => setEmail(event.target.value)}
-				placeholder="you@example.com"
-				required
-				type="email"
-				value={email}
-			/>
-			{/* 문구 자리를 비밀번호 칸에 붙인다. 가입 폼의 안내 줄과 같은 간격(gap-1, px-1)이다 */}
-			<div className="flex flex-col gap-1">
+		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 칸 아래에 띄운다
+		<form action={formAction} noValidate ref={form}>
+			<div className="flex flex-col gap-3">
 				<TextField
-					aria-invalid={errors.password ? true : undefined}
+					autoComplete="email"
+					disabled={pending}
+					error={errors.email}
+					label="이메일"
+					name="email"
+					onChange={(event) => setEmail(event.target.value)}
+					placeholder="you@example.com"
+					required
+					type="email"
+					value={email}
+				/>
+				<TextField
 					autoComplete="current-password"
-					readOnly={pending}
+					disabled={pending}
+					error={errors.password}
 					label="비밀번호"
 					name="password"
 					onChange={(event) => setPassword(event.target.value)}
@@ -52,19 +58,14 @@ export function SignInForm() {
 					type="password"
 					value={password}
 				/>
-				{/* 빈 자리를 늘 잡아둬서 문구가 떠도 버튼이 밀리지 않는다. body-sm 한 줄이 21px이라 그리드에서 24px을 쓴다 */}
-				<div className="min-h-6">
-					{message && (
-						<p className="px-1 text-body-sm text-danger" role="alert">
-							{message}
-						</p>
-					)}
-				</div>
 			</div>
 
-			<Button className="h-14 w-full text-body" loading={pending} type="submit">
-				{pending ? "로그인하는 중" : "로그인"}
-			</Button>
+			<div className="mt-2 flex flex-col gap-2">
+				<FormError message={failed?.formError} />
+				<Button disabled={!filled} loading={pending} size="lg" type="submit">
+					{pending ? "로그인하는 중" : "로그인"}
+				</Button>
+			</div>
 		</form>
 	);
 }

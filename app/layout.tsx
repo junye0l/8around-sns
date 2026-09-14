@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { parseTheme, THEME_COOKIE } from "@/lib/utils/theme";
 import "./globals.css";
+
+// 가변 폰트 하나로 굵기 전부를 낸다. 굵기 범위는 v1.3.9 배포 zip의 web/variable/pretendardvariable.css와 같다.
+// 대체 글꼴 순서는 app/globals.css의 --font-sans. 결정 0044
+const pretendard = localFont({
+	src: "./fonts/PretendardVariable.woff2",
+	variable: "--font-pretendard",
+	weight: "45 920",
+	display: "swap",
+});
 
 /**
  * `template`은 각 라우트가 준 제목 뒤에 앱 이름을 붙인다. 스크린리더는 라우트가
@@ -22,7 +32,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html
 			lang="ko"
-			className="h-full antialiased"
+			className={`${pretendard.variable} h-full antialiased`}
 			data-theme={theme === "system" ? undefined : theme}
 		>
 			<body className="flex min-h-full flex-col">{children}</body>

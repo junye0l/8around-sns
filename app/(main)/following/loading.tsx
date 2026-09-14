@@ -1,16 +1,15 @@
 import { PageShell } from "@/components/layout/PageShell";
 import { ContentCardSkeleton } from "@/components/ui/Skeleton";
 
-/**
- * 팔로잉 피드의 첫 페인트. `app/(main)/(feed)/loading.tsx`는 제목이 "추천"이고 글쓰기 줄이
- * 있어 여기까지 쓰지 못한다.
- */
+/** 팔로잉의 첫 페인트. 글 카드 셋을 세운다. 글쓰기 줄은 전체에만 있다 */
 export default function FollowingLoading() {
 	return (
 		<PageShell title="팔로잉">
-			{[0, 1, 2, 3].map((row) => (
-				<ContentCardSkeleton actions={2} key={row} />
-			))}
+			<div className="flex flex-col gap-3">
+				{[0, 1, 2].map((row) => (
+					<ContentCardSkeleton actions={2} key={row} />
+				))}
+			</div>
 		</PageShell>
 	);
 }

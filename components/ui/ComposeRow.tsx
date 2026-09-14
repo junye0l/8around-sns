@@ -1,7 +1,7 @@
 "use client";
 
+import { ArrowUp } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
-import { Button } from "@/components/ui/Button";
 import {
 	ComposeDialog,
 	type ComposeDialogProps,
@@ -9,32 +9,72 @@ import {
 import { DialogTrigger } from "@/components/ui/Dialog";
 
 /**
- * 모달을 여는 한 줄. 아바타, 문구, 버튼이 한 줄이고 누르면 모달이 열린다.
- * 추천의 글쓰기와 상세 화면의 댓글·답글이 같이 쓴다
+ * 글쓰기 시트를 여는 줄. 새 글, 댓글, 답글이 같이 쓴다
  * ([결정 0019](../../docs/decisions/0019-comment-compose-modal.md)).
+ * 여기서 직접 쓰지 않는다. 입력은 시트 하나에서만 받는다 (규칙 2).
  *
- * 여기서 직접 쓰지 않는다. 입력은 모달 하나에서만 받는다 (규칙 2).
- *
- * 문구와 버튼이 각각 트리거다. 버튼 안에 버튼을 넣을 수 없어 줄 전체를 하나로 묶지 않는다.
+ * - `card`: 글 카드와 같은 면에 줄 전체가 버튼 하나다. 내 아바타, `fg-muted` 안내, 꺼진 원형 보내기
+ * - `bar`: 768px 미만 상세 화면의 아래 입력줄. 하단 탭 바로 위 `canvas` 띠에 `fill` 알약이 선다.
+ *   흐름 밖(`fixed`)이라 같은 높이의 빈 자리를 흐름에 남겨 마지막 줄이 가리지 않게 한다
+ * @see docs/DESIGN.md 글쓰기 줄
  */
-export function ComposeRow(props: Omit<ComposeDialogProps, "trigger">) {
+export function ComposeRow({
+	variant = "card",
+	...props
+}: Omit<ComposeDialogProps, "trigger"> & { variant?: "card" | "bar" }) {
+	if (variant === "bar") {
+		return (
+			<>
+				<div aria-hidden className="h-14 md:hidden" />
+				<ComposeDialog
+					{...props}
+					trigger={
+						<div
+							className={
+								// 허용: 하단 탭 높이(h-16)와 기기 안전영역을 더한 자리라 토큰이 없다
+								"fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 border-hairline border-t bg-canvas px-3 py-2 md:hidden"
+							}
+						>
+							<DialogTrigger className="flex h-10 w-full items-center gap-2 rounded-full bg-fill pr-1 pl-4 text-left transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97">
+								<span className="min-w-0 flex-1 truncate text-body text-fg-muted">
+									{props.placeholder}
+								</span>
+								<span
+									aria-hidden
+									className="flex size-8 shrink-0 items-center justify-center rounded-full bg-hairline text-fg-disabled"
+								>
+									<ArrowUp className="size-4" />
+								</span>
+							</DialogTrigger>
+						</div>
+					}
+				/>
+			</>
+		);
+	}
+
 	return (
 		<ComposeDialog
 			{...props}
 			trigger={
-				<div className="flex items-center gap-3 border-hairline border-b px-4 py-4 md:px-6">
-					<Avatar path={props.authorAvatar} />
-					{/* -m-2 p-2 는 글자를 움직이지 않고 누를 자리만 넓힌다. 아바타와의 12px 간격이
-					    그대로 남는다. `ContentCard`의 이름 링크가 쓰는 방식과 같다 */}
-					<DialogTrigger className="-m-2 min-w-0 flex-1 truncate rounded-md p-2 text-left text-body text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+				<DialogTrigger className="flex w-full items-center gap-3 rounded-card bg-canvas px-5 py-4 text-left shadow-card transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97">
+					<Avatar
+						name={props.authorName}
+						path={props.authorAvatar}
+						seed={props.authorId}
+						size={40}
+					/>
+					<span className="min-w-0 flex-1 truncate text-body text-fg-muted">
 						{props.placeholder}
-					</DialogTrigger>
-					<DialogTrigger asChild>
-						<Button size="sm" variant="outline">
-							{props.submitLabel}
-						</Button>
-					</DialogTrigger>
-				</div>
+					</span>
+					{/* 보낼 글이 없는 줄이라 늘 꺼진 모양이다. 누르면 줄 전체가 시트를 연다 */}
+					<span
+						aria-hidden
+						className="flex size-9.5 shrink-0 items-center justify-center rounded-full bg-hairline text-fg-disabled"
+					>
+						<ArrowUp className="size-5" />
+					</span>
+				</DialogTrigger>
 			}
 		/>
 	);

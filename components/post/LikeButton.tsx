@@ -2,7 +2,9 @@
 
 import { Heart } from "lucide-react";
 import { useOptimistic, useRef, useState } from "react";
+import { PILL } from "@/components/ui/CommentCount";
 import { setPostLikeAction } from "@/lib/actions/post";
+import { cn } from "@/lib/utils/cn";
 
 /**
  * 좋아요 토글. 누르면 채워지고 한 번 더 누르면 비워진다. 게시글에만 붙는다.
@@ -16,10 +18,10 @@ import { setPostLikeAction } from "@/lib/actions/post";
  * props가 아니라 확정 상태로 두어야 되돌아가지 않는다. props가 바뀌면(다른 액션이
  * 화면을 다시 그린 경우) 확정 상태를 그 값으로 다시 맞춘다.
  *
- * 누른 상태는 색이 아니라 채움으로 말한다. 빨강(`danger`)은 파괴적 동작과 에러의
- * 색이라 가져오지 않았다. 결정 0020.
+ * 누른 상태는 색만으로 말하지 않는다. 알약 바탕이 `primary-soft`로 바뀌고 하트가 채워진다.
+ * 빨강(`danger`)은 파괴적 동작과 에러의 색이라 가져오지 않았다. 결정 0020.
  *
- * 모양은 옆의 `CommentCount`와 맞춘다 — 같은 줄에 서는 같은 크기의 동작이다.
+ * 모양은 옆의 `CommentCount`와 같은 알약이다 (`docs/DESIGN.md` 알약).
  */
 export function LikeButton({
 	postId,
@@ -80,13 +82,20 @@ export function LikeButton({
 				// 아이콘만 바뀌면 포커스가 머문 채라 조용히 지나간다
 				aria-label={`좋아요 ${shown.count}개`}
 				aria-pressed={shown.liked}
-				className={`inline-flex items-center gap-1 rounded-full p-2 text-body-sm transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:bg-hairline ${shown.liked ? "text-fg" : "text-fg-muted"}`}
+				className={cn(
+					PILL,
+					shown.liked && "bg-primary-soft text-on-primary-soft",
+				)}
 				onClick={() => setPressed(true)}
 				type="submit"
 			>
 				<Heart
 					aria-hidden
-					className={`size-5 shrink-0 ${shown.liked ? "fill-current" : ""} ${pressed && shown.liked ? "animate-like-pop" : ""}`}
+					className={cn(
+						"size-4 shrink-0",
+						shown.liked && "fill-current",
+						pressed && shown.liked && "animate-like-pop",
+					)}
 				/>
 				{/* 0도 보인다. 옆의 댓글 수와 같은 규칙이다 */}
 				<span aria-hidden className="tabular-nums">
@@ -95,7 +104,7 @@ export function LikeButton({
 			</button>
 
 			{error && (
-				<p className="text-body-sm text-danger" role="alert">
+				<p className="mt-1 text-footnote text-danger" role="alert">
 					{error}
 				</p>
 			)}

@@ -1,43 +1,37 @@
+"use client";
+
 import { cva, type VariantProps } from "class-variance-authority";
+import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * 변형별 색과 상태. 너비는 정하지 않는다. 부르는 쪽이 `className`으로 준다.
- *
- * primary는 `fg` 색이다, 라이트에서 검정이고 다크에서 흰색이다. 파랑은 포커스 링에만 남는다. 결정 0015.
- * hover와 pressed는 새 색을 만들지 않고 같은 토큰의 불투명도만 낮춘다,
- * 결정 0013의 오버레이(`bg-scrim/40`)와 같은 방식이다.
- *
- * 테두리는 변형이 아니라 기본값에 있고 변형은 색만 바꾼다. outline에만 두면 변형이
- * 바뀔 때 상자가 사방 1px씩 커진다 — 팔로우 버튼이 primary에서 outline으로 넘어가며
- * 옆 칸을 밀고 아랫줄을 내리는 시프트가 그것이었다.
+ * 변형별 색과 크기. 모양은 전부 알약이다. 값의 출처는 `docs/DESIGN.md`의 Button.
  *
  * 꺼진 모양은 `disabled:`가 아니라 `aria-disabled:`가 칠한다. 진행 중이든 보낼 것이 없든
  * 요소는 살아 있어야 포커스를 잃지 않고 키보드로 닿는다. 결정 0012, 0042.
+ * 진행 중(`aria-busy`)은 꺼진 색을 칠하지 않고 변형 색 그대로 스피너만 돈다.
  *
- * `md`는 40px이다. `docs/DESIGN.md`의 웹 버튼 40 또는 46px 중 작은 쪽으로, 결정 0009의
- * 남은 칸을 0015가 닫았다. `sm`은 60x36이고 사용자가 지정했다. 결정 0014.
+ * radix 항목처럼 요소를 직접 그려야 하는 자리는 `buttonStyles`로 같은 모양만 가져간다.
  *
- * 포커스 링 색은 결정 0010.
+ * 클라이언트 컴포넌트다. 누름을 막는 `onClick`을 늘 달아서, 서버 화면이 `DialogTrigger asChild` 안에 넣어도 함수가 경계를 넘지 않는다.
  * @see docs/decisions/0010-focus-ring-primary.md
  */
-const button = cva(
-	"inline-flex items-center justify-center rounded-lg border font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-disabled:cursor-not-allowed aria-busy:cursor-progress",
+export const buttonStyles = cva(
+	"relative inline-flex items-center justify-center gap-1.5 rounded-full font-bold transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97 active:brightness-92 aria-disabled:cursor-not-allowed aria-disabled:active:scale-100 aria-disabled:active:brightness-100 aria-disabled:not-aria-busy:bg-hairline aria-disabled:not-aria-busy:text-fg-disabled aria-busy:cursor-progress",
 	{
 		variants: {
 			size: {
-				md: "h-10 px-4 text-body-sm",
-				// 60x36 고정. 폭을 고정해야 진행 중에도 자리가 안 흔들린다.
-				// 들어가는 문구는 두 글자뿐이다 — 게시, 댓글, 답글
-				sm: "h-9 w-15 text-body-sm",
+				lg: "h-13 w-full px-5 text-body",
+				md: "h-11 px-5 text-callout",
+				sm: "h-8 px-3.5 text-subhead",
 			},
 			variant: {
-				primary:
-					"border-transparent bg-fg text-canvas hover:bg-fg/90 active:bg-fg/80 aria-disabled:bg-hairline aria-disabled:text-fg-muted aria-disabled:hover:bg-hairline aria-disabled:active:bg-hairline",
-				outline:
-					"border-hairline bg-transparent text-fg hover:bg-background active:bg-hairline aria-disabled:text-fg-muted aria-disabled:hover:bg-transparent aria-disabled:active:bg-transparent",
+				primary: "bg-primary-fill text-on-primary",
+				secondary: "bg-fill text-fg",
+				ghost: "text-primary",
+				danger: "bg-danger-soft text-danger",
 			},
 		},
 		defaultVariants: { size: "md", variant: "primary" },
@@ -45,15 +39,15 @@ const button = cva(
 );
 
 type ButtonProps = ComponentProps<"button"> &
-	VariantProps<typeof button> & {
+	VariantProps<typeof buttonStyles> & {
 		/**
-		 * 진행 중. 문구는 그대로 두어 너비를 유지하고 누름만 막는다.
+		 * 진행 중. 글자 자리에 스피너가 서서 폭이 그대로다. 누름을 막는다.
 		 * 요소를 `disabled`로 만들지 않는다 — 포커스된 요소가 disabled가 되면
 		 * 브라우저가 포커스를 body로 떨어뜨린다.
 		 */
 		loading?: boolean;
 		/**
-		 * 보낼 것이 없다. `loading`과 같이 `aria-disabled`로 끄고 누름을 막는다. 누름이 막히면
+		 * 보낼 것이 없다. `aria-disabled`로 끄고 누름을 막는다. 누름이 막히면
 		 * 폼의 Enter 암묵 제출도 같이 막힌다, 브라우저가 기본 버튼을 누르는 것으로 제출하기 때문이다
 		 */
 		disabled?: boolean;
@@ -72,7 +66,7 @@ export function Button({
 	onClick,
 	...props
 }: ButtonProps) {
-	const classes = cn(button({ size, variant }), className);
+	const classes = cn(buttonStyles({ size, variant }), className);
 	const blocked = loading || disabled;
 
 	if (href) {
@@ -99,7 +93,16 @@ export function Button({
 			className={classes}
 			{...props}
 		>
-			{children}
+			<span className={cn("contents", loading && "invisible")}>{children}</span>
+			{loading && (
+				<LoaderCircle
+					aria-hidden
+					className={cn(
+						"absolute animate-spin",
+						size === "sm" ? "size-4" : "size-5",
+					)}
+				/>
+			)}
 		</button>
 	);
 }

@@ -1,45 +1,47 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { commentMenu } from "@/components/comment/CommentThread";
+import { CommentThread, commentMenu } from "@/components/comment/CommentThread";
 import { COMMENT_MENU, REPLY_MENU } from "@/components/comment/comment-menu";
 import { PageShell } from "@/components/layout/PageShell";
+import { AuthorLine } from "@/components/ui/AuthorLine";
 import { ComposeRow } from "@/components/ui/ComposeRow";
-import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { GroupList } from "@/components/ui/GroupList";
 import { createCommentAction } from "@/lib/actions/comment";
 import { getComment, listCommentReplies } from "@/lib/queries/comment";
 import { getPost } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
+import { backTarget, postHref } from "@/lib/utils/back-target";
 import { COMMENT_CONTENT_MAX } from "@/lib/utils/content-limits";
 
 export const metadata: Metadata = {
-	title: "답글",
+	title: "댓글",
 };
 
 /**
- * 답글 화면 — 위에서부터 게시글 본문 · 답글 달 댓글 · 입력 줄 · 이미 달린 답글.
- * 입력 줄은 누르면 모달을 연다 ([결정 0019](../../../docs/decisions/0019-comment-compose-modal.md)).
- * 본문을 남겨두는 이유는 무엇에 대한 대화인지가 화면을 옮겨도 안 끊기게 하려는 것이다
+ * 댓글 상세 — 맥락 카드(원글 한 줄과 대상 댓글)와 답글 그룹.
+ * 원글 한 줄은 무엇에 대한 대화인지 끊기지 않게 남기고, 누르면 게시글로 간다
  * ([결정 0008](../../../docs/decisions/0008-reply-tree-on-post.md)).
+ * 입력줄은 누르면 답글 시트를 연다 ([결정 0019](../../../docs/decisions/0019-comment-compose-modal.md)).
  *
  * 답글에는 자기 화면이 없다. 1뎁스가 끝이라 `getComment`가 답글의 주소를 없는 것으로
  * 친다 ([결정 0007](../../../docs/decisions/0007-comment-routes.md)).
  *
- * 순서대로 읽는 이유는 `app/(main)/post/[id]/page.tsx`와 같다 — uuid가 아닌 주소가 뒤쪽
- * 쿼리까지 가면 캐스팅에서 터져 에러 화면으로 샌다. 댓글을 먼저 확인하고 나면
- * 뒤에 넘기는 id는 이미 검증된 값이다.
+ * 순서대로 읽는 이유는 `app/(main)/post/[id]/page.tsx`와 같다. 이 화면에서 댓글을 지우면
+ * 그 자리에 404가 뜬다 (결정 0022, 0037).
  *
- * 내 댓글과 답글에는 더보기 메뉴가 붙는다. 이 화면에서 댓글을 지우면 그 자리에 404가 뜬다,
- * 결정 0022의 게시글 상세와 같다 (결정 0037).
+ * 게시글로 돌아가는 링크는 주소의 `from`을 다시 싣는다 (`lib/utils/back-target.ts`).
  *
  * 로딩은 `loading.tsx`, 없는 댓글은 `not-found.tsx`, 에러는 `app/error.tsx`가 받는다 (규칙 10).
+ * @see docs/DESIGN.md 댓글 상세
  */
 export default async function CommentPage({
 	params,
+	searchParams,
 }: PageProps<"/comment/[id]">) {
-	const { id } = await params;
+	const [{ id }, { from }] = await Promise.all([params, searchParams]);
 	const supabase = await createClient();
 
 	const comment = await getComment(supabase, id);
@@ -55,61 +57,82 @@ export default async function CommentPage({
 	if (!post) notFound();
 
 	const displayName = profile?.display_name ?? "나";
+	// 게시글이 실어 준 온 화면을 되돌려 실어야 게시글의 뒤로 가기 이름이 남는다
+	const toPost = postHref(comment.post_id, backTarget(from).href);
+
+	const compose = {
+		action: createCommentAction,
+		authorAvatar: profile?.avatar_path,
+		authorId: profile?.id,
+		authorName: displayName,
+		maxLength: COMMENT_CONTENT_MAX,
+		// 내 댓글에 나에게 답글을 남기라고 하지 않는다
+		placeholder:
+			comment.author.id === profile?.id
+				? "답글 남기기"
+				: `${comment.author.display_name}님에게 답글 남기기`,
+		submitLabel: "답글",
+		title: "답글",
+	};
+
+	// 답글도 어느 글의 것인지 들고 있어야 한다 — RLS가 부모와 같은 글인지 본다 (`supabase/migrations/0001_init.sql:155-171`)
+	const hidden = (
+		<>
+			<input name="post_id" type="hidden" value={comment.post_id} />
+			<input name="parent_id" type="hidden" value={comment.id} />
+		</>
+	);
 
 	return (
-		<PageShell backHref={`/post/${comment.post_id}`} title="답글">
-			{/* 본문과 아래 댓글은 세로선으로 이어진다 — 무엇에 대한 대화인지가 안 끊긴다 */}
-			<ContentCard
-				author={post.author}
-				connected
-				content={post.content}
-				createdAt={post.created_at}
-			/>
+		<PageShell backHref={toPost} backLabel="게시글" title="댓글">
+			<div className="flex flex-col gap-3">
+				<article className="rounded-card bg-canvas px-5 py-4 shadow-card">
+					<Link
+						className="-mx-1 block truncate rounded-lg px-1 text-footnote text-fg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						href={toPost}
+					>
+						{post.author.display_name} · {post.content}
+					</Link>
+					<div className="mt-3">
+						<AuthorLine
+							author={comment.author}
+							createdAt={comment.created_at}
+							menu={commentMenu(comment, profile?.id, COMMENT_MENU)}
+						/>
+					</div>
+					<p className="mt-3 whitespace-pre-line break-keep text-headline font-normal text-fg wrap-anywhere">
+						{comment.content}
+					</p>
+				</article>
 
-			{/* 답글 달 댓글. 게시글 화면과 달리 들여쓰지 않는다 — 여기서는 이 댓글이
-				    주인공이고, 옆에 나란히 설 다른 댓글이 없다 */}
-			<ContentCard
-				author={comment.author}
-				content={comment.content}
-				createdAt={comment.created_at}
-				menu={commentMenu(comment, profile?.id, COMMENT_MENU)}
-			/>
+				<div className="max-md:hidden">
+					<ComposeRow {...compose}>{hidden}</ComposeRow>
+				</div>
 
-			<ComposeRow
-				action={createCommentAction}
-				authorAvatar={profile?.avatar_path}
-				authorName={displayName}
-				maxLength={COMMENT_CONTENT_MAX}
-				// 내 댓글에 나에게 답글을 남기라고 하지 않는다
-				placeholder={
-					comment.author.id === profile?.id
-						? "답글 남기기"
-						: `${comment.author.display_name}님에게 답글 남기기`
-				}
-				submitLabel="답글"
-				title="답글"
-			>
-				{/* 답글도 어느 글의 것인지 들고 있어야 한다 — RLS가 부모와 같은 글인지 본다
-					    (`supabase/migrations/0001_init.sql:155-171`) */}
-				<input name="post_id" type="hidden" value={comment.post_id} />
-				<input name="parent_id" type="hidden" value={comment.id} />
+				<GroupList
+					empty={
+						<EmptyState
+							description="먼저 남겨보세요."
+							inset
+							title="아직 답글이 없어요"
+						/>
+					}
+					label={`답글 ${replies.length}`}
+				>
+					{replies.map((reply) => (
+						<CommentThread
+							comment={reply}
+							config={REPLY_MENU}
+							key={reply.id}
+							viewerId={profile?.id}
+						/>
+					))}
+				</GroupList>
+			</div>
+
+			<ComposeRow {...compose} variant="bar">
+				{hidden}
 			</ComposeRow>
-
-			<SectionHeading label="답글" />
-
-			{replies.length === 0 ? (
-				<EmptyState message="아직 답글이 없어요. 먼저 남겨보세요." />
-			) : (
-				replies.map((reply) => (
-					<ContentCard
-						author={reply.author}
-						content={reply.content}
-						createdAt={reply.created_at}
-						key={reply.id}
-						menu={commentMenu(reply, profile?.id, REPLY_MENU)}
-					/>
-				))
-			)}
 		</PageShell>
 	);
 }

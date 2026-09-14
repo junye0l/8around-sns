@@ -1,127 +1,92 @@
 "use client";
 
-import { type ReactNode, useEffect, useId, useState } from "react";
+import { type ReactNode, useId } from "react";
 import { Avatar } from "@/components/ui/Avatar";
-import { Button } from "@/components/ui/Button";
-import { useSubmitAction } from "@/hooks/useSubmitAction";
-
-type ComposerResult = { ok: true } | { ok: false; error: string };
-
-type ComposerProps = {
-	authorName: string;
-	/** 아바타에 쓸 `profiles.avatar_path`. 없으면 기본 아이콘이다 */
-	authorAvatar?: string | null;
-	action: (
-		prev: ComposerResult | null,
-		formData: FormData,
-	) => Promise<ComposerResult>;
-	placeholder: string;
-	submitLabel: string;
-	maxLength: number;
-	/** 처음 채워둘 본문. 수정할 때 지금 글이 여기로 들어온다 */
-	initialContent?: string;
-	/** 액션에 같이 보낼 숨은 입력. 댓글은 여기에 post_id를 싣는다 */
-	children?: ReactNode;
-	/** 저장에 성공했을 때. 모달이 이걸로 닫힌다 */
-	onSuccess?: () => void;
-};
 
 /**
- * 입력칸. 아바타 옆에 이름이 서고 그 아래로 입력이, 오른쪽 끝 아래에 버튼이 온다.
- * 모달과 추천 피드가 같은 모양을 쓴다.
+ * 글쓰기 시트의 본문. 아바타와 이름 아래로 3줄 입력칸이 선다. 보내기 버튼은 시트 머리에 있어
+ * `form` 속성으로 이 폼에 붙는다. 상태는 `ComposeDialog`가 들고 있다.
  *
  * **포커스 링이 없다.** 캐럿이 포커스를 말한다. 결정 0017.
  *
  * **글자수 카운터를 두지 않는다.** 손대는 순간 없던 줄이 생겨 아래가 밀렸다.
- * 상한은 `maxLength`가 조용히 막고, 진짜 방어는 서버와 DB 제약이 한다 (규칙 9).
- * 결정 0014.
+ * 상한은 `maxLength`가 조용히 막고, 진짜 방어는 서버와 DB 제약이 한다 (규칙 9). 결정 0014.
  *
  * **높이가 고정이다.** 접었다 펴면 그것도 레이아웃이 밀리는 일이다.
  *
- * 이미지, GIF, 투표 같은 것은 범위 밖이라 아이콘 자리를 만들지 않는다.
- *
- * textarea를 제어 컴포넌트로 둔다. React 19는 함수 action이 끝나면 폼을 자동으로
- * 비우는데, 그러면 저장에 실패했을 때 쓰던 글까지 같이 날아간다. 값을 state로
- * 들고 있으면 실패한 화면에 글이 남고, 성공했을 때만 비운다.
+ * 입력칸은 바텀 시트 끌기에서 뺀다(`data-vaul-no-drag`). 글자를 고르려고 끌면 시트가 내려간다.
+ * @see docs/DESIGN.md 글쓰기 시트
  */
 export function Composer({
+	formId,
+	formAction,
 	authorName,
 	authorAvatar,
-	action,
+	authorId,
 	placeholder,
-	submitLabel,
 	maxLength,
-	initialContent = "",
+	content,
+	onContentChange,
+	pending,
+	error,
 	children,
-	onSuccess,
-}: ComposerProps) {
-	const [result, formAction, pending] = useSubmitAction<ComposerResult | null>(
-		action,
-		null,
-	);
-	const [content, setContent] = useState(initialContent);
+}: {
+	formId: string;
+	formAction: (formData: FormData) => void;
+	authorName: string;
+	/** 아바타에 쓸 `profiles.avatar_path`. 없으면 첫 글자다 */
+	authorAvatar?: string | null;
+	/** 사진 없는 아바타의 톤을 고르는 사용자 id */
+	authorId?: string;
+	placeholder: string;
+	maxLength: number;
+	content: string;
+	onContentChange: (content: string) => void;
+	pending: boolean;
+	error: string | null;
+	/** 액션에 같이 보낼 숨은 입력. 댓글은 여기에 post_id를 싣는다 */
+	children?: ReactNode;
+}) {
 	const id = useId();
 
-	// 성공했을 때만 비운다. result는 액션이 끝날 때마다 새 객체라 이걸로 구분된다
-	useEffect(() => {
-		if (result?.ok) {
-			setContent("");
-			onSuccess?.();
-		}
-	}, [result, onSuccess]);
-
-	const error = result && !result.ok ? result.error : null;
-	// 공백뿐이거나 고친 것이 없으면 보낼 것이 없다. 서버도 같은 것을 거른다(lib/utils/content.ts)
-	const nothingToSend =
-		content.trim() === "" || content.trim() === initialContent.trim();
-
 	return (
-		<form
-			action={formAction}
-			className="flex gap-3 border-hairline border-b px-4 py-3 md:px-6 last:border-b-0"
-		>
+		<form action={formAction} className="px-5 pb-5" id={formId}>
 			{children}
-			<Avatar path={authorAvatar} />
-
-			{/* min-w-0 이 없으면 긴 이름이 flex 칸을 밀어내 시각이 잘린다 */}
-			<div className="min-w-0 flex-1">
-				<p className="truncate text-body-sm font-semibold text-fg">
+			<div className="flex items-center gap-3">
+				<Avatar
+					name={authorName}
+					path={authorAvatar}
+					seed={authorId}
+					size={40}
+				/>
+				<p className="min-w-0 truncate text-subhead font-bold text-fg">
 					{authorName}
 				</p>
-
-				<label className="sr-only" htmlFor={id}>
-					{placeholder}
-				</label>
-				<textarea
-					className="mt-0.5 w-full resize-none text-body text-fg outline-none placeholder:text-fg-muted"
-					readOnly={pending}
-					id={id}
-					// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
-					maxLength={maxLength}
-					name="content"
-					onChange={(event) => setContent(event.target.value)}
-					placeholder={placeholder}
-					required
-					rows={3}
-					value={content}
-				/>
-
-				{error && (
-					<p className="mt-1 text-body-sm text-danger" role="alert">
-						{error}
-					</p>
-				)}
 			</div>
 
-			<Button
-				className="self-end"
-				disabled={nothingToSend}
-				loading={pending}
-				size="sm"
-				type="submit"
-			>
-				{submitLabel}
-			</Button>
+			<label className="sr-only" htmlFor={id}>
+				{placeholder}
+			</label>
+			<textarea
+				className="mt-3 w-full resize-none break-keep text-body text-fg outline-none placeholder:text-fg-muted"
+				data-vaul-no-drag=""
+				id={id}
+				// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
+				maxLength={maxLength}
+				name="content"
+				onChange={(event) => onContentChange(event.target.value)}
+				placeholder={placeholder}
+				readOnly={pending}
+				required
+				rows={3}
+				value={content}
+			/>
+
+			{error && (
+				<p className="mt-1 text-footnote text-danger" role="alert">
+					{error}
+				</p>
+			)}
 		</form>
 	);
 }

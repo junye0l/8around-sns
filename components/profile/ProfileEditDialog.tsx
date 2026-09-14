@@ -1,12 +1,19 @@
 "use client";
 
-import { Pencil } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import {
+	type ReactNode,
+	useCallback,
+	useEffect,
+	useId,
+	useRef,
+	useState,
+} from "react";
 import { InterestsField } from "@/components/profile/InterestsField";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/Dialog";
+import { DialogShell, Sheet, SheetHeader } from "@/components/ui/Dialog";
 import { TextField } from "@/components/ui/TextField";
+import { useFocusFirstInvalid } from "@/hooks/useFocusFirstInvalid";
 import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { updateProfileAction } from "@/lib/actions/profile";
 import type { UpdateProfileResult } from "@/lib/services/profile";
@@ -17,7 +24,7 @@ import {
 	DISPLAY_NAME_MAX,
 } from "@/lib/utils/content-limits";
 
-/** 올리는 이미지 한 변. 프로필 헤더 84px의 3배를 덮는다. 결정 0030 */
+/** 올리는 이미지 한 변. 프로필 헤더 76px의 3배를 덮는다. 결정 0030 */
 const AVATAR_SIDE = 256;
 
 /**
@@ -56,53 +63,62 @@ async function shrink(file: File): Promise<Blob> {
 }
 
 /**
- * 내 프로필의 "프로필 편집" 버튼과 모달. 별명, 소개, 프로필 이미지를 바꾼다.
- * 남의 프로필에서 팔로우 버튼이 서는 자리에 같은 높이(40px)로 선다.
+ * 프로필 편집 시트. 별명, 소개, 관심사, 프로필 사진을 바꾼다.
+ * 글쓰기 시트와 같은 틀이다(768px 미만 바텀 시트, 이상 모달). 머리 "취소" / "프로필 편집" / "저장".
+ * 닫을 때 묻지 않는다 (결정 0044).
  *
- * 모달은 `components/ui/Dialog.tsx`를 쓴다. 포커스 가두기, Esc, 닫힌 뒤 버튼으로 포커스 돌려주기는 radix가 한다.
- * 폼은 모달 안에 있어 닫히면 같이 사라지고, 다시 열면 지금 프로필 값에서 시작한다.
+ * 여는 버튼은 `trigger`로 받는다. 헤더의 "프로필 편집"과 관심사가 비었을 때의 "관심사 추가"가 같은 시트를 연다.
+ * 폼은 시트 안에 있어 닫히면 같이 사라지고, 다시 열면 지금 프로필 값에서 시작한다.
+ * @see docs/DESIGN.md 프로필 편집
  */
 export function ProfileEditDialog({
 	displayName,
 	bio,
 	interests,
 	avatarPath,
+	userId,
+	trigger,
 }: {
 	displayName: string;
 	bio: string | null;
 	interests: string[];
 	avatarPath: string | null;
+	/** 사진 없는 아바타의 톤을 고르는 사용자 id */
+	userId: string;
+	/** 시트를 여는 `DialogTrigger`들 */
+	trigger: ReactNode;
 }) {
 	const [open, setOpen] = useState(false);
+	const close = useCallback(() => setOpen(false), []);
 
 	return (
-		<Dialog onOpenChange={setOpen} open={open}>
-			<DialogTrigger asChild>
-				<Button className="w-full" variant="outline">
-					프로필 편집
-				</Button>
-			</DialogTrigger>
+		<Sheet onOpenChange={setOpen} open={open}>
+			{trigger}
 
-			{/* 기본은 첫 버튼(취소)에 포커스가 간다. 고치려고 연 창이라 별명 칸으로 보낸다 */}
-			<DialogContent
-				className="max-w-md"
+			<DialogShell
+				aria-describedby={undefined}
+				// 안쪽 좌우 여백 16px씩을 더해 면이 560px이다. 글쓰기 시트와 같다
+				className="top-12 max-w-148"
+				// 기본은 첫 버튼(취소)에 포커스가 간다. 고치려고 연 창이라 별명 칸으로 보낸다
 				onOpenAutoFocus={(event) => {
 					event.preventDefault();
 					(event.currentTarget as HTMLElement | null)
 						?.querySelector<HTMLInputElement>("input[name=display_name]")
 						?.focus();
 				}}
-				title="프로필 편집"
+				variant="sheet"
 			>
 				<ProfileEditForm
 					avatarPath={avatarPath}
 					bio={bio}
 					displayName={displayName}
 					interests={interests}
-					onSuccess={() => setOpen(false)}
+					onCancel={close}
+					onSuccess={close}
+					userId={userId}
 				/>
-			</DialogContent>
-		</Dialog>
+			</DialogShell>
+		</Sheet>
 	);
 }
 
@@ -111,12 +127,16 @@ function ProfileEditForm({
 	bio,
 	interests,
 	avatarPath,
+	userId,
+	onCancel,
 	onSuccess,
 }: {
 	displayName: string;
 	bio: string | null;
 	interests: string[];
 	avatarPath: string | null;
+	userId: string;
+	onCancel: () => void;
 	onSuccess: () => void;
 }) {
 	const [result, formAction, pending] =
@@ -128,6 +148,8 @@ function ProfileEditForm({
 	const [preview, setPreview] = useState<string | null>(null);
 	const [fileError, setFileError] = useState<string | null>(null);
 	const fileInput = useRef<HTMLInputElement>(null);
+	const form = useFocusFirstInvalid(result);
+	const formId = useId();
 
 	useEffect(() => {
 		if (result?.ok) onSuccess();
@@ -179,99 +201,103 @@ function ProfileEditForm({
 		interestItems.join("\n") === interests.join("\n");
 
 	return (
-		<form
-			action={(formData) => {
-				// 원본 파일이 아니라 줄인 것을 싣는다. 파일 칸에는 name이 없어 원본은 안 실린다
-				if (avatar) formData.set("avatar", avatar, "avatar");
-				formAction(formData);
-			}}
-			className="flex flex-col gap-6 px-6 pt-2 pb-6"
-		>
-			<div className="flex flex-col items-center gap-2">
-				{/* 사진 자체가 버튼이다. 늘 깔린 어두운 막과 연필이 누를 수 있다고 말하고, hover와 pressed에서 막이 짙어진다.
-				    저장 중에는 진짜 disabled 대신 aria-disabled로 막는다. 포커스가 body로 떨어지지 않는다 (결정 0012, Button.tsx와 같다) */}
-				<button
-					aria-busy={pending || undefined}
-					aria-disabled={pending || undefined}
-					aria-label="프로필 사진 바꾸기"
-					className="group/avatar relative shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-busy:cursor-not-allowed"
-					onClick={() => {
-						if (!pending) fileInput.current?.click();
-					}}
-					type="button"
-				>
-					<Avatar className="size-21" path={avatarPath} preview={preview} />
-					<span
-						aria-hidden
-						className="absolute inset-0 flex items-center justify-center rounded-full bg-scrim/30 text-on-scrim transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) group-hover/avatar:bg-scrim/50 group-active/avatar:bg-scrim/60 group-aria-busy/avatar:bg-scrim/30 group-aria-busy/avatar:group-hover/avatar:bg-scrim/30"
+		<>
+			<SheetHeader
+				canSubmit={!unchanged}
+				formId={formId}
+				onCancel={onCancel}
+				pending={pending}
+				submitLabel="저장"
+				title="프로필 편집"
+			/>
+
+			<form
+				action={(formData) => {
+					// 원본 파일이 아니라 줄인 것을 싣는다. 파일 칸에는 name이 없어 원본은 안 실린다
+					if (avatar) formData.set("avatar", avatar, "avatar");
+					formAction(formData);
+				}}
+				className="flex flex-col gap-3 px-5 pb-5"
+				id={formId}
+				ref={form}
+			>
+				{/* 사진 위에 아이콘을 겹치지 않는다. 바꾸는 길은 아래 글자 버튼 하나다 (결정 0030 업로드 흐름) */}
+				<div className="flex flex-col items-center gap-2">
+					<Avatar
+						eager
+						name={name.trim() || displayName}
+						path={avatarPath}
+						preview={preview}
+						seed={userId}
+						size={76}
+					/>
+					<Button
+						disabled={pending}
+						onClick={() => fileInput.current?.click()}
+						size="sm"
+						variant="ghost"
 					>
-						<Pencil className="size-6" />
-					</span>
-				</button>
-				<input
-					accept={Object.keys(AVATAR_TYPES).join(",")}
-					aria-label="프로필 사진 파일"
-					className="sr-only"
-					onChange={(event) => {
-						pick(event.target.files?.[0]);
-						// 같은 파일을 다시 골라도 onChange가 오게 비운다
-						event.target.value = "";
-					}}
-					ref={fileInput}
-					tabIndex={-1}
-					type="file"
+						사진 바꾸기
+					</Button>
+					<input
+						accept={Object.keys(AVATAR_TYPES).join(",")}
+						aria-label="프로필 사진 파일"
+						className="sr-only"
+						onChange={(event) => {
+							pick(event.target.files?.[0]);
+							// 같은 파일을 다시 골라도 onChange가 오게 비운다
+							event.target.value = "";
+						}}
+						ref={fileInput}
+						tabIndex={-1}
+						type="file"
+					/>
+					{avatarError && (
+						<p className="text-center text-footnote text-danger" role="alert">
+							{avatarError}
+						</p>
+					)}
+				</div>
+
+				<TextField
+					error={nameError}
+					hint={`${DISPLAY_NAME_MAX}자까지 가능해요`}
+					label="별명"
+					// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
+					maxLength={DISPLAY_NAME_MAX}
+					name="display_name"
+					onChange={(event) => setName(event.target.value)}
+					readOnly={pending}
+					sheet
+					value={name}
 				/>
-				{avatarError && (
-					<p className="text-center text-body-sm text-danger" role="alert">
-						{avatarError}
+
+				<TextField
+					error={bioError}
+					hint={`${BIO_MAX}자까지 가능해요`}
+					label="소개"
+					maxLength={BIO_MAX}
+					multiline
+					name="bio"
+					onChange={(event) => setBioText(event.target.value)}
+					readOnly={pending}
+					sheet
+					value={bioText}
+				/>
+
+				<InterestsField
+					defaultValue={interests}
+					error={interestsError}
+					onChange={setInterestItems}
+					pending={pending}
+				/>
+
+				{formError && (
+					<p className="text-footnote text-danger" role="alert">
+						{formError}
 					</p>
 				)}
-			</div>
-
-			<TextField
-				readOnly={pending}
-				error={nameError}
-				label="별명"
-				// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
-				maxLength={DISPLAY_NAME_MAX}
-				name="display_name"
-				onChange={(event) => setName(event.target.value)}
-				value={name}
-			/>
-
-			<TextField
-				error={bioError}
-				hint={`${BIO_MAX}자까지 가능해요`}
-				label="소개"
-				maxLength={BIO_MAX}
-				multiline
-				name="bio"
-				onChange={(event) => setBioText(event.target.value)}
-				readOnly={pending}
-				value={bioText}
-			/>
-
-			<InterestsField
-				defaultValue={interests}
-				error={interestsError}
-				onChange={setInterestItems}
-				pending={pending}
-			/>
-
-			{formError && (
-				<p className="text-body-sm text-danger" role="alert">
-					{formError}
-				</p>
-			)}
-
-			<Button
-				className="w-full"
-				disabled={unchanged}
-				loading={pending}
-				type="submit"
-			>
-				저장
-			</Button>
-		</form>
+			</form>
+		</>
 	);
 }

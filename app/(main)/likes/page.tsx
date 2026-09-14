@@ -1,6 +1,8 @@
+import { Heart } from "lucide-react";
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { PostList } from "@/components/post/PostList";
+import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listLikedFeed } from "@/lib/queries/post";
 import { getCurrentProfile } from "@/lib/queries/profile";
@@ -30,9 +32,18 @@ export default async function LikesPage() {
 	return (
 		<PageShell title="좋아요">
 			{posts.length === 0 ? (
-				<EmptyState message="아직 좋아요한 글이 없어요. 마음에 드는 글에 하트를 눌러 보세요." />
+				<EmptyState
+					action={
+						<Button href="/" size="sm">
+							전체 글 둘러보기
+						</Button>
+					}
+					description="마음에 드는 글에 하트를 눌러 보세요."
+					icon={Heart}
+					title="아직 좋아요한 글이 없어요"
+				/>
 			) : (
-				<PostList posts={posts} viewerId={profile?.id} />
+				<PostList from="/likes" posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);

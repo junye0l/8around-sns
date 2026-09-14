@@ -1,23 +1,24 @@
 import { PageShell } from "@/components/layout/PageShell";
 import {
 	ComposeRowSkeleton,
-	ContentCardSkeleton,
-	SectionHeadingSkeleton,
+	DetailCardSkeleton,
+	GroupListSkeleton,
 } from "@/components/ui/Skeleton";
 
 /**
- * 상세 화면의 첫 페인트. 글 한 칸, 댓글 입력 줄, "댓글" 제목줄, 댓글 칸의 순서와
- * 높이를 `page.tsx`와 같게 둔다. 댓글 칸은 답글이 없는 모양이다.
+ * 게시글 상세의 첫 페인트. 원글 카드, 넓은 폭의 글쓰기 줄, 댓글 그룹을 `page.tsx`와 같은 순서로 세운다.
+ * 돌아갈 화면은 주소의 `from`을 읽어야 알 수 있어 여기서는 화살표만 둔다.
  */
 export default function PostLoading() {
 	return (
 		<PageShell backHref="/" title="게시글">
-			<ContentCardSkeleton actions={1} />
-			<ComposeRowSkeleton />
-			<SectionHeadingSkeleton />
-			{[0, 1].map((row) => (
-				<ContentCardSkeleton actions={1} key={row} />
-			))}
+			<div className="flex flex-col gap-3">
+				<DetailCardSkeleton actions={2} />
+				<div className="max-md:hidden">
+					<ComposeRowSkeleton />
+				</div>
+				<GroupListSkeleton />
+			</div>
 		</PageShell>
 	);
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import * as Primitive from "@radix-ui/react-dropdown-menu";
-import { Check, ChevronRight } from "lucide-react";
 import { type ComponentProps, createContext, useContext, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
 
@@ -13,11 +12,11 @@ import { cn } from "@/lib/utils/cn";
  * @see docs/PLAN.md 애니메이션 절
  */
 const SURFACE =
-	"z-50 min-w-56 origin-(--radix-dropdown-menu-content-transform-origin) animate-menu-open overflow-hidden rounded-md border border-hairline bg-canvas py-1";
+	"z-50 min-w-56 origin-(--radix-dropdown-menu-content-transform-origin) animate-menu-open overflow-hidden rounded-menu border border-hairline bg-canvas-raised p-1.5 shadow-raised";
 
 // radix는 키보드와 포인터 강조를 같은 data 속성으로 준다
 const ITEM =
-	"flex cursor-pointer select-none items-center gap-3 px-4 py-3 text-body text-fg outline-none transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) data-highlighted:bg-background";
+	"flex cursor-pointer select-none items-center gap-3 rounded-xl px-3 py-2.5 text-body text-fg outline-none transition-colors duration-(--motion-fast) ease-(--ease-standard) data-highlighted:bg-fill";
 
 /**
  * 무엇으로 열었는지와 그 트리거가 무엇인지. 닫을 때 포커스를 어떻게 돌려줄지가 여기서 갈린다.
@@ -69,7 +68,7 @@ export function DropdownMenuTrigger(
 }
 
 /**
- * 떠 있는 면. 그림자를 쓰지 않으므로 1px 선이 분리를 맡는다.
+ * 떠 있는 면. 라이트는 그림자와 1px 선이, 다크는 `canvas-raised` 면 색과 선이 뒤와 가른다.
  * 기본값은 버튼 오른쪽 위 정렬이다 — 레일이 화면 왼쪽 끝에 붙어 있어 아래로 열 자리가 없다.
  *
  * 열릴 때 트리거 쪽 모서리에서 펼쳐진다. 어느 모서리인지는 radix가 자리를 잡고 나서
@@ -153,67 +152,25 @@ export function DropdownMenuSeparator({
 	);
 }
 
-/** 안에 메뉴를 하나 더 품는 묶음. 트리거와 떠 있는 면을 짝으로 쓴다 */
-export const DropdownMenuSub = Primitive.Sub;
-
-/** 하위 메뉴를 여는 줄. 누르거나 올리거나 오른쪽 화살표 키로 연다 */
-export function DropdownMenuSubTrigger({
-	className,
-	children,
-	...props
-}: ComponentProps<typeof Primitive.SubTrigger>) {
-	return (
-		<Primitive.SubTrigger className={cn(ITEM, className)} {...props}>
-			{children}
-			<ChevronRight aria-hidden className="ml-auto size-5 shrink-0" />
-		</Primitive.SubTrigger>
-	);
-}
-
-/** 하위 메뉴의 떠 있는 면. 겉모습은 `DropdownMenuContent`와 같다 */
-export function DropdownMenuSubContent({
-	className,
-	sideOffset = 8,
-	...props
-}: ComponentProps<typeof Primitive.SubContent>) {
-	return (
-		<Primitive.Portal>
-			<Primitive.SubContent
-				className={cn(SURFACE, className)}
-				collisionPadding={8}
-				sideOffset={sideOffset}
-				{...props}
-			/>
-		</Primitive.Portal>
-	);
-}
-
-/** 하나만 고르는 줄 묶음. `value`와 `onValueChange`를 받는다 */
+/** 하나만 고르는 칸 묶음. `value`와 `onValueChange`를 받는다 */
 export const DropdownMenuRadioGroup = Primitive.RadioGroup;
 
 /**
- * 고를 수 있는 한 줄. 고른 줄은 오른쪽에 체크가 선다.
+ * 고를 수 있는 칸 하나. 모양은 부르는 쪽이 `className`으로 준다. 켜진 칸은 `aria-checked`가 붙는다.
+ * 세그먼트처럼 한 줄에 나란히 두어도 위아래 화살표 키로 옮겨 다닌다.
  * 손을 뗄 때 실행되지 않게 막는 이유는 `DropdownMenuItem`과 같다.
  */
 export function DropdownMenuRadioItem({
-	className,
-	children,
 	onPointerUp,
 	...props
 }: ComponentProps<typeof Primitive.RadioItem>) {
 	return (
 		<Primitive.RadioItem
-			className={cn(ITEM, className)}
 			onPointerUp={(event) => {
 				onPointerUp?.(event);
 				event.preventDefault();
 			}}
 			{...props}
-		>
-			{children}
-			<Primitive.ItemIndicator className="ml-auto">
-				<Check aria-hidden className="size-5 shrink-0" />
-			</Primitive.ItemIndicator>
-		</Primitive.RadioItem>
+		/>
 	);
 }
