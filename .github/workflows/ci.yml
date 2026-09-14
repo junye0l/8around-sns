@@ -24,3 +24,39 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+  # 심사 시나리오 E2E. 프로덕션 DB가 아니라 러너 안에 띄운 로컬 Supabase에 대고 돈다.
+  # PR마다 원격 DB에 테스트 계정이 쌓이지 않게 하려는 것이다 (결정 0048). 러너에는 Docker가 있다
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # 시나리오가 쓰는 것은 DB, 인증, REST, Storage(버킷 마이그레이션)와 그 앞의 kong이다
+      - run: npx supabase start -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+      - name: 로컬 Supabase의 주소와 키를 앱 환경변수로 넘긴다
+        run: |
+          eval "$(npx supabase status -o env)"
+          test -n "$API_URL" && test -n "$ANON_KEY"
+          echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      # 서버와 테스트를 한 단계에 둔다. 단계가 끝나면 백그라운드 서버가 남는다는 보장이 없다
+      - name: 서버를 띄우고 E2E를 돌린다
+        run: |
+          npm run start &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3000/login && break
+            sleep 1
+          done
+          npm run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-trace
+          path: test-results/

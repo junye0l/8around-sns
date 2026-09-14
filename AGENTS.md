@@ -43,8 +43,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 | `npm run db:push` | 마이그레이션을 원격 DB에 적용. 규칙 7에 따라 먼저 묻는다 |
 | `npm run types:gen` | 스키마에서 `types/database.ts` 재생성 |
 | `npm run harness` | 규칙 중 기계가 볼 수 있는 것만 검사한다. `verify`가 부른다 |
+| `npm run test:e2e` | 떠 있는 개발 서버에 대고 심사 시나리오 E2E를 돌린다 (규칙 17) |
 
 CI는 `verify` 3단계에 `npm run build`를 더해 그대로 돌린다. 로컬에서 `verify`가 통과하면 CI도 통과한다.
+E2E는 CI의 다른 job이 러너 안에 띄운 로컬 Supabase에 대고 돌린다 ([결정 0048](docs/decisions/0048-e2e-against-remote-db.md)).
 
 ## 구조
 
@@ -66,6 +68,7 @@ lib/
 types/                  스키마에서 생성한 DB 타입 (규칙 8)
 supabase/migrations/    스키마. SQL 파일만이 출처 (규칙 3)
 scripts/                verify가 부르는 검사. 앱 코드가 아니다
+e2e/                    심사 시나리오 E2E. *.e2e.ts (규칙 17)
 docs/                   PLAN.md, DESIGN.md
   decisions/            결정 기록. 선택지와 버린 이유 (규칙 14)
 ```
@@ -313,6 +316,17 @@ npm run types:gen           types/database.ts 재생성
 
 - 개발 서버와 브라우저 설치(`npx playwright install chromium`)는 규칙 7을 따른다
 - 보고는 무엇을 눌렀고 무엇이 보였는지로 한다. 근거는 스크린샷과 콘솔 출력이다 (규칙 4)
+
+## 17. 사용자 흐름을 바꾸면 E2E를 같이 고친다
+
+단위 테스트는 가짜 DB로 돌아 화면 흐름이 끊긴 것을 잡지 못한다.
+답글이 없는 댓글에서 답글 화면으로 가는 길이 사라진 것을 E2E를 짜면서야 알았다 ([결정 0047](docs/decisions/0047-reply-entry-without-replies.md)).
+
+- 대상은 `e2e/signup-flow.e2e.ts`가 지나는 흐름이다. 가입, 로그인, 로그아웃, 글 작성, 댓글, 답글, 팔로우
+- 그 흐름의 화면 구성, 버튼과 입력칸의 이름, 주소를 바꿨으면 같은 PR에서 E2E를 고친다
+- 모든 화면을 E2E로 덮지 않는다. 입력 오류와 실패 처리는 `lib/services/*.test.ts`가 본다
+- 로컬 실행은 원격 DB에 대고 돈다. 만든 데이터는 `finally`에서 지운다 ([결정 0048](docs/decisions/0048-e2e-against-remote-db.md))
+- 에이전트는 개발 서버를 띄워 달라고 요청한 뒤 `npm run test:e2e`를 돌린다 (규칙 7)
 
 ---
 
