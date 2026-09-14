@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils/cn";
  * 문구는 `sr-only`다. 지금 어디인지는 아이콘 색이 말한다, 회색이 기본이고 검정이 현재다.
  * 결정 0015. 마우스를 올리거나 키보드 포커스가 들어오면 레일이 240px로 넓어지며 문구가
  * 아이콘 오른쪽에 나온다. 흐름 밖(`fixed`)이라 컬럼은 밀리지 않고 위를 덮는다.
+ * 태블릿 폭에서는 덮인 본문이 반투명 흐림 너머로 비친다. 결정 0035.
  *
  * 지금 어디인지를 `usePathname`으로 직접 읽는다. 화면마다 prop으로 내려주면
  * 라우트가 늘 때마다 호출부를 전부 고쳐야 하고, 한 곳만 빠뜨려도 조용히 틀린다.
@@ -51,7 +52,7 @@ export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 
 	return (
 		// 768 미만은 화면 아래 탭바다. 로고와 더 보기는 빠지고 더 보기는 `PageShell` 제목줄로 간다
-		<nav className="group fixed inset-x-0 bottom-0 z-20 flex h-16 items-center overflow-hidden border-hairline border-t bg-canvas px-2 text-body transition-all duration-[var(--motion-fast)] ease-(--ease-standard) md:inset-x-auto md:inset-y-0 md:left-0 md:h-auto md:w-19 md:flex-col md:items-stretch md:border-t-0 md:bg-transparent md:px-3.5 md:py-4 md:hover:w-60 md:hover:bg-background md:has-focus-visible:w-60 md:has-focus-visible:bg-background">
+		<nav className="group fixed inset-x-0 bottom-0 z-20 flex h-16 items-center overflow-hidden border-hairline border-t bg-canvas px-2 text-body transition-all duration-[var(--motion-fast)] ease-(--ease-standard) md:inset-x-auto md:inset-y-0 md:left-0 md:h-auto md:w-19 md:flex-col md:items-stretch md:border-t-0 md:bg-transparent md:px-3.5 md:py-4 md:hover:w-60 md:hover:bg-background/80 md:hover:backdrop-blur-rail md:has-focus-visible:w-60 md:has-focus-visible:bg-background/80 md:has-focus-visible:backdrop-blur-rail">
 			<div className="max-md:hidden">
 				<BrandMark />
 			</div>
