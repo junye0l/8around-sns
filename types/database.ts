@@ -190,6 +190,7 @@ export type Database = {
 					created_at: string;
 					display_name: string;
 					id: string;
+					interests: string[];
 				};
 				Insert: {
 					avatar_path?: string | null;
@@ -197,6 +198,7 @@ export type Database = {
 					created_at?: string;
 					display_name: string;
 					id: string;
+					interests?: string[];
 				};
 				Update: {
 					avatar_path?: string | null;
@@ -204,6 +206,7 @@ export type Database = {
 					created_at?: string;
 					display_name?: string;
 					id?: string;
+					interests?: string[];
 				};
 				Relationships: [];
 			};
@@ -235,6 +238,7 @@ export type Database = {
 				Args: { post: Database["public"]["Tables"]["posts"]["Row"] };
 				Returns: boolean;
 			};
+			profile_interests_valid: { Args: { items: string[] }; Returns: boolean };
 		};
 		Enums: {
 			[_ in never]: never;
