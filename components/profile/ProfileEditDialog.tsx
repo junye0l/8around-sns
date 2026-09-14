@@ -164,7 +164,7 @@ function ProfileEditForm({
 			}}
 			className="flex flex-col gap-6 px-6 pt-2 pb-6"
 		>
-			<div className="flex items-center gap-4">
+			<div className="flex flex-col items-center gap-2">
 				{/* 사진 자체가 버튼이다. 늘 깔린 어두운 막과 연필이 누를 수 있다고 말하고, hover와 pressed에서 막이 짙어진다 */}
 				<button
 					aria-label="프로필 사진 바꾸기"
@@ -195,7 +195,7 @@ function ProfileEditForm({
 					type="file"
 				/>
 				{avatarError && (
-					<p className="min-w-0 text-body-sm text-danger" role="alert">
+					<p className="text-center text-body-sm text-danger" role="alert">
 						{avatarError}
 					</p>
 				)}
