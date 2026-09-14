@@ -80,7 +80,12 @@ export default async function CommentPage({
 				authorAvatar={profile?.avatar_path}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
-				placeholder={`${comment.author.display_name}님에게 답글 남기기`}
+				// 내 글에 나에게 답글을 남기라고 하지 않는다
+				placeholder={
+					comment.author.id === profile?.id
+						? "답글 남기기"
+						: `${comment.author.display_name}님에게 답글 남기기`
+				}
 				submitLabel="답글"
 				title="답글"
 			>
