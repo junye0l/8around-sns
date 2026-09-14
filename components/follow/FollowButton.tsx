@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { setFollowAction } from "@/lib/actions/follow";
 import type { SetFollowResult } from "@/lib/services/follow";
 
@@ -24,10 +24,10 @@ export function FollowButton({
 	/** 지금 팔로우 중인가. 눌렀을 때의 의도가 여기서 나온다 */
 	following: boolean;
 }) {
-	const [result, formAction, pending] = useActionState<
-		SetFollowResult | null,
-		FormData
-	>(setFollowAction, null);
+	const [result, formAction, pending] = useSubmitAction<SetFollowResult | null>(
+		setFollowAction,
+		null,
+	);
 
 	const error = result && !result.ok ? result.error : null;
 

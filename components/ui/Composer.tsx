@@ -1,14 +1,9 @@
 "use client";
 
-import {
-	type ReactNode,
-	useActionState,
-	useEffect,
-	useId,
-	useState,
-} from "react";
+import { type ReactNode, useEffect, useId, useState } from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
+import { useSubmitAction } from "@/hooks/useSubmitAction";
 
 type ComposerResult = { ok: true } | { ok: false; error: string };
 
@@ -60,10 +55,10 @@ export function Composer({
 	children,
 	onSuccess,
 }: ComposerProps) {
-	const [result, formAction, pending] = useActionState<
-		ComposerResult | null,
-		FormData
-	>(action, null);
+	const [result, formAction, pending] = useSubmitAction<ComposerResult | null>(
+		action,
+		null,
+	);
 	const [content, setContent] = useState(initialContent);
 	const id = useId();
 
@@ -76,6 +71,9 @@ export function Composer({
 	}, [result, onSuccess]);
 
 	const error = result && !result.ok ? result.error : null;
+	// 공백뿐이거나 고친 것이 없으면 보낼 것이 없다. 서버도 같은 것을 거른다(lib/utils/content.ts)
+	const nothingToSend =
+		content.trim() === "" || content.trim() === initialContent.trim();
 
 	return (
 		<form
@@ -115,7 +113,13 @@ export function Composer({
 				)}
 			</div>
 
-			<Button className="self-end" loading={pending} size="sm" type="submit">
+			<Button
+				className="self-end"
+				disabled={nothingToSend}
+				loading={pending}
+				size="sm"
+				type="submit"
+			>
 				{submitLabel}
 			</Button>
 		</form>
