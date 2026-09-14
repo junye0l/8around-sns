@@ -30,6 +30,8 @@ export async function updateProfileAction(
 	const result = await updateProfile(supabase, userId, {
 		displayName: formData.get("display_name"),
 		bio: formData.get("bio"),
+		// 관심사는 칩마다 hidden input 하나라 전부 모은다. 하나도 없으면 빈 배열이고, 다 지운 것이다
+		interests: formData.getAll("interests"),
 		avatar: formData.get("avatar"),
 	});
 	if (result.ok) refresh();

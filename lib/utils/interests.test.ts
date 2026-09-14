@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
 	interestLength,
-	interestsError,
+	interestsSchema,
 	normalizeInterests,
 } from "./interests";
+
+const parse = (value: unknown) => interestsSchema.safeParse(value);
 
 describe("normalizeInterests", () => {
 	it("앞뒤 공백을 지우고 빈 값과 중복을 빼며 순서를 지킨다", () => {
@@ -14,15 +16,21 @@ describe("normalizeInterests", () => {
 	});
 });
 
-describe("interestsError", () => {
-	it("3개, 한 개에 2글자까지 받는다", () => {
-		expect(interestsError(["운동", "맛집", "AI"])).toBeNull();
-		expect(interestsError([])).toBeNull();
+describe("interestsSchema", () => {
+	it("다듬은 뒤 3개, 한 개에 2글자까지 받는다", () => {
+		expect(parse([" 운동", "맛집", "AI", "운동"]).data).toEqual([
+			"운동",
+			"맛집",
+			"AI",
+		]);
+		expect(parse([]).data).toEqual([]);
 	});
 
-	it("4개 이상이거나 3글자 이상이면 막는다", () => {
-		expect(interestsError(["운동", "맛집", "AI", "여행"])).not.toBeNull();
-		expect(interestsError(["프론트"])).not.toBeNull();
+	it("4개 이상, 3글자 이상, 배열이 아니거나 문자열이 아닌 원소는 막는다", () => {
+		expect(parse(["운동", "맛집", "AI", "여행"]).success).toBe(false);
+		expect(parse(["프론트"]).success).toBe(false);
+		expect(parse("운동").success).toBe(false);
+		expect(parse([1]).success).toBe(false);
 	});
 });
 

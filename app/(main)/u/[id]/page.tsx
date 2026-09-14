@@ -51,6 +51,7 @@ export default async function ProfilePage({ params }: PageProps<"/u/[id]">) {
 							avatarPath={profile.avatar_path}
 							bio={profile.bio}
 							displayName={profile.display_name}
+							interests={profile.interests}
 						/>
 					) : (
 						<FollowButton following={following} targetId={profile.id} />

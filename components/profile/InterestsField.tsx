@@ -4,12 +4,8 @@ import { useRef, useState } from "react";
 import { InterestChip } from "@/components/profile/InterestChip";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
-import {
-	INTEREST_CHARS_MAX,
-	INTERESTS_MAX,
-	interestsError,
-	normalizeInterests,
-} from "@/lib/utils/interests";
+import { INTEREST_CHARS_MAX, INTERESTS_MAX } from "@/lib/utils/content-limits";
+import { interestLength, normalizeInterests } from "@/lib/utils/interests";
 
 /**
  * 프로필 편집 모달의 관심사 칸. 입력칸에 쓰고 Enter나 추가 버튼으로 넣는다. 넣은 것은 지울 수 있는 칩이 된다.
@@ -21,9 +17,12 @@ import {
  */
 export function InterestsField({
 	defaultValue,
+	error,
 	pending = false,
 }: {
 	defaultValue: string[];
+	/** 서버가 돌려준 관심사 에러 문구 */
+	error?: string;
 	/** 저장 중. 값을 바꾸지 못하게 막는다 */
 	pending?: boolean;
 }) {
@@ -35,10 +34,9 @@ export function InterestsField({
 
 	function add() {
 		if (locked) return;
-		const next = normalizeInterests([...items, draft]);
 		// maxLength는 UTF-16으로 세고 한글 조합 중에는 넘칠 수 있어 글자 수를 한 번 더 본다
-		if (interestsError(next)) return;
-		setItems(next);
+		if (interestLength(draft.trim()) > INTEREST_CHARS_MAX) return;
+		setItems(normalizeInterests([...items, draft]));
 		setDraft("");
 	}
 
@@ -47,6 +45,7 @@ export function InterestsField({
 			<div className="flex items-start gap-2">
 				<div className="min-w-0 flex-1">
 					<TextField
+						error={error}
 						hint={`한 개에 ${INTEREST_CHARS_MAX}글자, ${INTERESTS_MAX}개까지 가능해요`}
 						label="관심사"
 						maxLength={INTEREST_CHARS_MAX}

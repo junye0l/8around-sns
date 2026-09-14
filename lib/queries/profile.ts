@@ -51,7 +51,7 @@ export async function getCurrentProfile(
 /** 프로필 화면의 주인공. 팔로워 · 팔로잉 수를 같이 들고 온다 */
 export type ProfileDetail = Pick<
 	Profile,
-	"id" | "display_name" | "avatar_path" | "bio"
+	"id" | "display_name" | "avatar_path" | "bio" | "interests"
 > & {
 	follower_count: number;
 	following_count: number;
@@ -65,7 +65,7 @@ export type ProfileDetail = Pick<
  * 그건 수만 보여주는 자리에 목록을 통째로 끌고 오는 일이다.
  */
 const PROFILE_DETAIL_SELECT =
-	"id, display_name, avatar_path, bio, followers:follows!follows_following_id_fkey(count), following:follows!follows_follower_id_fkey(count)";
+	"id, display_name, avatar_path, bio, interests, followers:follows!follows_following_id_fkey(count), following:follows!follows_follower_id_fkey(count)";
 
 type ProfileDetailRow = Omit<
 	ProfileDetail,

@@ -2,6 +2,7 @@
 
 import { Pencil } from "lucide-react";
 import { useActionState, useEffect, useRef, useState } from "react";
+import { InterestsField } from "@/components/profile/InterestsField";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/Dialog";
@@ -63,10 +64,12 @@ async function shrink(file: File): Promise<Blob> {
 export function ProfileEditDialog({
 	displayName,
 	bio,
+	interests,
 	avatarPath,
 }: {
 	displayName: string;
 	bio: string | null;
+	interests: string[];
 	avatarPath: string | null;
 }) {
 	const [open, setOpen] = useState(false);
@@ -94,6 +97,7 @@ export function ProfileEditDialog({
 					avatarPath={avatarPath}
 					bio={bio}
 					displayName={displayName}
+					interests={interests}
 					onSuccess={() => setOpen(false)}
 				/>
 			</DialogContent>
@@ -104,11 +108,13 @@ export function ProfileEditDialog({
 function ProfileEditForm({
 	displayName,
 	bio,
+	interests,
 	avatarPath,
 	onSuccess,
 }: {
 	displayName: string;
 	bio: string | null;
+	interests: string[];
 	avatarPath: string | null;
 	onSuccess: () => void;
 }) {
@@ -157,6 +163,8 @@ function ProfileEditForm({
 	const nameError =
 		serverError?.field === "display_name" ? serverError.error : undefined;
 	const bioError = serverError?.field === "bio" ? serverError.error : undefined;
+	const interestsError =
+		serverError?.field === "interests" ? serverError.error : undefined;
 	const avatarError =
 		fileError ?? (serverError?.field === "avatar" ? serverError.error : null);
 	const formError =
@@ -232,6 +240,12 @@ function ProfileEditForm({
 				multiline
 				name="bio"
 				readOnly={pending}
+			/>
+
+			<InterestsField
+				defaultValue={interests}
+				error={interestsError}
+				pending={pending}
 			/>
 
 			{formError && (

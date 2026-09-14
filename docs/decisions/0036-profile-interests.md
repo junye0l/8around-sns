@@ -33,8 +33,12 @@
 같이 정한 값:
 
 - **원소 검사는 `profile_interests_valid` 함수로 감싼다.** CHECK에는 서브쿼리를 못 쓴다. 앞뒤 공백, 빈 값, 중복도 DB가 막는다
-- **칩은 `hairline` 테두리와 `fg` 글자다.** 시안의 `#4e5968`(body)은 색 토큰이 없어서 쓰지 않는다. `fg-muted`는 흰 바탕 글자 대비가 3.04:1이라 본문 글자로 쓰지 않는다
-- **3개가 차면 입력칸은 readOnly, 추가 버튼은 aria-disabled.** 진짜 disabled는 포커스를 body로 떨어뜨린다(결정 0012)
+- **서버는 `lib/utils/interests.ts`의 `interestsSchema`로 한 번 더 본다.** 문자열 배열이 아니면 거절하고, 다듬어서 빈 값과 중복을 뺀 뒤 개수와 글자 수를 본다. 에러는 관심사 칸에 붙는다
+- **상한 3과 2는 `lib/utils/content-limits.ts`에 둔다.** 별명, 소개 상한과 같은 자리다. 입력칸이 import하므로 zod와 같은 파일에 두지 않는다
+- **폼에는 칩마다 `name="interests"` hidden input으로 싣고, 액션이 `getAll`로 모은다.** 다 지우면 빈 배열로 저장된다
+- **프로필 화면에서는 소개 아래 12px에 칩 줄이 선다.** 비면 줄이 없다
+- **칩은 `hairline` 테두리와 `fg` 글자다.** 시안의 `#4e5968`(body)은 색 토큰이 없어서 쓰지 않는다. `fg-muted`는 흰 바탕 글자 대비가 3.04:1이라 본문 글자로 쓰지 않는다. 누를 수 없고 파랑을 쓰지 않는다
+- **3개가 차거나 저장 중이면 입력칸은 readOnly, 추가 버튼은 aria-disabled.** 진짜 disabled는 포커스를 body로 떨어뜨린다(결정 0012). 한글 조합을 끝내는 Enter는 넣지 않는다
 
 ## 비용
 
