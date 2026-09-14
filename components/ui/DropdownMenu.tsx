@@ -1,6 +1,7 @@
 "use client";
 
 import * as Primitive from "@radix-ui/react-dropdown-menu";
+import { Check, ChevronRight } from "lucide-react";
 import { type ComponentProps, createContext, useContext, useRef } from "react";
 import { cn } from "@/lib/utils/cn";
 
@@ -11,6 +12,13 @@ import { cn } from "@/lib/utils/cn";
  * 여는 애니메이션만 있다. 닫을 때는 radix가 바로 언마운트해서 보이지 않는다.
  * @see docs/PLAN.md 애니메이션 절
  */
+const SURFACE =
+	"z-50 min-w-56 origin-(--radix-dropdown-menu-content-transform-origin) animate-menu-open overflow-hidden rounded-md border border-hairline bg-canvas py-1";
+
+// radix는 키보드와 포인터 강조를 같은 data 속성으로 준다
+const ITEM =
+	"flex cursor-pointer select-none items-center gap-3 px-4 py-3 text-body text-fg outline-none transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) data-highlighted:bg-background";
+
 /**
  * 무엇으로 열었는지와 그 트리거가 무엇인지. 닫을 때 포커스를 어떻게 돌려줄지가 여기서 갈린다.
  * 상태가 아니라 ref다 — 값이 바뀌어도 다시 그릴 이유가 없다.
@@ -82,10 +90,7 @@ export function DropdownMenuContent({
 		<Primitive.Portal>
 			<Primitive.Content
 				align={align}
-				className={cn(
-					"z-50 min-w-56 origin-(--radix-dropdown-menu-content-transform-origin) animate-menu-open overflow-hidden rounded-md border border-hairline bg-canvas py-1",
-					className,
-				)}
+				className={cn(SURFACE, className)}
 				collisionPadding={8}
 				// 포커스는 어느 쪽이든 트리거로 돌아간다. 안 그러면 닫은 뒤 Tab이 문서
 				// 처음부터 시작한다. 마우스로 열었을 때만 링을 끈다 — 되돌리는 것은
@@ -124,13 +129,7 @@ export function DropdownMenuItem({
 }: ComponentProps<typeof Primitive.Item> & { danger?: boolean }) {
 	return (
 		<Primitive.Item
-			className={cn(
-				"flex cursor-pointer select-none items-center gap-3 px-4 py-3 text-body outline-none transition-colors duration-[var(--motion-fast)] ease-(--ease-standard)",
-				// radix는 키보드와 포인터 강조를 같은 data 속성으로 준다
-				"data-highlighted:bg-background",
-				danger ? "text-danger" : "text-fg",
-				className,
-			)}
+			className={cn(ITEM, danger && "text-danger", className)}
 			// 호출자 핸들러와 합친다. 스프레드 앞에 그냥 두면 호출자가 넘긴 것이 이걸 덮어쓴다
 			onPointerUp={(event) => {
 				onPointerUp?.(event);
@@ -151,5 +150,70 @@ export function DropdownMenuSeparator({
 			className={cn("my-1 h-px bg-hairline", className)}
 			{...props}
 		/>
+	);
+}
+
+/** 안에 메뉴를 하나 더 품는 묶음. 트리거와 떠 있는 면을 짝으로 쓴다 */
+export const DropdownMenuSub = Primitive.Sub;
+
+/** 하위 메뉴를 여는 줄. 누르거나 올리거나 오른쪽 화살표 키로 연다 */
+export function DropdownMenuSubTrigger({
+	className,
+	children,
+	...props
+}: ComponentProps<typeof Primitive.SubTrigger>) {
+	return (
+		<Primitive.SubTrigger className={cn(ITEM, className)} {...props}>
+			{children}
+			<ChevronRight aria-hidden className="ml-auto size-5 shrink-0" />
+		</Primitive.SubTrigger>
+	);
+}
+
+/** 하위 메뉴의 떠 있는 면. 겉모습은 `DropdownMenuContent`와 같다 */
+export function DropdownMenuSubContent({
+	className,
+	sideOffset = 8,
+	...props
+}: ComponentProps<typeof Primitive.SubContent>) {
+	return (
+		<Primitive.Portal>
+			<Primitive.SubContent
+				className={cn(SURFACE, className)}
+				collisionPadding={8}
+				sideOffset={sideOffset}
+				{...props}
+			/>
+		</Primitive.Portal>
+	);
+}
+
+/** 하나만 고르는 줄 묶음. `value`와 `onValueChange`를 받는다 */
+export const DropdownMenuRadioGroup = Primitive.RadioGroup;
+
+/**
+ * 고를 수 있는 한 줄. 고른 줄은 오른쪽에 체크가 선다.
+ * 손을 뗄 때 실행되지 않게 막는 이유는 `DropdownMenuItem`과 같다.
+ */
+export function DropdownMenuRadioItem({
+	className,
+	children,
+	onPointerUp,
+	...props
+}: ComponentProps<typeof Primitive.RadioItem>) {
+	return (
+		<Primitive.RadioItem
+			className={cn(ITEM, className)}
+			onPointerUp={(event) => {
+				onPointerUp?.(event);
+				event.preventDefault();
+			}}
+			{...props}
+		>
+			{children}
+			<Primitive.ItemIndicator className="ml-auto">
+				<Check aria-hidden className="size-5 shrink-0" />
+			</Primitive.ItemIndicator>
+		</Primitive.RadioItem>
 	);
 }
