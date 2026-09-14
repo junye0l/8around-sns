@@ -209,7 +209,7 @@
 - 768px 미만은 바텀 시트, 이상은 가운데 모달(폭 560px). 바탕 `canvas-raised`, `rounded-sheet`, `shadow-raised`
 - 머리: 왼쪽 ghost "취소", 가운데 `headline` 제목, 오른쪽 primary sm 보내기 버튼
 - 입력칸은 3줄 높이 고정, 카운터 없음 ([결정 0014](decisions/0014-composer-layout.md))
-- 공백만 있으면 보내기 disabled. 보내는 중에는 loading과 입력 읽기 전용, 취소 비활성
+- 공백만 있으면 보내기 disabled ([결정 0041](decisions/0041-soft-surface.md)). 보내는 중에는 loading과 입력 읽기 전용, 취소 비활성
 - 실패하면 입력칸 아래 `danger` 한 줄. 시트는 닫지 않는다
 
 ### 그룹 목록
