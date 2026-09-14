@@ -80,7 +80,7 @@ export function Composer({
 	return (
 		<form
 			action={formAction}
-			className="flex gap-3 border-hairline border-b px-6 py-3 last:border-b-0"
+			className="flex gap-3 border-hairline border-b px-4 py-3 md:px-6 last:border-b-0"
 		>
 			{children}
 			<Avatar path={authorAvatar} />

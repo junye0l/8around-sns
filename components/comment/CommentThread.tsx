@@ -54,7 +54,7 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 				// 세로선이 여기서 끝난다. 겹친 원이 선 끝에 서고 그 옆이 들어가는 길이다.
 				// 위아래 패딩은 `ContentCard`와 같아야 한다 — 위 칸에서 내려오는 선의 길이가
 				// 두 패딩의 합으로 계산돼 있다
-				<div className="flex items-center gap-3 px-6 py-4">
+				<div className="flex items-center gap-3 px-4 py-4 md:px-6">
 					{/* 세로선은 위 칸의 36px 아바타 가운데(칸 왼쪽에서 18px)로 흐른다.
 					    여기 원은 24px이라 6px 밀어야 선 끝과 중심이 맞는다 */}
 					<div className="ml-1.5 flex">

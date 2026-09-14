@@ -56,3 +56,4 @@
 | [0030](0030-profile-avatar-upload.md) | 프로필 이미지는 Storage에 두고, 브라우저가 줄여서 Server Action으로 올린다 | 확정 |
 | [0031](0031-post-likes-private.md) | 누가 좋아요했는지는 본인만 보고, 수는 계산 컬럼이 준다 | 확정 |
 | [0032](0032-nickname-as-handle.md) | 아이디를 없애고 별명을 유일한 이름으로, 주소는 id로 한다 | 확정 |
+| [0033](0033-responsive-shell.md) | 768px 하나로 나누고, 좁으면 레일을 아래 탭바로 내린다 | 확정 |

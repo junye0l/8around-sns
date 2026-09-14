@@ -40,7 +40,7 @@ export function ContentCard({
 }: ContentCardProps) {
 	return (
 		<article
-			className={`flex gap-3 px-6 py-4 ${connected ? "" : "border-hairline border-b last:border-b-0"}`}
+			className={`flex gap-3 px-4 py-4 md:px-6 ${connected ? "" : "border-hairline border-b last:border-b-0"}`}
 		>
 			<div className="flex flex-col items-center gap-2">
 				<Avatar path={author.avatar_path} />

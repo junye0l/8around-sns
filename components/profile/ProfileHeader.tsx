@@ -48,7 +48,7 @@ export function ProfileHeader({
 	action?: ReactNode;
 }) {
 	return (
-		<section className="border-hairline border-b px-6 py-5">
+		<section className="border-hairline border-b px-4 py-5 md:px-6">
 			<div className="flex items-start gap-4">
 				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 아바타가 잘린다 */}
 				<div className="min-w-0 flex-1">
