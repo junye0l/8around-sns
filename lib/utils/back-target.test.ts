@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { backTarget, postHref } from "@/lib/utils/back-target";
+import { backTarget, commentHref, postHref } from "@/lib/utils/back-target";
 
 const ID = "8dc59883-2484-404d-bc1b-e328dfec2386";
 
@@ -40,5 +40,19 @@ describe("postHref", () => {
 	it("온 화면을 인코딩해 싣고, 없으면 싣지 않는다", () => {
 		expect(postHref(ID, "/following")).toBe(`/post/${ID}?from=%2Ffollowing`);
 		expect(postHref(ID)).toBe(`/post/${ID}`);
+	});
+});
+
+describe("commentHref", () => {
+	it("게시글 → 댓글 → 게시글로 돌아와도 처음 온 화면이 남는다", () => {
+		const from = backTarget("/likes").href;
+		const comment = commentHref(ID, from);
+		expect(comment).toBe(`/comment/${ID}?from=%2Flikes`);
+		const back =
+			new URL(comment, "http://x").searchParams.get("from") ?? undefined;
+		expect(backTarget(back)).toEqual({ href: "/likes", label: "좋아요" });
+		expect(postHref(ID, backTarget(back).href)).toBe(
+			`/post/${ID}?from=%2Flikes`,
+		);
 	});
 });

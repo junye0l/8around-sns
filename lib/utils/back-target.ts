@@ -25,7 +25,17 @@ export function backTarget(from: string | string[] | undefined): BackTarget {
 
 /** 글 상세 주소. 온 화면을 `from`으로 싣는다. 받는 쪽은 `backTarget` */
 export function postHref(postId: string, from?: string) {
-	return from
-		? `/post/${postId}?from=${encodeURIComponent(from)}`
-		: `/post/${postId}`;
+	return withFrom(`/post/${postId}`, from);
+}
+
+/**
+ * 댓글 상세 주소. 게시글이 받은 `from`을 그대로 실어, 댓글 상세의 "게시글" 뒤로 가기가
+ * 게시글로 돌아갔을 때도 처음 온 화면 이름이 남는다.
+ */
+export function commentHref(commentId: string, from?: string) {
+	return withFrom(`/comment/${commentId}`, from);
+}
+
+function withFrom(path: string, from?: string) {
+	return from ? `${path}?from=${encodeURIComponent(from)}` : path;
 }
