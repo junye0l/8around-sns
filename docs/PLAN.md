@@ -131,7 +131,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 
 ## 10. 디자인 리뉴얼 (소프트 서피스)
 
-값과 화면 구성은 `docs/DESIGN.md`, 이유는 [결정 0041](decisions/0041-soft-surface.md). 한 단계가 PR 하나다.
+값과 화면 구성은 `docs/DESIGN.md`, 이유는 [결정 0043](decisions/0043-soft-surface.md). 한 단계가 PR 하나다.
 단계마다 390px과 1280px 폭, 라이트와 다크를 Playwright로 열어 DESIGN.md와 대조하고 스크린샷으로 보고한다 (AGENTS.md 규칙 16).
 
 - [ ] 1. 토큰과 공통 컴포넌트 — `app/globals.css` 토큰 교체, `lib/utils/tone.ts`와 테스트, `Button`, `TextField`, `Avatar`,

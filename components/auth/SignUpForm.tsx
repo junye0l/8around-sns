@@ -1,17 +1,23 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
+import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { signUpAction } from "@/lib/actions/auth";
 import type { SignUpResult } from "@/lib/services/auth";
 import { DISPLAY_NAME_MAX } from "@/lib/utils/content-limits";
 
 export function SignUpForm() {
-	const [result, formAction, pending] = useActionState<
-		SignUpResult | null,
-		FormData
-	>(signUpAction, null);
+	const [result, formAction, pending] = useSubmitAction<SignUpResult | null>(
+		signUpAction,
+		null,
+	);
+
+	// 칸을 state로 든다. React는 함수 action이 끝나면 폼을 비워서, 한 칸만 틀려도 전부 다시 써야 했다
+	const [email, setEmail] = useState("");
+	const [displayName, setDisplayName] = useState("");
+	const [password, setPassword] = useState("");
 
 	const failed = result && !result.ok ? result : null;
 	const errors = failed?.errors ?? {};
@@ -27,9 +33,11 @@ export function SignUpForm() {
 				error={errors.email}
 				label="이메일"
 				name="email"
+				onChange={(event) => setEmail(event.target.value)}
 				placeholder="you@example.com"
 				required
 				type="email"
+				value={email}
 			/>
 			<TextField
 				autoComplete="nickname"
@@ -39,7 +47,9 @@ export function SignUpForm() {
 				label="별명"
 				maxLength={DISPLAY_NAME_MAX}
 				name="display_name"
+				onChange={(event) => setDisplayName(event.target.value)}
 				required
+				value={displayName}
 			/>
 			<TextField
 				autoComplete="new-password"
@@ -48,8 +58,10 @@ export function SignUpForm() {
 				hint="6자 이상, 특수문자도 가능해요"
 				label="비밀번호"
 				name="password"
+				onChange={(event) => setPassword(event.target.value)}
 				required
 				type="password"
+				value={password}
 			/>
 
 			{/* 칸 하나에 묶이지 않는 문구는 로그인과 같이 버튼 바로 위에 선다 */}

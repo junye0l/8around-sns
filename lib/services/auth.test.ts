@@ -50,6 +50,14 @@ describe("signUp", () => {
 		expect(result.errors.display_name).toBeTruthy();
 	});
 
+	it("빈 이메일과 틀린 모양의 이메일은 문구가 다르다", async () => {
+		const empty = await signUp(stub({}), { ...input, email: "" });
+		const wrong = await signUp(stub({}), { ...input, email: "not-an-email" });
+
+		expect(empty.ok || empty.errors.email).toBe("이메일을 입력해 주세요");
+		expect(wrong.ok || wrong.errors.email).toBe("이메일 형식을 확인해 주세요");
+	});
+
 	it("이메일 중복은 이메일 필드에 붙인다", async () => {
 		const result = await signUp(stub({ code: "user_already_exists" }), input);
 

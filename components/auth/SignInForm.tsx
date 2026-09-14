@@ -1,16 +1,21 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
+import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { signInAction } from "@/lib/actions/auth";
 import type { SignInResult } from "@/lib/services/auth";
 
 export function SignInForm() {
-	const [result, formAction, pending] = useActionState<
-		SignInResult | null,
-		FormData
-	>(signInAction, null);
+	const [result, formAction, pending] = useSubmitAction<SignInResult | null>(
+		signInAction,
+		null,
+	);
+
+	// 칸을 state로 든다. React는 함수 action이 끝나면 폼을 비워서, 비밀번호 하나 틀려도 이메일까지 다시 써야 했다
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 
 	const failed = result && !result.ok ? result : null;
 	const errors = failed?.errors ?? {};
@@ -28,9 +33,11 @@ export function SignInForm() {
 				readOnly={pending}
 				label="이메일"
 				name="email"
+				onChange={(event) => setEmail(event.target.value)}
 				placeholder="you@example.com"
 				required
 				type="email"
+				value={email}
 			/>
 			{/* 문구 자리를 비밀번호 칸에 붙인다. 가입 폼의 안내 줄과 같은 간격(gap-1, px-1)이다 */}
 			<div className="flex flex-col gap-1">
@@ -40,8 +47,10 @@ export function SignInForm() {
 					readOnly={pending}
 					label="비밀번호"
 					name="password"
+					onChange={(event) => setPassword(event.target.value)}
 					required
 					type="password"
+					value={password}
 				/>
 				{/* 빈 자리를 늘 잡아둬서 문구가 떠도 버튼이 밀리지 않는다. body-sm 한 줄이 21px이라 그리드에서 24px을 쓴다 */}
 				<div className="min-h-6">

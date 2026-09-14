@@ -118,7 +118,7 @@ Tailwind v4를 쓴다. 유틸리티를 화면에 직접 흩뿌리지 않고 공�
 - 아이콘은 `lucide-react`에서 가져온다. SVG를 손으로 그리지 않는다.
   `aria-hidden`은 직접 붙인다. lucide가 안 붙인다
 
-소프트 서피스 디자인에서 오는 제약이다. 근거는 `docs/DESIGN.md`와 [결정 0041](docs/decisions/0041-soft-surface.md)에 있다.
+소프트 서피스 디자인에서 오는 제약이다. 근거는 `docs/DESIGN.md`와 [결정 0043](docs/decisions/0043-soft-surface.md)에 있다.
 
 - 보라(`primary`)는 동작과 현재 위치에만 칠한다. 장식으로 쓰지 않는다. 관심사 톤은 칩과 아바타에만 쓴다
 - 시스템 글꼴을 쓴다. 웹폰트는 재배포가 허용된 것만, 결정을 거친 뒤에 넣는다

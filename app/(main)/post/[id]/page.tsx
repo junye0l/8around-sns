@@ -80,7 +80,12 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 				authorAvatar={profile?.avatar_path}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
-				placeholder={`${post.author.display_name}님에게 답글 남기기`}
+				// 내 글에 나에게 답글을 남기라고 하지 않는다
+				placeholder={
+					post.author.id === profile?.id
+						? "댓글 남기기"
+						: `${post.author.display_name}님에게 답글 남기기`
+				}
 				submitLabel="댓글"
 				title="댓글"
 			>

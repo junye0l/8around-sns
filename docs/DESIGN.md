@@ -6,7 +6,7 @@
 이 문서가 색, 글자, 간격, 컴포넌트 모양, 화면 구성의 유일한 출처다 (AGENTS.md 규칙 3).
 `app/globals.css`는 여기 값을 그대로 옮겨 적는다. 여기 없는 값이 필요하면 멈추고 묻는다.
 
-- 왜 이 방향인지, 무엇을 버렸는지: [결정 0041](decisions/0041-soft-surface.md)
+- 왜 이 방향인지, 무엇을 버렸는지: [결정 0043](decisions/0043-soft-surface.md)
 - 시안(라이트, 다크 전 화면): https://claude.ai/code/artifact/af397131-0ba4-4c67-9c8c-78917291c11c
   시안과 이 문서가 다르면 이 문서가 맞다
 
@@ -73,7 +73,7 @@
 ### 글자
 
 시스템 글꼴을 쓴다. `-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", system-ui, sans-serif`.
-웹폰트를 넣을지는 [결정 0041](decisions/0041-soft-surface.md)의 남은 칸이다.
+웹폰트를 넣을지는 [결정 0043](decisions/0043-soft-surface.md)의 남은 칸이다.
 
 | 토큰 | 크기 / 줄높이 / 굵기 | 쓰는 곳 |
 |---|---|---|
@@ -209,7 +209,7 @@
 - 768px 미만은 바텀 시트, 이상은 가운데 모달(폭 560px). 바탕 `canvas-raised`, `rounded-sheet`, `shadow-raised`
 - 머리: 왼쪽 ghost "취소", 가운데 `headline` 제목, 오른쪽 primary sm 보내기 버튼
 - 입력칸은 3줄 높이 고정, 카운터 없음 ([결정 0014](decisions/0014-composer-layout.md))
-- 공백만 있으면 보내기 disabled ([결정 0041](decisions/0041-soft-surface.md)). 보내는 중에는 loading과 입력 읽기 전용, 취소 비활성
+- 공백만 있으면 보내기 disabled ([결정 0043](decisions/0043-soft-surface.md)). 보내는 중에는 loading과 입력 읽기 전용, 취소 비활성
 - 실패하면 입력칸 아래 `danger` 한 줄. 시트는 닫지 않는다
 
 ### 그룹 목록

@@ -1,12 +1,13 @@
 "use client";
 
 import { Pencil } from "lucide-react";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InterestsField } from "@/components/profile/InterestsField";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/Dialog";
 import { TextField } from "@/components/ui/TextField";
+import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { updateProfileAction } from "@/lib/actions/profile";
 import type { UpdateProfileResult } from "@/lib/services/profile";
 import {
@@ -118,11 +119,11 @@ function ProfileEditForm({
 	avatarPath: string | null;
 	onSuccess: () => void;
 }) {
-	const [result, formAction, pending] = useActionState<
-		UpdateProfileResult | null,
-		FormData
-	>(updateProfileAction, null);
+	const [result, formAction, pending] =
+		useSubmitAction<UpdateProfileResult | null>(updateProfileAction, null);
 	const [name, setName] = useState(displayName);
+	const [bioText, setBioText] = useState(bio ?? "");
+	const [interestItems, setInterestItems] = useState(interests);
 	const [avatar, setAvatar] = useState<Blob | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [fileError, setFileError] = useState<string | null>(null);
@@ -169,6 +170,13 @@ function ProfileEditForm({
 		fileError ?? (serverError?.field === "avatar" ? serverError.error : null);
 	const formError =
 		serverError && !serverError.field ? serverError.error : null;
+
+	// 연 뒤로 바뀐 것이 없으면 저장할 것이 없다. 비교는 서버가 저장하는 모양(앞뒤 공백 없음)으로 한다
+	const unchanged =
+		avatar === null &&
+		name.trim() === displayName.trim() &&
+		bioText.trim() === (bio ?? "").trim() &&
+		interestItems.join("\n") === interests.join("\n");
 
 	return (
 		<form
@@ -232,19 +240,21 @@ function ProfileEditForm({
 			/>
 
 			<TextField
-				defaultValue={bio ?? ""}
 				error={bioError}
 				hint={`${BIO_MAX}자까지 가능해요`}
 				label="소개"
 				maxLength={BIO_MAX}
 				multiline
 				name="bio"
+				onChange={(event) => setBioText(event.target.value)}
 				readOnly={pending}
+				value={bioText}
 			/>
 
 			<InterestsField
 				defaultValue={interests}
 				error={interestsError}
+				onChange={setInterestItems}
 				pending={pending}
 			/>
 
@@ -254,7 +264,12 @@ function ProfileEditForm({
 				</p>
 			)}
 
-			<Button className="w-full" loading={pending} type="submit">
+			<Button
+				className="w-full"
+				disabled={unchanged}
+				loading={pending}
+				type="submit"
+			>
 				저장
 			</Button>
 		</form>
