@@ -41,7 +41,7 @@
 - [x] Supabase 프로젝트 생성, `.env.local` 채우기
 - [x] `lib/supabase/` 클라이언트 (server / client / middleware)
 - [x] 마이그레이션으로 4테이블 생성
-  - `profiles` — id(auth.users FK), username, display_name, bio
+  - `profiles` — id(auth.users FK), display_name, bio
   - `posts` — id, author_id, content, created_at
   - `comments` — id, post_id, author_id, **parent_id (self FK, nullable)**, content
   - `follows` — follower_id, following_id (복합 PK)
@@ -76,8 +76,8 @@
   별명은 겹치지 않는다(대소문자 무시). 이미지는 Storage `avatars` 버킷에 두고 프로필에는 경로만 저장한다
   (`supabase/migrations/0007_profile_avatars.sql`, [결정 0030](decisions/0030-profile-avatar-upload.md)). 사용자가 요청해서 범위에 들어왔다.
   나중에 편집할 칸이 늘면 모달에서 화면으로 옮길 수 있다. `bio`는 아직 채울 길이 없다
-- [ ] **아이디(`username`) 컬럼 지우기** — 별명이 사람을 가리키는 이름이고 주소는 id다([결정 0032](decisions/0032-nickname-as-handle.md)).
-  0009가 컬럼을 nullable로 넓혔고 새 코드는 쓰지 않는다. 이 코드가 배포된 뒤 다음 마이그레이션이 컬럼, 형식 제약, 트리거의 username을 지운다
+- [x] 아이디(`username`) 컬럼 지우기 — 별명이 사람을 가리키는 이름이고 주소는 id다([결정 0032](decisions/0032-nickname-as-handle.md)).
+  0009로 넓히고 코드를 배포한 뒤 0010이 컬럼과 트리거의 username을 지웠다
 
 ## 6. 공통 컴포넌트
 
