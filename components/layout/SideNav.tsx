@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MoreMenu } from "@/components/layout/MoreMenu";
 import { ComposeButton } from "@/components/post/ComposeButton";
+import { BrandMark } from "@/components/ui/BrandMark";
 
 /**
  * 왼쪽 아이콘 레일. 로고가 위, 항목이 가운데, 더 보기가 아래다. 웹 폭만 맞춘다.
@@ -48,9 +49,7 @@ export function SideNav({
 
 	return (
 		<nav className="group fixed inset-y-0 left-0 z-20 flex w-19 flex-col overflow-hidden px-3.5 py-4 text-body transition-all duration-[var(--motion-fast)] ease-(--ease-standard) hover:w-60 hover:bg-background has-focus-visible:w-60 has-focus-visible:bg-background">
-			<span className="flex size-12 items-center justify-center text-title text-fg">
-				8
-			</span>
+			<BrandMark />
 
 			<div className="my-auto flex flex-col gap-2">
 				<Link
