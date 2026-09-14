@@ -195,7 +195,7 @@ function ProfileEditForm({
 					<Avatar className="size-21" path={avatarPath} preview={preview} />
 					<span
 						aria-hidden
-						className="absolute inset-0 flex items-center justify-center rounded-full bg-fg/30 text-canvas transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) group-hover/avatar:bg-fg/50 group-active/avatar:bg-fg/60 group-aria-busy/avatar:bg-fg/30 group-aria-busy/avatar:group-hover/avatar:bg-fg/30"
+						className="absolute inset-0 flex items-center justify-center rounded-full bg-scrim/30 text-on-scrim transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) group-hover/avatar:bg-scrim/50 group-active/avatar:bg-scrim/60 group-aria-busy/avatar:bg-scrim/30 group-aria-busy/avatar:group-hover/avatar:bg-scrim/30"
 					>
 						<Pencil className="size-6" />
 					</span>
