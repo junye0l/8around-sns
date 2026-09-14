@@ -11,18 +11,20 @@ import { interestLength, normalizeInterests } from "@/lib/utils/interests";
  * 프로필 편집 모달의 관심사 칸. 입력칸에 쓰고 Enter나 추가 버튼으로 넣는다. 넣은 것은 지울 수 있는 칩이 된다.
  * 폼에는 항목마다 `name="interests"` hidden input으로 실린다. 검증은 서버가 다시 한다(규칙 9).
  *
- * 3개가 차면 입력칸은 readOnly, 추가 버튼은 aria-disabled다. 진짜 disabled로 바꾸면
- * 방금 누른 요소에서 포커스가 body로 떨어진다(`components/ui/Button.tsx`와 같은 이유).
+ * 3개가 차면 입력칸은 readOnly, 추가 버튼은 꺼진다(`Button`의 `disabled`는 `aria-disabled`라 포커스가 남는다).
  * 결정 0036.
  */
 export function InterestsField({
 	defaultValue,
 	error,
+	onChange,
 	pending = false,
 }: {
 	defaultValue: string[];
 	/** 서버가 돌려준 관심사 에러 문구 */
 	error?: string;
+	/** 넣거나 뺄 때마다 지금 목록. 편집 모달이 바뀐 것이 있는지 본다 */
+	onChange?: (items: string[]) => void;
 	/** 저장 중. 값을 바꾸지 못하게 막는다 */
 	pending?: boolean;
 }) {
@@ -32,11 +34,16 @@ export function InterestsField({
 	const full = items.length >= INTERESTS_MAX;
 	const locked = pending || full;
 
+	function update(next: string[]) {
+		setItems(next);
+		onChange?.(next);
+	}
+
 	function add() {
 		if (locked) return;
 		// maxLength는 UTF-16으로 세고 한글 조합 중에는 넘칠 수 있어 글자 수를 한 번 더 본다
 		if (interestLength(draft.trim()) > INTEREST_CHARS_MAX) return;
-		setItems(normalizeInterests([...items, draft]));
+		update(normalizeInterests([...items, draft]));
 		setDraft("");
 	}
 
@@ -63,8 +70,8 @@ export function InterestsField({
 					/>
 				</div>
 				<Button
-					aria-disabled={locked || undefined}
-					className="h-14 aria-disabled:cursor-not-allowed aria-disabled:text-fg-muted aria-disabled:hover:bg-transparent"
+					className="h-14"
+					disabled={locked}
 					onClick={add}
 					variant="outline"
 				>
@@ -80,7 +87,7 @@ export function InterestsField({
 								disabled={pending}
 								label={item}
 								onRemove={() => {
-									setItems(items.filter((value) => value !== item));
+									update(items.filter((value) => value !== item));
 									// 지운 버튼이 사라지면 포커스가 body로 떨어진다
 									input.current?.focus();
 								}}

@@ -14,8 +14,8 @@ import { cn } from "@/lib/utils/cn";
  * 바뀔 때 상자가 사방 1px씩 커진다 — 팔로우 버튼이 primary에서 outline으로 넘어가며
  * 옆 칸을 밀고 아랫줄을 내리는 시프트가 그것이었다.
  *
- * 진행 중일 때의 회색은 `disabled:`가 아니라 `aria-busy:`가 칠한다. 진행 중에도
- * 요소는 살아 있어야 포커스를 잃지 않기 때문이다. 결정 0012.
+ * 꺼진 모양은 `disabled:`가 아니라 `aria-disabled:`가 칠한다. 진행 중이든 보낼 것이 없든
+ * 요소는 살아 있어야 포커스를 잃지 않고 키보드로 닿는다. 결정 0012, 0042.
  *
  * `md`는 40px이다. `docs/DESIGN.md`의 웹 버튼 40 또는 46px 중 작은 쪽으로, 결정 0009의
  * 남은 칸을 0015가 닫았다. `sm`은 60x36이고 사용자가 지정했다. 결정 0014.
@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils/cn";
  * @see docs/decisions/0010-focus-ring-primary.md
  */
 const button = cva(
-	"inline-flex items-center justify-center rounded-lg border font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed aria-busy:cursor-progress",
+	"inline-flex items-center justify-center rounded-lg border font-semibold transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-disabled:cursor-not-allowed aria-busy:cursor-progress",
 	{
 		variants: {
 			size: {
@@ -35,9 +35,9 @@ const button = cva(
 			},
 			variant: {
 				primary:
-					"border-transparent bg-fg text-canvas hover:bg-fg/90 active:bg-fg/80 disabled:bg-hairline disabled:text-fg-muted aria-busy:bg-hairline aria-busy:text-fg-muted aria-busy:hover:bg-hairline",
+					"border-transparent bg-fg text-canvas hover:bg-fg/90 active:bg-fg/80 aria-disabled:bg-hairline aria-disabled:text-fg-muted aria-disabled:hover:bg-hairline aria-disabled:active:bg-hairline",
 				outline:
-					"border-hairline bg-transparent text-fg hover:bg-background active:bg-hairline disabled:text-fg-muted aria-busy:text-fg-muted aria-busy:hover:bg-transparent",
+					"border-hairline bg-transparent text-fg hover:bg-background active:bg-hairline aria-disabled:text-fg-muted aria-disabled:hover:bg-transparent aria-disabled:active:bg-transparent",
 			},
 		},
 		defaultVariants: { size: "md", variant: "primary" },
@@ -52,6 +52,11 @@ type ButtonProps = ComponentProps<"button"> &
 		 * 브라우저가 포커스를 body로 떨어뜨린다.
 		 */
 		loading?: boolean;
+		/**
+		 * 보낼 것이 없다. `loading`과 같이 `aria-disabled`로 끄고 누름을 막는다. 누름이 막히면
+		 * 폼의 Enter 암묵 제출도 같이 막힌다, 브라우저가 기본 버튼을 누르는 것으로 제출하기 때문이다
+		 */
+		disabled?: boolean;
 		/** 주면 `<Link>`가 된다. 모양은 같고 하는 일만 이동이다 */
 		href?: string;
 	};
@@ -68,6 +73,7 @@ export function Button({
 	...props
 }: ButtonProps) {
 	const classes = cn(button({ size, variant }), className);
+	const blocked = loading || disabled;
 
 	if (href) {
 		return (
@@ -82,10 +88,9 @@ export function Button({
 			type="button"
 			aria-busy={loading || undefined}
 			// 살아 있는 채로 "지금은 못 누른다"만 알린다. 포커스가 유지된다
-			aria-disabled={loading || undefined}
-			disabled={disabled}
+			aria-disabled={blocked || undefined}
 			onClick={(event) => {
-				if (loading) {
+				if (blocked) {
 					event.preventDefault();
 					return;
 				}
