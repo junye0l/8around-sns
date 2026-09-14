@@ -12,9 +12,12 @@ import { createClient } from "@/lib/supabase/server";
 export default async function MainLayout({ children }: LayoutProps<"/">) {
 	const supabase = await createClient();
 
+	// 레이아웃은 이동 중 다시 돌지 않아 실패한 Promise가 그대로 남는다. 레일 때문에 화면 전체가 에러로 넘어가지 않게 두 줄만 접는다
+	const profile = getCurrentProfile(supabase).catch(() => null);
+
 	return (
 		<>
-			<SideNav profile={getCurrentProfile(supabase)} />
+			<SideNav profile={profile} />
 			{children}
 		</>
 	);
