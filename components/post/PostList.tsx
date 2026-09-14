@@ -1,7 +1,8 @@
 import { LikeButton } from "@/components/post/LikeButton";
-import { PostMenu } from "@/components/post/PostMenu";
+import { POST_MENU } from "@/components/post/post-compose";
 import { CommentCount } from "@/components/ui/CommentCount";
 import { ContentCard } from "@/components/ui/ContentCard";
+import { ContentMenu } from "@/components/ui/ContentMenu";
 import type { FeedPost } from "@/lib/queries/post";
 
 /**
@@ -9,8 +10,7 @@ import type { FeedPost } from "@/lib/queries/post";
  *
  * 빈 상태는 받지 않는다. 문구가 화면마다 다르고 팔로잉은 둘로 갈리므로 부르는 쪽이 정한다.
  *
- * 더보기 메뉴는 내가 쓴 글에만 붙는다. 별명은 유일하므로(`supabase/migrations/0001_init.sql:14`) 그것으로 가른다 —
- * 이걸 위해 질의에 작성자 id를 더하지 않는다.
+ * 더보기 메뉴는 내가 쓴 글에만 붙는다. 작성자 id와 보는 사람의 id로 가른다.
  */
 export function PostList({
 	posts,
@@ -42,11 +42,12 @@ export function PostList({
 			key={post.id}
 			menu={
 				post.author.id === viewerId ? (
-					<PostMenu
+					<ContentMenu
 						authorAvatar={post.author.avatar_path}
 						authorName={post.author.display_name}
+						config={POST_MENU}
 						content={post.content}
-						postId={post.id}
+						id={post.id}
 					/>
 				) : undefined
 			}

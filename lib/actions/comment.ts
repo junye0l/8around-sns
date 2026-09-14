@@ -4,6 +4,10 @@ import { refresh } from "next/cache";
 import {
 	type CreateCommentResult,
 	createComment,
+	type DeleteCommentResult,
+	deleteComment,
+	type UpdateCommentResult,
+	updateComment,
 } from "@/lib/services/comment";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionUserId } from "@/lib/supabase/session";
@@ -31,6 +35,51 @@ export async function createCommentAction(
 		parentId: formData.get("parent_id"),
 		content: formData.get("content"),
 	});
+	if (result.ok) refresh();
+
+	return result;
+}
+
+/**
+ * 댓글 수정 진입점. 로그인 확인 → services 호출 → 화면 갱신.
+ * 소유권은 여기서 보지 않는다. RLS가 본다 (규칙 9).
+ */
+export async function updateCommentAction(
+	_prev: UpdateCommentResult | null,
+	formData: FormData,
+): Promise<UpdateCommentResult> {
+	const supabase = await createClient();
+
+	const userId = await getSessionUserId(supabase);
+	if (!userId) {
+		return { ok: false, error: "로그인이 풀렸어요. 다시 로그인해 주세요" };
+	}
+
+	const result = await updateComment(supabase, {
+		commentId: formData.get("comment_id"),
+		content: formData.get("content"),
+	});
+	if (result.ok) refresh();
+
+	return result;
+}
+
+/**
+ * 댓글 삭제 진입점. 로그인 확인 → services 호출 → 화면 갱신.
+ * 소유권은 여기서 보지 않는다. RLS가 본다 (규칙 9).
+ */
+export async function deleteCommentAction(
+	_prev: DeleteCommentResult | null,
+	formData: FormData,
+): Promise<DeleteCommentResult> {
+	const supabase = await createClient();
+
+	const userId = await getSessionUserId(supabase);
+	if (!userId) {
+		return { ok: false, error: "로그인이 풀렸어요. 다시 로그인해 주세요" };
+	}
+
+	const result = await deleteComment(supabase, formData.get("comment_id"));
 	if (result.ok) refresh();
 
 	return result;
