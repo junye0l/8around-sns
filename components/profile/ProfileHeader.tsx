@@ -32,8 +32,8 @@ function CountLink({
 }
 
 /**
- * 프로필 맨 위 칸. 왼쪽에 별명, 오른쪽에 큰 아바타, 그 아래 소개와
- * 팔로워 · 팔로잉 수, 맨 아래 전폭 버튼. 레퍼런스(Threads)의 배치다.
+ * 프로필 맨 위 칸. 오른쪽에 큰 아바타, 왼쪽 한 컬럼에 별명, 소개, 팔로워 · 팔로잉 수가
+ * 같은 왼쪽 끝으로 쌓이고 맨 아래 전폭 버튼이 선다. 레퍼런스(Threads)의 배치다.
  * 검정 버튼과 여백 치수는 결정 0015를 따른다.
  *
  * 아래 자리는 부르는 쪽이 채운다. 남의 프로필이면 팔로우 버튼, 내 프로필이면
@@ -53,28 +53,29 @@ export function ProfileHeader({
 				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 아바타가 잘린다 */}
 				<div className="min-w-0 flex-1">
 					<p className="truncate text-title text-fg">{profile.display_name}</p>
+
+					{/* 아바타 줄 아래로 내리면 84px만큼 떠서 별명과 멀어진다 */}
+					{profile.bio && (
+						<p className="mt-1 whitespace-pre-wrap break-words text-body text-fg">
+							{profile.bio}
+						</p>
+					)}
+
+					<div className="mt-4 flex gap-6">
+						<CountLink
+							count={profile.follower_count}
+							href={`/u/${profile.id}/followers`}
+							label="팔로워"
+						/>
+						<CountLink
+							count={profile.following_count}
+							href={`/u/${profile.id}/following`}
+							label="팔로잉"
+						/>
+					</div>
 				</div>
 				{/* 84px. 레퍼런스 프로필 아바타의 관측치이고 4px 그리드 위에 있다 */}
 				<Avatar className="size-21" eager path={profile.avatar_path} />
-			</div>
-
-			{profile.bio && (
-				<p className="mt-3 whitespace-pre-wrap break-words text-body text-fg">
-					{profile.bio}
-				</p>
-			)}
-
-			<div className="mt-3 flex gap-6">
-				<CountLink
-					count={profile.follower_count}
-					href={`/u/${profile.id}/followers`}
-					label="팔로워"
-				/>
-				<CountLink
-					count={profile.following_count}
-					href={`/u/${profile.id}/following`}
-					label="팔로잉"
-				/>
 			</div>
 
 			{action && <div className="mt-4">{action}</div>}

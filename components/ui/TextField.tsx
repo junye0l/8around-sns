@@ -11,6 +11,8 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
 	error?: string;
 	/** 평상시 아래에 깔리는 안내 문구 */
 	hint?: string;
+	/** 여러 줄로 받는다. 칸이 textarea가 되고 96px에서 시작해 내용만큼 늘지 않는다 */
+	multiline?: boolean;
 };
 
 /**
@@ -28,6 +30,8 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
  *
  * `type="password"`면 오른쪽에 보기 토글이 붙는다. 누르면 `type`만 바꾸고 값은 그대로다.
  *
+ * `multiline`이면 같은 상자와 라벨로 textarea를 그린다. 비어 있을 때 라벨은 첫 줄 자리에 내려온다.
+ *
  * 상자는 흰 채움에 `fg-muted` 테두리다. 흰 바탕에서 3.04:1로 결정 0012의 기준을 넘는다.
  * 그래서 이 입력칸은 흰 바탕 위에 서야 한다.
  */
@@ -35,6 +39,7 @@ export function TextField({
 	label,
 	error,
 	hint,
+	multiline = false,
 	placeholder,
 	type,
 	"aria-invalid": ariaInvalid,
@@ -50,25 +55,44 @@ export function TextField({
 	return (
 		<div className="flex flex-col gap-1">
 			<div className="relative">
-				<input
-					id={id}
-					aria-describedby={description ? describedById : undefined}
-					aria-invalid={invalid || undefined}
-					className={cn(
-						"peer h-14 w-full rounded-lg border bg-canvas px-4 text-body text-fg outline-none transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) placeholder:text-transparent focus:placeholder:text-fg-muted",
-						invalid ? "border-danger" : "border-fg-muted focus:border-fg",
-						password && "pr-12",
-					)}
-					placeholder={placeholder ?? " "}
-					type={password && revealed ? "text" : type}
-					{...props}
-				/>
+				{multiline ? (
+					<textarea
+						id={id}
+						aria-describedby={description ? describedById : undefined}
+						aria-invalid={invalid || undefined}
+						// py-4에 한 줄 24px이면 첫 줄 가운데가 28px이다. 비었을 때 라벨이 top-7로 내려와 그 줄에 앉는다
+						className={cn(
+							"peer block min-h-24 w-full resize-none rounded-lg border bg-canvas px-4 py-4 text-body text-fg outline-none transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) placeholder:text-transparent focus:placeholder:text-fg-muted",
+							invalid ? "border-danger" : "border-fg-muted focus:border-fg",
+						)}
+						placeholder={placeholder ?? " "}
+						// 입력칸 전용 이벤트 타입을 쓰는 호출부가 없어 속성만 그대로 넘긴다
+						{...(props as ComponentProps<"textarea">)}
+					/>
+				) : (
+					<input
+						id={id}
+						aria-describedby={description ? describedById : undefined}
+						aria-invalid={invalid || undefined}
+						className={cn(
+							"peer h-14 w-full rounded-lg border bg-canvas px-4 text-body text-fg outline-none transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) placeholder:text-transparent focus:placeholder:text-fg-muted",
+							invalid ? "border-danger" : "border-fg-muted focus:border-fg",
+							password && "pr-12",
+						)}
+						placeholder={placeholder ?? " "}
+						type={password && revealed ? "text" : type}
+						{...props}
+					/>
+				)}
 				{/* 기본은 올라간 자리다. 비어 있을 때만 칸 가운데로 내려오고, 포커스가 그것을 다시 이긴다.
 				    Tailwind가 placeholder-shown 변형을 focus보다 앞에 내보내서 이 순서가 선다 */}
 				<label
 					className={cn(
 						"pointer-events-none absolute top-0 left-3 -translate-y-1/2 bg-canvas px-1 text-body-sm leading-none transition-all duration-[var(--motion-fast)] ease-(--ease-standard)",
-						"peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-body",
+						multiline
+							? "peer-placeholder-shown:top-7"
+							: "peer-placeholder-shown:top-1/2",
+						"peer-placeholder-shown:text-body",
 						"peer-focus:top-0 peer-focus:text-body-sm",
 						invalid ? "text-danger" : "text-fg-muted peer-focus:text-fg",
 					)}

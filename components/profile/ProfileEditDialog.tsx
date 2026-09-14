@@ -11,6 +11,7 @@ import type { UpdateProfileResult } from "@/lib/services/profile";
 import {
 	AVATAR_MAX_BYTES,
 	AVATAR_TYPES,
+	BIO_MAX,
 	DISPLAY_NAME_MAX,
 } from "@/lib/utils/content-limits";
 
@@ -53,7 +54,7 @@ async function shrink(file: File): Promise<Blob> {
 }
 
 /**
- * 내 프로필의 "프로필 편집" 버튼과 모달. 별명과 프로필 이미지를 바꾼다.
+ * 내 프로필의 "프로필 편집" 버튼과 모달. 별명, 소개, 프로필 이미지를 바꾼다.
  * 남의 프로필에서 팔로우 버튼이 서는 자리에 같은 높이(40px)로 선다.
  *
  * 모달은 `components/ui/Dialog.tsx`를 쓴다. 포커스 가두기, Esc, 닫힌 뒤 버튼으로 포커스 돌려주기는 radix가 한다.
@@ -61,9 +62,11 @@ async function shrink(file: File): Promise<Blob> {
  */
 export function ProfileEditDialog({
 	displayName,
+	bio,
 	avatarPath,
 }: {
 	displayName: string;
+	bio: string | null;
 	avatarPath: string | null;
 }) {
 	const [open, setOpen] = useState(false);
@@ -89,6 +92,7 @@ export function ProfileEditDialog({
 			>
 				<ProfileEditForm
 					avatarPath={avatarPath}
+					bio={bio}
 					displayName={displayName}
 					onSuccess={() => setOpen(false)}
 				/>
@@ -99,10 +103,12 @@ export function ProfileEditDialog({
 
 function ProfileEditForm({
 	displayName,
+	bio,
 	avatarPath,
 	onSuccess,
 }: {
 	displayName: string;
+	bio: string | null;
 	avatarPath: string | null;
 	onSuccess: () => void;
 }) {
@@ -150,6 +156,7 @@ function ProfileEditForm({
 	const serverError = result && !result.ok ? result : null;
 	const nameError =
 		serverError?.field === "display_name" ? serverError.error : undefined;
+	const bioError = serverError?.field === "bio" ? serverError.error : undefined;
 	const avatarError =
 		fileError ?? (serverError?.field === "avatar" ? serverError.error : null);
 	const formError =
@@ -214,6 +221,17 @@ function ProfileEditForm({
 				name="display_name"
 				onChange={(event) => setName(event.target.value)}
 				value={name}
+			/>
+
+			<TextField
+				defaultValue={bio ?? ""}
+				error={bioError}
+				hint={`${BIO_MAX}자까지 가능해요`}
+				label="소개"
+				maxLength={BIO_MAX}
+				multiline
+				name="bio"
+				readOnly={pending}
 			/>
 
 			{formError && (

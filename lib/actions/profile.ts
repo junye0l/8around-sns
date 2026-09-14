@@ -29,6 +29,7 @@ export async function updateProfileAction(
 
 	const result = await updateProfile(supabase, userId, {
 		displayName: formData.get("display_name"),
+		bio: formData.get("bio"),
 		avatar: formData.get("avatar"),
 	});
 	if (result.ok) refresh();
