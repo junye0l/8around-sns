@@ -190,7 +190,6 @@ export type Database = {
 					created_at: string;
 					display_name: string;
 					id: string;
-					username: string | null;
 				};
 				Insert: {
 					avatar_path?: string | null;
@@ -198,7 +197,6 @@ export type Database = {
 					created_at?: string;
 					display_name: string;
 					id: string;
-					username?: string | null;
 				};
 				Update: {
 					avatar_path?: string | null;
@@ -206,7 +204,6 @@ export type Database = {
 					created_at?: string;
 					display_name?: string;
 					id?: string;
-					username?: string | null;
 				};
 				Relationships: [];
 			};
