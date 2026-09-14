@@ -15,11 +15,12 @@ export type UpdateProfileResult =
 	| { ok: true }
 	| { ok: false; error: string; field?: "display_name" | "bio" | "avatar" };
 
-// 다 지우고 저장하면 빈 문자열이 아니라 null이다. 프로필에서 소개 줄이 사라진다
+// 다 지우고 저장하면 빈 문자열이 아니라 null이다. 프로필에서 소개 줄이 사라진다.
+// 폼 제출은 줄바꿈을 \r\n으로 싣는다. 브라우저 maxLength는 줄바꿈을 1자로 세므로 여기서도 1자로 맞춘다
 const bioSchema = z
 	.string()
-	.trim()
-	.max(BIO_MAX, `소개는 ${BIO_MAX}자까지 쓸 수 있어요`)
+	.transform((bio) => bio.replaceAll("\r\n", "\n"))
+	.pipe(z.string().trim().max(BIO_MAX, `소개는 ${BIO_MAX}자까지 쓸 수 있어요`))
 	.nullish()
 	.transform((bio) => bio || null);
 

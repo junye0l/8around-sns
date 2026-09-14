@@ -49,6 +49,21 @@ describe("updateProfile", () => {
 		]);
 	});
 
+	it("폼이 실은 \\r\\n 줄바꿈을 한 글자로 세고 \\n으로 저장한다", async () => {
+		const { client, calls } = stub();
+		const bio = `${"가".repeat(79)}\r\n${"나".repeat(80)}`;
+		expect(
+			await updateProfile(client, USER, {
+				displayName: "이름",
+				bio,
+				avatar: null,
+			}),
+		).toEqual({ ok: true });
+		expect(calls).toEqual([
+			{ display_name: "이름", bio: `${"가".repeat(79)}\n${"나".repeat(80)}` },
+		]);
+	});
+
 	it("공백뿐인 소개는 null로 지운다", async () => {
 		const { client, calls } = stub();
 		await updateProfile(client, USER, {
