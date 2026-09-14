@@ -88,10 +88,15 @@ function applyTheme(theme: Theme) {
 	if (!document.startViewTransition) return set();
 
 	root.dataset.themeSwitching = "";
-	document
-		.startViewTransition(set)
-		.finished.finally(() => delete root.dataset.themeSwitching);
+	const transition = document.startViewTransition(set);
+	latestTransition = transition;
+	// 빨리 연달아 고르면 앞 전환이 건너뛰어지며 먼저 끝난다. 뒤 전환이 겹치는 중에 전환을 다시 켜지 않게 마지막 것만 푼다
+	transition.finished.finally(() => {
+		if (latestTransition === transition) delete root.dataset.themeSwitching;
+	});
 }
+
+let latestTransition: ViewTransition | null = null;
 
 const THEMES = [
 	{ value: "dark", label: "다크" },
