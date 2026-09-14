@@ -17,7 +17,7 @@ export default function PostLoading() {
 				<div className="max-md:hidden">
 					<ComposeRowSkeleton />
 				</div>
-				<GroupListSkeleton />
+				<GroupListSkeleton replyLine />
 			</div>
 		</PageShell>
 	);
