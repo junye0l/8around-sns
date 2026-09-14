@@ -79,10 +79,15 @@ export function DetailCardSkeleton({ actions = 0 }: { actions?: 0 | 2 }) {
 
 /**
  * `GroupList`와 댓글 행의 자리. 라벨 줄과 행 둘을 같은 치수로 세운다.
+ * `replyLine`은 게시글 상세의 댓글 행 아래 "답글 달기" 줄이다. 답글 행에는 없다.
  * @see components/ui/GroupList.tsx
  * @see components/comment/CommentThread.tsx
  */
-export function GroupListSkeleton() {
+export function GroupListSkeleton({
+	replyLine = false,
+}: {
+	replyLine?: boolean;
+}) {
 	return (
 		<div className="rounded-card bg-canvas shadow-card">
 			<div className="px-4.5 pt-3.5 pb-1.5 text-footnote">
@@ -99,6 +104,12 @@ export function GroupListSkeleton() {
 							<div className="mt-0.5 text-callout">
 								<SkeletonLine className="w-3/4" />
 							</div>
+							{replyLine && (
+								// 링크의 -m-1 mt-0.5 p-1이 아래로 4px를 더 차지한다
+								<div className="mt-0.5 pb-1 text-subhead">
+									<SkeletonLine className="w-16" />
+								</div>
+							)}
 						</div>
 					</div>
 				))}

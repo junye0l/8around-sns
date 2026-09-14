@@ -12,7 +12,7 @@ import { formatRelativeTime } from "@/lib/utils/relative-time";
 
 /**
  * 그룹 목록의 댓글 한 행. 아바타 34, 이름과 시각, 본문, 내 것이면 더 보기. 답글 화면의 답글 행도 같다.
- * 답글이 있으면 행 아래 `primary` 글자 "답글 N개 보기" 한 줄만 둔다. 답글 본문은 댓글 상세에서 본다.
+ * 댓글 행 아래에는 `primary` 글자 한 줄을 둔다. 답글이 있으면 "답글 N개 보기", 없으면 "답글 달기". 결정 0047
  * 줄 간격 값은 docs/DESIGN.md 게시글 상세와 작업 중 사용자가 정한 값이다
  * @see docs/DESIGN.md 게시글 상세
  */
@@ -30,7 +30,8 @@ export function CommentThread({
 	/** 게시글 상세가 받은 온 화면. 답글 링크에 실어 돌아올 때 뒤로 가기 이름이 남는다 */
 	from?: string;
 }) {
-	const replies = "replies" in comment ? comment.replies.length : 0;
+	// 답글 행에는 `replies`가 없다. 1뎁스가 끝이라 답글로 가는 줄도 두지 않는다
+	const replies = "replies" in comment ? comment.replies.length : null;
 
 	return (
 		<li className={`flex gap-3 ${GROUP_ROW}`}>
@@ -63,12 +64,12 @@ export function CommentThread({
 				<p className="mt-0.5 whitespace-pre-line break-keep text-callout text-fg wrap-anywhere">
 					{comment.content}
 				</p>
-				{replies > 0 && (
+				{replies !== null && (
 					<Link
-						className="-m-1 mt-0.5 inline-block rounded-lg p-1 text-subhead font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97"
+						className="-m-1 mt-0.5 block w-fit rounded-lg p-1 text-subhead font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97"
 						href={commentHref(comment.id, from)}
 					>
-						답글 {replies}개 보기
+						{replies > 0 ? `답글 ${replies}개 보기` : "답글 달기"}
 					</Link>
 				)}
 			</div>
