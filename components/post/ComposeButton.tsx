@@ -12,17 +12,21 @@ export function ComposeButton({
 	trigger,
 	authorName,
 	authorAvatar,
+	authorId,
 }: {
 	trigger: ReactNode;
 	/** 입력칸 왼쪽에 서는 이름 */
 	authorName: string;
 	/** 이름 옆 아바타에 쓸 `profiles.avatar_path` */
 	authorAvatar: string | null;
+	/** 사진 없는 아바타의 톤을 고르는 사용자 id */
+	authorId?: string;
 }) {
 	return (
 		<ComposeDialog
 			{...POST_COMPOSE}
 			authorAvatar={authorAvatar}
+			authorId={authorId}
 			authorName={authorName}
 			trigger={trigger}
 		/>

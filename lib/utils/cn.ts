@@ -14,6 +14,7 @@ export const FONT_SIZES = [
 	"subhead",
 	"footnote",
 	"caption",
+	"chip",
 	"body-sm",
 ];
 

@@ -15,6 +15,8 @@ export type FeedPost = {
 		id: string;
 		display_name: string;
 		avatar_path: string | null;
+		/** 글 카드 작성자 줄에 칩으로 선다. 최대 3개(0011_profile_interests.sql) */
+		interests: string[];
 	};
 };
 
@@ -41,7 +43,7 @@ const FEED_LIMIT = 50;
  * PostgREST가 PGRST201로 거절한다.
  */
 const POST_SELECT =
-	"id, content, created_at, author:profiles!posts_author_id_fkey(id, display_name, avatar_path), comments(count), like_count, liked_by_viewer";
+	"id, content, created_at, author:profiles!posts_author_id_fkey(id, display_name, avatar_path, interests), comments(count), like_count, liked_by_viewer";
 
 type PostRow = Omit<FeedPost, "comment_count" | "liked"> & {
 	comments: { count: number }[];
@@ -106,14 +108,14 @@ export async function getPost(
 }
 
 /**
- * 내가 팔로우하는 사람들의 글만. 정렬과 개수는 추천 피드와 같다.
+ * 내가 팔로우하는 사람들의 글만. 정렬과 개수는 전체 피드와 같다.
  *
  * 누구를 팔로우하는지는 DB 함수 `following_posts`가 요청의 JWT로 거른다
  * (`supabase/migrations/0005_following_posts.sql`). 그래서 보는 사람 id를 받지 않고,
  * 프로필 조회와 나란히 던질 수 있다 — 전에는 내 id → 팔로우 목록 → 글, 세 번을
  * 차례로 갔다. 결정 0025.
  *
- * 함수가 `setof posts`를 돌려주므로 select 문자열과 정렬, 개수는 추천 피드와 같은 것을 쓴다.
+ * 함수가 `setof posts`를 돌려주므로 select 문자열과 정렬, 개수는 전체 피드와 같은 것을 쓴다.
  *
  * 비어 있을 때 "팔로우한 사람이 없다"와 "팔로우했는데 글이 없다"를 가르는 것은 부르는 쪽이
  * 한다 — 그 구분은 빈 경우에만 필요해서 여기서 매번 묻지 않는다.
@@ -136,7 +138,7 @@ export async function listFollowingFeed(
 }
 
 /**
- * 내가 좋아요한 글만. 좋아요를 누른 시각의 역순이다 — 글이 쓰인 시각이 아니다. 개수는 추천 피드와 같다.
+ * 내가 좋아요한 글만. 좋아요를 누른 시각의 역순이다 — 글이 쓰인 시각이 아니다. 개수는 전체 피드와 같다.
  *
  * `post_likes`에서 출발해 글을 임베드한다. 정렬 기준이 `post_likes.created_at`이라
  * `posts`를 돌려주는 DB 함수로는 이 순서로 줄 세울 수 없다. 결정 0029.
@@ -169,7 +171,7 @@ export async function listLikedFeed(
 }
 
 /**
- * 한 사람이 쓴 글. 정렬과 개수는 추천 피드와 같다. 프로필 화면이 헤더 아래에 편다.
+ * 한 사람이 쓴 글. 정렬과 개수는 전체 피드와 같다. 프로필 화면이 헤더 아래에 편다.
  *
  * `posts_author_id_idx`(`supabase/migrations/0001_init.sql:69`)가 필터를 받는다.
  *

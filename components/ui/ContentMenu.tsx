@@ -58,6 +58,7 @@ export function ContentMenu({
 	content,
 	authorName,
 	authorAvatar,
+	authorId,
 }: {
 	config: ContentMenuConfig;
 	id: string;
@@ -67,6 +68,8 @@ export function ContentMenu({
 	authorName: string;
 	/** 수정 모달 아바타에 쓸 `profiles.avatar_path` */
 	authorAvatar: string | null;
+	/** 수정 모달 아바타의 톤을 고르는 사용자 id */
+	authorId?: string;
 }) {
 	const [editing, setEditing] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -108,6 +111,7 @@ export function ContentMenu({
 			<ComposeDialog
 				action={config.updateAction}
 				authorAvatar={authorAvatar}
+				authorId={authorId}
 				authorName={authorName}
 				initialContent={content}
 				maxLength={config.maxLength}

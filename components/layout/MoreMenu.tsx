@@ -5,10 +5,10 @@ import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Button, buttonStyles } from "@/components/ui/Button";
 import {
-	Dialog,
 	DialogShell,
 	DialogTitle,
 	DialogTrigger,
+	Sheet,
 } from "@/components/ui/Dialog";
 import {
 	DropdownMenu,
@@ -60,7 +60,7 @@ export function MoreMenu({
 
 	if (variant === "sheet") {
 		return (
-			<Dialog>
+			<Sheet>
 				<DialogTrigger className={className}>{trigger}</DialogTrigger>
 				<DialogShell
 					aria-describedby={undefined}
@@ -75,7 +75,7 @@ export function MoreMenu({
 						</form>
 					</div>
 				</DialogShell>
-			</Dialog>
+			</Sheet>
 		);
 	}
 

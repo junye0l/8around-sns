@@ -1,4 +1,28 @@
 import { X } from "lucide-react";
+import { type Tone, toneOf } from "@/lib/utils/tone";
+
+const TONE: Record<Tone, string> = {
+	violet: "bg-chip-violet text-chip-violet-fg",
+	blue: "bg-chip-blue text-chip-blue-fg",
+	green: "bg-chip-green text-chip-green-fg",
+	orange: "bg-chip-orange text-chip-orange-fg",
+	pink: "bg-chip-pink text-chip-pink-fg",
+	teal: "bg-chip-teal text-chip-teal-fg",
+};
+
+/**
+ * 글 카드 작성자 줄의 작은 관심사 칩. 글자를 해시한 톤으로 칠한다. 누를 수 없다.
+ * @see docs/DESIGN.md 관심사 칩
+ */
+export function InterestTag({ label }: { label: string }) {
+	return (
+		<span
+			className={`inline-block max-w-full truncate rounded-full px-2 text-chip ${TONE[toneOf(label)]}`}
+		>
+			{label}
+		</span>
+	);
+}
 
 /**
  * 관심사 한 개. 테두리 없는 회색 채움 알약이고 누를 수 없다. 파랑을 쓰지 않는다, 동작이 아니다.

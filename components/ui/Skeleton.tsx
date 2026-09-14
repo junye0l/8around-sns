@@ -32,6 +32,7 @@ export function SkeletonLine({ className }: { className: string }) {
 export function ContentCardSkeleton({
 	actions = 0,
 	connected = false,
+	card = false,
 }: {
 	/**
 	 * 액션 줄의 버튼 수. 0이면 줄이 없다. 목록의 글은 좋아요와 댓글 수로 2,
@@ -42,7 +43,31 @@ export function ContentCardSkeleton({
 	actions?: 0 | 1 | 2;
 	/** `ContentCard`의 `connected`와 같다. 아래 구분선이 빠진다 */
 	connected?: boolean;
+	/** `ContentCard`의 `card`와 같다. 새 카드 모양의 자리다 */
+	card?: boolean;
 }) {
+	if (card) {
+		return (
+			<div className="flex gap-3 rounded-card bg-canvas px-5 py-4 shadow-card">
+				<Skeleton className="size-10 shrink-0 rounded-full" />
+				<div className="min-w-0 flex-1">
+					<div className="text-subhead">
+						<SkeletonLine className="w-28" />
+					</div>
+					<div className="mt-0.5 text-body">
+						<SkeletonLine className="w-3/4" />
+					</div>
+					{actions > 0 && (
+						<div className="mt-3 flex gap-2">
+							<Skeleton className="h-8 w-14 rounded-full" />
+							{actions > 1 && <Skeleton className="h-8 w-14 rounded-full" />}
+						</div>
+					)}
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div
 			className={cn(
@@ -87,7 +112,19 @@ function ActionSkeleton() {
  * 줄 높이는 버튼(36px)이 정하므로 그 높이를 빈 칸으로 남긴다.
  * @see components/ui/ComposeRow.tsx
  */
-export function ComposeRowSkeleton() {
+export function ComposeRowSkeleton({ card = false }: { card?: boolean }) {
+	if (card) {
+		return (
+			<div className="flex items-center gap-3 rounded-card bg-canvas px-5 py-4 shadow-card">
+				<Skeleton className="size-10 shrink-0 rounded-full" />
+				<div className="flex-1 text-body">
+					<SkeletonLine className="w-48" />
+				</div>
+				<Skeleton className="size-9.5 shrink-0 rounded-full" />
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex items-center gap-3 border-hairline border-b px-4 py-4 md:px-6">
 			<Skeleton className="size-9 shrink-0 rounded-full" />

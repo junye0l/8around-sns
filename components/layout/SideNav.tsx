@@ -134,6 +134,7 @@ function ComposeItem({
 	return (
 		<ComposeButton
 			authorAvatar={me.avatar_path}
+			authorId={me.id}
 			authorName={me.display_name}
 			trigger={
 				wide ? (

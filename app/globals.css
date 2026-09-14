@@ -20,6 +20,7 @@
 	--color-primary: light-dark(#5750e6, #8c86ff);
 	--color-primary-fill: light-dark(#5750e6, #5e57ea);
 	--color-primary-soft: light-dark(#ecebfd, #2a2850);
+	--color-on-primary-soft: light-dark(#5750e6, #b9b5ff);
 	--color-on-primary: #ffffff;
 	--color-danger: light-dark(#d92d20, #ff6b5e);
 	--color-danger-soft: light-dark(#fdecea, #3a1d1b);
@@ -28,6 +29,20 @@
 	/* 로컬 확장 — 문서에 없다. 막 위에 올린 아이콘. 쓰는 곳(components/profile/ProfileEditDialog.tsx)이
 	   리뉴얼 6단계에서 사라지면 같이 지운다 */
 	--color-on-scrim: #ffffff;
+
+	/* 관심사 칩 바탕과 글자. 고르는 함수는 lib/utils/tone.ts */
+	--color-chip-violet: light-dark(#f1e8fb, #3a2a52);
+	--color-chip-violet-fg: light-dark(#7a3fb8, #d7b8ff);
+	--color-chip-blue: light-dark(#e6effd, #1e2f4f);
+	--color-chip-blue-fg: light-dark(#2459b8, #a9c8ff);
+	--color-chip-green: light-dark(#e2f5e9, #173a27);
+	--color-chip-green-fg: light-dark(#1d7a45, #9be3b6);
+	--color-chip-orange: light-dark(#ffeede, #48301a);
+	--color-chip-orange-fg: light-dark(#a8520f, #ffc38f);
+	--color-chip-pink: light-dark(#fde8f1, #4a2034);
+	--color-chip-pink-fg: light-dark(#b42366, #ffb0d2);
+	--color-chip-teal: light-dark(#e0f4f4, #153b3b);
+	--color-chip-teal-fg: light-dark(#11706f, #8fe0de);
 
 	/* 사진 없는 아바타 바탕. 두 테마 공통이고 위 글자는 흰색이다. 고르는 함수는 lib/utils/tone.ts */
 	--color-tone-violet: #7c5cd6;
@@ -76,6 +91,11 @@
 	--text-caption--line-height: 1.2;
 	--text-caption--font-weight: 500;
 
+	/* 관심사 칩 글자. 12px / 줄높이 18px / 600 (docs/DESIGN.md 관심사 칩) */
+	--text-chip: 12px;
+	--text-chip--line-height: 1.5;
+	--text-chip--font-weight: 600;
+
 	/* 로컬 확장 — 문서에 없다. 리뉴얼 전 이름이다. 쓰는 화면이 3~6단계에서 subhead나 footnote로
 	   옮겨가면 지운다 */
 	--text-body-sm: 14px;
@@ -98,8 +118,7 @@
 	/* 로컬 확장 — 문서에 없다. 드롭다운이 열릴 때 트리거 쪽 모서리에서 펼쳐진다 */
 	--animate-menu-open: menu-open var(--motion-fast) var(--ease-enter);
 
-	/* 시트는 아래에서 올라오고 막은 페이드로 들어온다 (docs/DESIGN.md 움직임) */
-	--animate-sheet-in: sheet-in var(--motion-standard) var(--ease-enter);
+	/* 모달 뒤 막은 페이드로 들어온다. 바텀 시트의 움직임은 아래 [data-vaul-drawer]가 맡는다 */
 	--animate-fade-in: fade-in var(--motion-fast) var(--ease-standard);
 
 	/* 로컬 확장 — 문서가 "지금 것을 그대로 쓴다"고만 적는다. 값을 새로 만들지 않는다 */
@@ -153,6 +172,32 @@
 	animation-timing-function: var(--ease-standard);
 }
 
+/*
+ * 바텀 시트(vaul)가 스스로 넣는 0.5초와 자체 이징을 우리 움직임 토큰으로 바꾼다. 새 duration과 이징을 만들지 않는다.
+ * 끌다 놓을 때 vaul이 인라인 style로 transition을 넣으므로 !important로 이긴다 (components/ui/Dialog.tsx)
+ */
+[data-vaul-drawer] {
+	/* biome-ignore lint/complexity/noImportantStyles: vaul의 인라인 transition을 이기려면 필요하다 */
+	animation-duration: var(--motion-standard) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
+	animation-timing-function: var(--ease-enter) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
+	transition-duration: var(--motion-standard) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
+	transition-timing-function: var(--ease-standard) !important;
+}
+
+[data-vaul-overlay] {
+	/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
+	animation-duration: var(--motion-fast) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
+	animation-timing-function: var(--ease-standard) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
+	transition-duration: var(--motion-fast) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: 위와 같음 */
+	transition-timing-function: var(--ease-standard) !important;
+}
+
 /* 로컬 확장 — durations. duration-(--motion-fast) 로 참조한다 */
 :root {
 	--motion-instant: 0ms;
@@ -173,12 +218,6 @@
 	from {
 		opacity: 0;
 		scale: 0.96;
-	}
-}
-
-@keyframes sheet-in {
-	from {
-		translate: 0 100%;
 	}
 }
 

@@ -1,14 +1,24 @@
 "use client";
 
 import * as Primitive from "@radix-ui/react-dialog";
-import type { ComponentProps, ReactNode } from "react";
+import {
+	type ComponentProps,
+	createContext,
+	type ReactNode,
+	type RefObject,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
+import { Drawer } from "vaul";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils/cn";
 
 /**
  * shadcn 구조를 따라 radix 위에 우리 토큰만 입힌 얇은 껍데기.
  * 포커스 가두기, Esc 닫기, 바깥 클릭, 스크롤 잠금은 radix가 한다 — 직접 만들지 않는다.
- *
- * 여는 것만 움직인다. 막은 페이드로, 시트는 아래에서 올라온다.
+ * 768px 미만 바텀 시트는 shadcn Drawer와 같은 vaul이 끌어내리기를 더한다. vaul도 안에서 radix Dialog를 쓴다.
  * @see docs/DESIGN.md 드롭다운, 모달, 시트
  */
 export const Dialog = Primitive.Root;
@@ -17,13 +27,71 @@ export const DialogClose = Primitive.Close;
 export const DialogTitle = Primitive.Title;
 export const DialogDescription = Primitive.Description;
 
+type SheetState = {
+	drawer: boolean;
+	content: RefObject<HTMLDivElement | null>;
+	overlay: RefObject<HTMLDivElement | null>;
+};
+
+const SheetContext = createContext<SheetState | null>(null);
+
+/**
+ * 768px 미만은 끌어내릴 수 있는 바텀 시트, 이상은 radix 모달이다. 안에는 `DialogShell variant="sheet"`를 둔다.
+ *
+ * 닫는 모든 길(끌어내리기, 바깥 누르기, Esc, 닫기 버튼)이 `onOpenChange(false)` 하나로 온다.
+ * 부르는 쪽이 닫지 않고 두면(닫기 확인을 띄울 때) 끌린 시트를 제자리로 되돌린다. 결정 0044.
+ */
+export function Sheet({
+	open: openProp,
+	onOpenChange,
+	children,
+}: {
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	children: ReactNode;
+}) {
+	const wide = useMediaQuery("(width >= 48rem)");
+	const [openState, setOpenState] = useState(false);
+	const open = openProp ?? openState;
+	const content = useRef<HTMLDivElement>(null);
+	const overlay = useRef<HTMLDivElement>(null);
+	const latestOpen = useRef(open);
+	useEffect(() => {
+		latestOpen.current = open;
+	});
+
+	const change = (next: boolean) => {
+		(onOpenChange ?? setOpenState)(next);
+		if (next || wide) return;
+		// vaul은 끌던 자리를 인라인 style로 남긴다. 닫힘이 거절돼 다음 프레임에도 열려 있으면 그 style을 걷는다
+		requestAnimationFrame(() => {
+			if (!latestOpen.current) return;
+			content.current?.style.removeProperty("transform");
+			overlay.current?.style.removeProperty("opacity");
+		});
+	};
+
+	return (
+		<SheetContext.Provider value={{ drawer: !wide, content, overlay }}>
+			{wide ? (
+				<Primitive.Root onOpenChange={change} open={open}>
+					{children}
+				</Primitive.Root>
+			) : (
+				<Drawer.Root onOpenChange={change} open={open}>
+					{children}
+				</Drawer.Root>
+			)}
+		</SheetContext.Provider>
+	);
+}
+
 /**
  * 떠 있는 면의 껍데기. 막과 `canvas-raised` 면까지가 여기다.
  * 안에 무엇이 들어가는지는 부르는 쪽이 정한다 — 입력 모달과 확인 모달이 같이 쓴다 (규칙 2).
  *
  * 자리와 너비는 `className`으로 받는다. 가로 가운데 정렬만 여기서 한다.
- * `variant="sheet"`면 768px 미만에서 화면 아래에 붙는 바텀 시트가 되고, 이상에서는 `className`의 자리를 따른다.
- * 시트 끌어내리기는 아직 없다. 리뉴얼 4단계(`docs/PLAN.md`)에서 닫기 확인과 같이 만든다.
+ * `variant="sheet"`는 `Sheet` 안에서 쓴다. 768px 미만이면 화면 아래에 붙는 바텀 시트가 되고 `className`은 쓰지 않는다.
  */
 export function DialogShell({
 	variant = "modal",
@@ -34,7 +102,33 @@ export function DialogShell({
 	variant?: "modal" | "sheet";
 	children: ReactNode;
 }) {
-	const sheet = variant === "sheet";
+	const sheet = useContext(SheetContext);
+
+	if (variant === "sheet" && sheet?.drawer) {
+		return (
+			<Drawer.Portal>
+				<Drawer.Overlay
+					className="fixed inset-0 z-40 bg-scrim"
+					ref={sheet.overlay}
+				/>
+				<Drawer.Content
+					className={cn(
+						"fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-sheet bg-canvas-raised shadow-raised outline-none",
+						// 허용: 시트 최대 높이와 아래 안전영역은 기기 뷰포트에 묶인 값이라 토큰이 없다
+						"max-h-[90dvh] pb-[env(safe-area-inset-bottom)]",
+					)}
+					ref={sheet.content}
+					{...props}
+				>
+					<span
+						aria-hidden
+						className="mx-auto mt-2 block h-1.25 w-9 shrink-0 rounded-full bg-hairline"
+					/>
+					<div className="overflow-y-auto">{children}</div>
+				</Drawer.Content>
+			</Drawer.Portal>
+		);
+	}
 
 	return (
 		<Primitive.Portal>
@@ -43,25 +137,10 @@ export function DialogShell({
 				className={cn(
 					"fixed left-1/2 z-50 w-full -translate-x-1/2 px-4",
 					className,
-					sheet &&
-						"max-md:inset-x-0 max-md:top-auto max-md:bottom-0 max-md:max-w-none max-md:translate-x-0 max-md:animate-sheet-in max-md:px-0",
 				)}
 				{...props}
 			>
-				<div
-					className={cn(
-						"overflow-hidden rounded-sheet bg-canvas-raised shadow-raised",
-						sheet &&
-							// 허용: 시트 최대 높이와 아래 안전영역은 기기 뷰포트에 묶인 값이라 토큰이 없다
-							"max-md:flex max-md:max-h-[90dvh] max-md:flex-col max-md:overflow-y-auto max-md:rounded-b-none max-md:pb-[env(safe-area-inset-bottom)]",
-					)}
-				>
-					{sheet && (
-						<span
-							aria-hidden
-							className="mx-auto mt-2 block h-1.25 w-9 shrink-0 rounded-full bg-hairline md:hidden"
-						/>
-					)}
+				<div className="overflow-hidden rounded-sheet bg-canvas-raised shadow-raised">
 					{children}
 				</div>
 			</Primitive.Content>
