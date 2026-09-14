@@ -14,6 +14,12 @@ describe("cn", () => {
 		expect(cn("text-body", "text-body-sm")).toBe("text-body-sm");
 	});
 
+	it("이름이 다른 색 토큰끼리도 뒤가 이긴다", () => {
+		expect(cn("text-fg-muted hover:text-fg", "text-fg")).toBe(
+			"hover:text-fg text-fg",
+		);
+	});
+
 	it("거짓값은 건너뛴다", () => {
 		expect(cn("text-fg", false, undefined, "")).toBe("text-fg");
 	});

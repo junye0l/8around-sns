@@ -7,6 +7,7 @@ import { Suspense, use } from "react";
 import { MoreMenu } from "@/components/layout/MoreMenu";
 import { ComposeButton } from "@/components/post/ComposeButton";
 import { BrandMark } from "@/components/ui/BrandMark";
+import { cn } from "@/lib/utils/cn";
 
 /**
  * 왼쪽 아이콘 레일. 로고가 위, 항목이 가운데, 더 보기가 아래다. 웹 폭만 맞춘다.
@@ -50,7 +51,7 @@ export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 			<div className="my-auto flex flex-col gap-2">
 				<Link
 					aria-current={pathname === "/" ? "page" : undefined}
-					className={`${ITEM} ${pathname === "/" ? CURRENT : ""}`}
+					className={cn(ITEM, pathname === "/" && CURRENT)}
 					href="/"
 				>
 					<Home aria-hidden className="size-6 shrink-0" />
@@ -63,7 +64,7 @@ export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 
 				<Link
 					aria-current={pathname === "/following" ? "page" : undefined}
-					className={`${ITEM} ${pathname === "/following" ? CURRENT : ""}`}
+					className={cn(ITEM, pathname === "/following" && CURRENT)}
 					href="/following"
 				>
 					<Users aria-hidden className="size-6 shrink-0" />
@@ -72,7 +73,7 @@ export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 
 				<Link
 					aria-current={pathname === "/likes" ? "page" : undefined}
-					className={`${ITEM} ${pathname === "/likes" ? CURRENT : ""}`}
+					className={cn(ITEM, pathname === "/likes" && CURRENT)}
 					href="/likes"
 				>
 					<Heart aria-hidden className="size-6 shrink-0" />
@@ -119,7 +120,7 @@ function ProfileItem({
 	return (
 		<Link
 			aria-current={current ? "page" : undefined}
-			className={`${ITEM} ${current ? CURRENT : ""}`}
+			className={cn(ITEM, current && CURRENT)}
 			href={href}
 		>
 			<User aria-hidden className="size-6 shrink-0" />
