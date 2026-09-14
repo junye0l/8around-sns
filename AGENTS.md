@@ -121,7 +121,7 @@ Tailwind v4를 쓴다. 유틸리티를 화면에 직접 흩뿌리지 않고 공�
 소프트 서피스 디자인에서 오는 제약이다. 근거는 `docs/DESIGN.md`와 [결정 0043](docs/decisions/0043-soft-surface.md)에 있다.
 
 - 보라(`primary`)는 동작과 현재 위치에만 칠한다. 장식으로 쓰지 않는다. 관심사 톤은 칩과 아바타에만 쓴다
-- 시스템 글꼴을 쓴다. 웹폰트는 재배포가 허용된 것만, 결정을 거친 뒤에 넣는다
+- 글꼴은 `app/fonts/`의 Pretendard 하나다([결정 0044](docs/decisions/0044-renewal-open-decisions.md)). 다른 웹폰트는 결정을 거치지 않고 넣지 않는다
 - 새 이징이나 duration을 만들지 않는다. `--motion-*`과 `--ease-*` 셋만 쓴다. 스프링과 오버슈트는 금지다
 - 그림자는 라이트에서 `shadow-card`, `shadow-raised` 둘만 쓴다. 다크는 그림자 없이 면 색으로 나눈다
 - 한글 본문은 단어 단위로 줄바꿈한다. `break-keep`과 `wrap-anywhere`를 같이 둔다

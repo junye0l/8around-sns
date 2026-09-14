@@ -134,14 +134,14 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 값과 화면 구성은 `docs/DESIGN.md`, 이유는 [결정 0043](decisions/0043-soft-surface.md). 한 단계가 PR 하나다.
 단계마다 390px과 1280px 폭, 라이트와 다크를 Playwright로 열어 DESIGN.md와 대조하고 스크린샷으로 보고한다 (AGENTS.md 규칙 16).
 
-- [ ] 1. 토큰과 공통 컴포넌트 — `app/globals.css` 토큰 교체, `lib/utils/tone.ts`와 테스트, `Button`, `TextField`, `Avatar`,
+- [ ] 1. 토큰과 공통 컴포넌트 — `app/globals.css` 토큰 교체, Pretendard를 `app/fonts/`에 두고 `next/font/local`로 적용(파일 용량을 PR 본문에 적는다, [결정 0044](decisions/0044-renewal-open-decisions.md)), `lib/utils/tone.ts`와 테스트, `Button`, `TextField`, `Avatar`,
   `EmptyState`(icon, title, description, action), `Skeleton`, `Dialog`(sheet), `DropdownMenu`. 여러 기능에 걸쳐 한 PR로 묶는다 (규칙 11 예외).
   Toss 문서를 인용하던 코드 주석(`app/globals.css`, `components/ui/Button.tsx`)도 여기서 고친다. 쓰지 않게 되는 토큰(`--blur-rail` 등)을 지운다
-- [ ] 2. 뼈대 — `app/(main)/layout.tsx`, `PageShell`, `SideNav`(768, 1024, 1280px), 하단 탭, `MoreMenu`(시트, 디자인 세그먼트)
+- [ ] 2. 뼈대 — `app/(main)/layout.tsx`, `PageShell`, `SideNav`(768, 1024, 1280px, 첫 탭 라벨 "전체"), 하단 탭, `MoreMenu`(시트, 디자인 세그먼트)
 - [ ] 3. 인증 — `/login`, `/signup`. 버튼 비활성 조건, 에러 문구 분기, 첫 에러 칸 포커스
-- [ ] 4. 피드 — 추천, 팔로잉, 좋아요, `ContentCard`, `ComposeRow`, `ComposeDialog`, `LikeButton`, `CommentCount`, 빈 상태 문구와 버튼
+- [ ] 4. 피드 — 전체(제목과 `metadata.title`도 "전체"), 팔로잉, 좋아요, `ContentCard`, `ComposeRow`, `ComposeDialog`(닫기 확인), `LikeButton`, `CommentCount`, 빈 상태 문구와 버튼
 - [ ] 5. 글과 댓글 — `/post/[id]`, `/comment/[id]`, `CommentThread`, 입력줄, 삭제 확인
-- [ ] 6. 프로필 — `/u/[id]`, `ProfileHeader`, `ProfileEditDialog`, `InterestsField`, 팔로워·팔로잉 목록(행 팔로우 버튼), 내 프로필 요약 칸, 404와 에러
+- [ ] 6. 프로필 — `/u/[id]`, `ProfileHeader`, `ProfileEditDialog`, `InterestsField`, 팔로워·팔로잉 목록(행 팔로우 버튼), 내 프로필 요약 칸, 404와 에러("전체로 돌아가기")
 
 1과 2가 먼저 머지된다. 3~6은 서로 파일이 겹치지 않아 병렬로 진행할 수 있다.
 각 단계가 끝나면 `/impeccable polish <라우트>`로 DESIGN.md와 어긋난 곳을 한 번 훑는다.
