@@ -17,7 +17,7 @@ export default function Loading() {
 		<PageShell title="추천">
 			<ComposeRowSkeleton />
 			{[0, 1, 2, 3].map((row) => (
-				<ContentCardSkeleton actions={2} key={row} />
+				<ContentCardSkeleton actions key={row} />
 			))}
 		</PageShell>
 	);

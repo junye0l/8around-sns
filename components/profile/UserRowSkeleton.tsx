@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
 
 /**
  * `UserRow` 한 줄의 자리. 팔로워와 팔로잉 목록의 로딩이 같이 쓴다.
@@ -10,8 +10,8 @@ export function UserRowSkeleton() {
 		<div className="flex gap-3 border-hairline border-b px-6 py-3 last:border-b-0">
 			<Skeleton className="size-9 shrink-0 rounded-full" />
 			<div className="min-w-0 flex-1 text-body-sm">
-				<Skeleton className="h-lh w-24" />
-				<Skeleton className="h-lh w-16" />
+				<SkeletonLine className="w-24" />
+				<SkeletonLine className="w-16" />
 			</div>
 		</div>
 	);
