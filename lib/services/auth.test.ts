@@ -20,7 +20,7 @@ const stub = (options: { code?: string; taken?: boolean }) =>
 		},
 		from: () => ({
 			select: () => ({
-				eq: () => ({
+				ilike: () => ({
 					maybeSingle: async () => ({
 						data: options.taken ? { id: "stub" } : null,
 					}),
@@ -32,7 +32,7 @@ const stub = (options: { code?: string; taken?: boolean }) =>
 const input = {
 	email: "a@b.com",
 	password: "hunter2",
-	username: "hong_gil",
+	display_name: "홍길동",
 };
 
 describe("signUp", () => {
@@ -40,14 +40,14 @@ describe("signUp", () => {
 		const result = await signUp(stub({}), {
 			email: "not-an-email",
 			password: "123",
-			username: "Alice",
+			display_name: "   ",
 		});
 
 		expect(result.ok).toBe(false);
 		if (result.ok) return;
 		expect(result.errors.email).toBeTruthy();
 		expect(result.errors.password).toBeTruthy();
-		expect(result.errors.username).toBeTruthy();
+		expect(result.errors.display_name).toBeTruthy();
 	});
 
 	it("이메일 중복은 이메일 필드에 붙인다", async () => {
@@ -56,7 +56,7 @@ describe("signUp", () => {
 		expect(result.ok).toBe(false);
 		if (result.ok) return;
 		expect(result.errors.email).toContain("이미 가입한");
-		expect(result.errors.username).toBeUndefined();
+		expect(result.errors.display_name).toBeUndefined();
 	});
 
 	it("이유를 모르는 실패는 별명이 이미 있는지 확인해서 판정한다", async () => {
@@ -66,7 +66,7 @@ describe("signUp", () => {
 		);
 		expect(taken.ok).toBe(false);
 		if (taken.ok) return;
-		expect(taken.errors.username).toContain("이미 쓰고 있는");
+		expect(taken.errors.display_name).toContain("이미 쓰고 있는");
 
 		const free = await signUp(
 			stub({ code: "unexpected_failure", taken: false }),
@@ -74,7 +74,7 @@ describe("signUp", () => {
 		);
 		expect(free.ok).toBe(false);
 		if (free.ok) return;
-		expect(free.errors.username).toBeUndefined();
+		expect(free.errors.display_name).toBeUndefined();
 		expect(free.formError).toBeTruthy();
 	});
 

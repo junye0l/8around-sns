@@ -7,13 +7,10 @@ import { listFollowing } from "@/lib/queries/follow";
 import { getProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
 
-/** 주소의 별명만 쓴다. 제목을 위해 프로필을 한 번 더 읽지 않는다 */
-export async function generateMetadata({
-	params,
-}: PageProps<"/u/[username]/following">): Promise<Metadata> {
-	const { username } = await params;
-	return { title: `@${username} 팔로잉` };
-}
+// 주소가 id라 제목에 쓸 사람 이름이 없다. 제목을 위해 프로필을 한 번 더 읽지 않는다
+export const metadata: Metadata = {
+	title: "팔로잉",
+};
 
 /**
  * 이 사람이 팔로우하는 사람들.
@@ -25,23 +22,23 @@ export async function generateMetadata({
  */
 export default async function FollowingPage({
 	params,
-}: PageProps<"/u/[username]/following">) {
-	const { username } = await params;
+}: PageProps<"/u/[id]/following">) {
+	const { id } = await params;
 	const supabase = await createClient();
 
-	const profile = await getProfile(supabase, username);
+	const profile = await getProfile(supabase, id);
 	if (!profile) notFound();
 
 	const users = await listFollowing(supabase, profile.id);
 
 	return (
-		<PageShell backHref={`/u/${profile.username}`} title="팔로잉">
+		<PageShell backHref={`/u/${profile.id}`} title="팔로잉">
 			{users.length === 0 ? (
 				<EmptyState message="아직 팔로우한 사람이 없어요." />
 			) : (
 				<ul>
 					{users.map((user) => (
-						<UserRow key={user.username} user={user} />
+						<UserRow key={user.id} user={user} />
 					))}
 				</ul>
 			)}

@@ -3,7 +3,7 @@ import type { Database } from "@/types/database";
 
 /** 목록 한 줄에 필요한 만큼. 팔로워 · 팔로잉 두 화면이 같은 모양을 쓴다 */
 export type FollowUser = {
-	username: string;
+	id: string;
 	display_name: string;
 	avatar_path: string | null;
 	bio: string | null;
@@ -14,9 +14,9 @@ export type FollowUser = {
  * 제약 이름의 출처는 `types/database.ts`의 `Relationships`다.
  */
 const FOLLOWER_SELECT =
-	"user:profiles!follows_follower_id_fkey(username, display_name, avatar_path, bio)";
+	"user:profiles!follows_follower_id_fkey(id, display_name, avatar_path, bio)";
 const FOLLOWING_SELECT =
-	"user:profiles!follows_following_id_fkey(username, display_name, avatar_path, bio)";
+	"user:profiles!follows_following_id_fkey(id, display_name, avatar_path, bio)";
 
 /** 한 번에 읽어올 개수. 페이지네이션은 범위 밖이라 첫 장만 본다 */
 const LIST_LIMIT = 100;

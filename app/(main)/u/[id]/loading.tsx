@@ -22,9 +22,6 @@ export default function ProfileLoading() {
 						<div className="text-title">
 							<SkeletonLine className="h-5 w-32" />
 						</div>
-						<div className="text-body">
-							<SkeletonLine className="w-24" />
-						</div>
 					</div>
 					<Skeleton className="size-21 shrink-0 rounded-full" />
 				</div>

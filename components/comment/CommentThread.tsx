@@ -31,7 +31,7 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 
 	// 같은 사람이 여러 번 답글을 달아도 원은 하나다. Map은 처음 넣은 순서를 지킨다
 	const stacked = [
-		...new Map(replies.map((reply) => [reply.author.username, reply.author])),
+		...new Map(replies.map((reply) => [reply.author.id, reply.author])),
 	].slice(0, STACK_MAX);
 
 	return (
@@ -58,14 +58,14 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 					{/* 세로선은 위 칸의 36px 아바타 가운데(칸 왼쪽에서 18px)로 흐른다.
 					    여기 원은 24px이라 6px 밀어야 선 끝과 중심이 맞는다 */}
 					<div className="ml-1.5 flex">
-						{stacked.map(([username, author], index) => (
+						{stacked.map(([authorId, author], index) => (
 							<Avatar
 								className={cn(
 									"size-6",
 									// 겹치는 원은 카드 바탕색 테두리로 서로를 끊는다. 그림자를 쓰지 않는다
 									index > 0 && "-ml-2 ring-2 ring-canvas",
 								)}
-								key={username}
+								key={authorId}
 								path={author.avatar_path}
 							/>
 						))}

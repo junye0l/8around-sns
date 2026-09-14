@@ -40,7 +40,7 @@ const LABEL =
 const CURRENT = "text-fg";
 
 type NavProfile = {
-	username: string;
+	id: string;
 	display_name: string;
 	avatar_path: string | null;
 } | null;
@@ -118,7 +118,7 @@ function ProfileItem({
 	const me = use(profile);
 	if (!me) return null;
 
-	const href = `/u/${me.username}`;
+	const href = `/u/${me.id}`;
 	// startsWith만 쓰면 `/u/bobby`가 `/u/bob`의 현재 위치로 잡힌다
 	const current = pathname === href || pathname.startsWith(`${href}/`);
 

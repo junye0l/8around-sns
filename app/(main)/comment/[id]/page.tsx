@@ -49,8 +49,7 @@ export default async function CommentPage({
 	// 글이 지워졌으면 댓글도 cascade로 같이 지워진다. 그래도 사이에 지워질 수는 있다
 	if (!post) notFound();
 
-	const username = profile?.username ?? "나";
-	const displayName = profile?.display_name ?? username;
+	const displayName = profile?.display_name ?? "나";
 
 	return (
 		<PageShell backHref={`/post/${comment.post_id}`} title="답글">
@@ -75,7 +74,7 @@ export default async function CommentPage({
 				authorAvatar={profile?.avatar_path}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
-				placeholder={`${comment.author.username}님에게 답글 남기기`}
+				placeholder={`${comment.author.display_name}님에게 답글 남기기`}
 				submitLabel="답글"
 				title="답글"
 			>

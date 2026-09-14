@@ -44,8 +44,7 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 		listPostComments(supabase, post.id),
 	]);
 
-	const username = profile?.username ?? "나";
-	const displayName = profile?.display_name ?? username;
+	const displayName = profile?.display_name ?? "나";
 
 	return (
 		<PageShell backHref="/" title="게시글">
@@ -63,7 +62,7 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 					/>
 				}
 				menu={
-					post.author.username === profile?.username ? (
+					post.author.id === profile?.id ? (
 						<PostMenu
 							authorAvatar={post.author.avatar_path}
 							authorName={post.author.display_name}
@@ -79,7 +78,7 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 				authorAvatar={profile?.avatar_path}
 				authorName={displayName}
 				maxLength={COMMENT_CONTENT_MAX}
-				placeholder={`${post.author.username}님에게 답글 남기기`}
+				placeholder={`${post.author.display_name}님에게 답글 남기기`}
 				submitLabel="댓글"
 				title="댓글"
 			>

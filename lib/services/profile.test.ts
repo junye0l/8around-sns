@@ -85,4 +85,19 @@ describe("updateProfile", () => {
 			expect(calls).toEqual([]);
 		}
 	});
+
+	it("다른 사람과 겹치는 별명은 별명 칸 에러로 돌려준다", async () => {
+		const client = {
+			from: () => ({
+				update: () => ({ eq: async () => ({ error: { code: "23505" } }) }),
+			}),
+		} as unknown as SupabaseClient<Database>;
+
+		const result = await updateProfile(client, USER, {
+			displayName: "minsu",
+			avatar: null,
+		});
+
+		expect(result).toMatchObject({ ok: false, field: "display_name" });
+	});
 });

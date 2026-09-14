@@ -32,7 +32,7 @@ export default async function LikesPage() {
 			{posts.length === 0 ? (
 				<EmptyState message="아직 좋아요한 글이 없어요. 마음에 드는 글에 하트를 눌러 보세요." />
 			) : (
-				<PostList posts={posts} viewerUsername={profile?.username} />
+				<PostList posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);
