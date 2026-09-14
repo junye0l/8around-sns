@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
-import { SideNav } from "@/components/layout/SideNav";
 import { PostList } from "@/components/post/PostList";
 import { POST_COMPOSE } from "@/components/post/post-compose";
 import { ComposeRow } from "@/components/ui/ComposeRow";
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
  * 비로그인은 미들웨어가 `/login`으로 돌려보내므로 여기까지 오지 않는다
  * ([결정 0006](../docs/decisions/0006-feed-requires-login.md)).
  *
- * 로딩은 `app/loading.tsx`, 에러는 `app/error.tsx`가 받는다 (규칙 10).
+ * 로딩은 `loading.tsx`, 에러는 `app/error.tsx`가 받는다 (규칙 10).
  */
 export default async function Home() {
 	const supabase = await createClient();
@@ -34,7 +33,7 @@ export default async function Home() {
 	const displayName = profile?.display_name ?? username;
 
 	return (
-		<PageShell nav={<SideNav profile={profile} />} title="추천">
+		<PageShell title="추천">
 			<ComposeRow {...POST_COMPOSE} authorName={displayName} />
 
 			{posts.length === 0 ? (

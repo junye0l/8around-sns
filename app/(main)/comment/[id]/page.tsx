@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/PageShell";
-import { SideNav } from "@/components/layout/SideNav";
 import { ComposeRow } from "@/components/ui/ComposeRow";
 import { ContentCard } from "@/components/ui/ContentCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -26,7 +25,7 @@ export const metadata: Metadata = {
  * 답글에는 자기 화면이 없다. 1뎁스가 끝이라 `getComment`가 답글의 주소를 없는 것으로
  * 친다 ([결정 0007](../../../docs/decisions/0007-comment-routes.md)).
  *
- * 순서대로 읽는 이유는 `app/post/[id]/page.tsx`와 같다 — uuid가 아닌 주소가 뒤쪽
+ * 순서대로 읽는 이유는 `app/(main)/post/[id]/page.tsx`와 같다 — uuid가 아닌 주소가 뒤쪽
  * 쿼리까지 가면 캐스팅에서 터져 에러 화면으로 샌다. 댓글을 먼저 확인하고 나면
  * 뒤에 넘기는 id는 이미 검증된 값이다.
  *
@@ -54,11 +53,7 @@ export default async function CommentPage({
 	const displayName = profile?.display_name ?? username;
 
 	return (
-		<PageShell
-			backHref={`/post/${comment.post_id}`}
-			nav={<SideNav profile={profile} />}
-			title="답글"
-		>
+		<PageShell backHref={`/post/${comment.post_id}`} title="답글">
 			{/* 본문과 아래 댓글은 세로선으로 이어진다 — 무엇에 대한 대화인지가 안 끊긴다 */}
 			<ContentCard
 				author={post.author}

@@ -38,7 +38,7 @@ export function ContentCardSkeleton({
 	 * 액션 줄의 버튼 수. 0이면 줄이 없다. 목록의 글은 좋아요와 댓글 수로 2,
 	 * 상세의 글(좋아요)과 댓글(답글 수)은 1이다.
 	 * @see components/post/PostList.tsx
-	 * @see app/post/[id]/page.tsx
+	 * @see app/(main)/post/[id]/page.tsx
 	 */
 	actions?: 0 | 1 | 2;
 	/** `ContentCard`의 `connected`와 같다. 아래 구분선이 빠진다 */

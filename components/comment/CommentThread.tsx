@@ -14,7 +14,7 @@ const STACK_MAX = 3;
  * ([결정 0008](../../docs/decisions/0008-reply-tree-on-post.md) ·
  * [0019](../../docs/decisions/0019-comment-compose-modal.md)).
  *
- * 펴는 쪽은 답글 화면(`app/comment/[id]/page.tsx`)이 본문과 댓글을 잇는 것과 **같은 방식**으로
+ * 펴는 쪽은 답글 화면(`app/(main)/comment/[id]/page.tsx`)이 본문과 댓글을 잇는 것과 **같은 방식**으로
  * 잇는다 — 아바타 밑으로 세로선이 흐른다.
  *
  * 들여쓰지 않는다. 선이 아바타 가운데를 지나는데 답글을 옆으로 밀면 선이 아무것도

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
-import { SideNav } from "@/components/layout/SideNav";
 import { PostList } from "@/components/post/PostList";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listFollowingIds } from "@/lib/queries/follow";
@@ -37,7 +36,7 @@ export default async function FollowingPage() {
 			(await listFollowingIds(supabase, profile.id)).length > 0);
 
 	return (
-		<PageShell nav={<SideNav profile={profile} />} title="팔로잉">
+		<PageShell title="팔로잉">
 			{posts.length === 0 ? (
 				<EmptyState
 					message={
