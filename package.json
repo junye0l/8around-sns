@@ -10,6 +10,7 @@
 		"format": "biome check --write",
 		"typecheck": "next typegen && tsc --noEmit",
 		"test": "vitest run --passWithNoTests",
+		"test:e2e": "playwright test",
 		"verify": "npm run lint && npm run typecheck && npm run test && npm run harness",
 		"db:push": "supabase db push",
 		"db:diff": "supabase db diff",
@@ -34,6 +35,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",
+		"@playwright/test": "^1.63.0",
 		"@tailwindcss/postcss": "^4",
 		"@types/node": "^20",
 		"@types/react": "^19",

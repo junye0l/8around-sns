@@ -71,3 +71,4 @@
 | [0045](0045-sheet-vaul.md) | 바텀 시트 끌어내리기는 vaul로 하고, 닫힘을 거절하면 끌린 자리를 되돌린다 | 확정 |
 | [0046](0046-auth-switch-primary.md) | 인증 화면의 건너가는 글자를 primary로 칠한다 | 확정 |
 | [0047](0047-reply-entry-without-replies.md) | 답글이 없는 댓글에도 답글 화면으로 가는 글자를 둔다 | 확정 |
+| [0048](0048-e2e-against-remote-db.md) | 심사 시나리오 E2E는 로컬에서 원격 DB에 대고 돌리고, 글과 팔로우만 지운다 | 확정 |
