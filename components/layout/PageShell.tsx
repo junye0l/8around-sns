@@ -23,27 +23,25 @@ export function PageShell({
 	backHref?: string;
 	/** 돌아갈 화면 이름. 없으면 화살표만 서고 이름은 스크린리더용 "뒤로"다 */
 	backLabel?: string;
-	/** 큰 제목을 스크린리더에만 둔다. 남의 프로필은 이름을 카드에만 쓴다 (docs/DESIGN.md 프로필) */
+	/** 큰 제목을 스크린리더에만 두고 뒤로 가기를 그 자리에 세운다. 남의 프로필은 이름을 카드에만 쓴다 (docs/DESIGN.md 프로필) */
 	titleHidden?: boolean;
 	children: ReactNode;
 }) {
 	return (
 		<main className="flex w-full min-w-0 max-w-150 flex-1 flex-col px-3 pb-20 md:px-0 md:pb-10">
 			<header className="pt-4 pb-3 md:pt-6 md:pb-4">
-				{backHref && (
-					// -ml-1.5는 화살표 아이콘 안쪽 여백만큼 당겨 화살표 끝이 제목 글자와 같은 선에 서게 한다
-					<Link
-						className="-ml-1.5 mb-1 inline-flex items-center gap-0.5 rounded-lg pr-1 text-callout font-semibold text-primary transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97"
-						href={backHref}
-					>
-						<ChevronLeft aria-hidden className="size-5 shrink-0" />
-						{backLabel ?? <span className="sr-only">뒤로</span>}
-					</Link>
+				{backHref && !titleHidden && (
+					<BackLink className="mb-1" href={backHref} label={backLabel} />
 				)}
-				<div className="flex items-center gap-1">
+				{/* 제목을 숨기면 뒤로 가기가 제목 자리에 선다. 줄 높이를 큰 제목 한 줄(min-h-lh)로 지켜
+				    로딩 스켈레톤(제목이 보이는 모양)과 제목줄 높이가 같다 */}
+				<div className="flex min-h-lh items-center gap-1 text-large-title">
+					{backHref && titleHidden && (
+						<BackLink href={backHref} label={backLabel} />
+					)}
 					<h1
 						className={cn(
-							"min-w-0 flex-1 truncate text-large-title text-fg",
+							"min-w-0 flex-1 truncate text-fg",
 							titleHidden && "sr-only",
 						)}
 					>
@@ -58,5 +56,29 @@ export function PageShell({
 
 			{children}
 		</main>
+	);
+}
+
+// -ml-1.5는 화살표 아이콘 안쪽 여백만큼 당겨 화살표 끝이 제목 글자와 같은 선에 서게 한다
+function BackLink({
+	href,
+	label,
+	className,
+}: {
+	href: string;
+	label?: string;
+	className?: string;
+}) {
+	return (
+		<Link
+			className={cn(
+				"-ml-1.5 inline-flex items-center gap-0.5 rounded-lg pr-1 text-callout font-semibold text-primary transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97",
+				className,
+			)}
+			href={href}
+		>
+			<ChevronLeft aria-hidden className="size-5 shrink-0" />
+			{label ?? <span className="sr-only">뒤로</span>}
+		</Link>
 	);
 }
