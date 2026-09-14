@@ -44,7 +44,7 @@ export function PageShell({
 						    버튼의 누를 자리(p-2)가 이미 그만큼을 대신한다 */}
 					<h1
 						className={cn(
-							"min-w-0 truncate text-body font-semibold text-fg",
+							"min-w-0 truncate text-title text-fg",
 							backHref ? "" : "px-4",
 						)}
 					>
