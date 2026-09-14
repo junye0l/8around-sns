@@ -18,15 +18,7 @@ export function SignUpForm() {
 	return (
 		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 필드 아래에 깐다
 		<form action={formAction} className="flex flex-col gap-4" noValidate>
-			<h1 className="text-center text-body font-semibold text-fg">
-				8around 계정 만들기
-			</h1>
-
-			{failed?.formError && (
-				<p className="text-body-sm text-danger" role="alert">
-					{failed.formError}
-				</p>
-			)}
+			<h1 className="mb-4 text-title text-fg">가입</h1>
 
 			<TextField
 				autoComplete="email"
@@ -59,7 +51,14 @@ export function SignUpForm() {
 				type="password"
 			/>
 
-			<Button className="h-14 w-full" loading={pending} type="submit">
+			{/* 칸 하나에 묶이지 않는 문구는 로그인과 같이 버튼 바로 위에 선다 */}
+			{failed?.formError && (
+				<p className="px-1 text-body-sm text-danger" role="alert">
+					{failed.formError}
+				</p>
+			)}
+
+			<Button className="h-14 w-full text-body" loading={pending} type="submit">
 				{pending ? "가입하는 중" : "가입하기"}
 			</Button>
 		</form>
