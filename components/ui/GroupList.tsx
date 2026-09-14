@@ -11,7 +11,8 @@ export function GroupList({
 	empty,
 	children,
 }: {
-	label: string;
+	/** 맨 위 라벨. 목록이 무엇인지 화면 제목이 이미 말하면 비운다 */
+	label?: string;
 	empty?: ReactNode;
 	children?: ReactNode;
 }) {
@@ -19,9 +20,11 @@ export function GroupList({
 
 	return (
 		<section className="rounded-card bg-canvas shadow-card">
-			<h2 className="px-4.5 pt-3.5 pb-1.5 text-footnote font-semibold text-fg-muted">
-				{label}
-			</h2>
+			{label && (
+				<h2 className="px-4.5 pt-3.5 pb-1.5 text-footnote font-semibold text-fg-muted">
+					{label}
+				</h2>
+			)}
 			{hasRows ? (
 				<ul className="divide-y divide-hairline">{children}</ul>
 			) : (

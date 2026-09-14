@@ -1,3 +1,5 @@
+"use client";
+
 import { cva, type VariantProps } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
@@ -11,12 +13,13 @@ import { cn } from "@/lib/utils/cn";
  * 요소는 살아 있어야 포커스를 잃지 않고 키보드로 닿는다. 결정 0012, 0042.
  * 진행 중(`aria-busy`)은 꺼진 색을 칠하지 않고 변형 색 그대로 스피너만 돈다.
  *
- * `outline`은 리뉴얼 전 변형이다. 쓰는 화면이 옮겨가면 지운다.
  * radix 항목처럼 요소를 직접 그려야 하는 자리는 `buttonStyles`로 같은 모양만 가져간다.
+ *
+ * 클라이언트 컴포넌트다. 누름을 막는 `onClick`을 늘 달아서, 서버 화면이 `DialogTrigger asChild` 안에 넣어도 함수가 경계를 넘지 않는다.
  * @see docs/decisions/0010-focus-ring-primary.md
  */
 export const buttonStyles = cva(
-	"relative inline-flex items-center justify-center rounded-full font-bold transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97 active:brightness-92 aria-disabled:cursor-not-allowed aria-disabled:active:scale-100 aria-disabled:active:brightness-100 aria-disabled:not-aria-busy:bg-hairline aria-disabled:not-aria-busy:text-fg-disabled aria-busy:cursor-progress",
+	"relative inline-flex items-center justify-center gap-1.5 rounded-full font-bold transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97 active:brightness-92 aria-disabled:cursor-not-allowed aria-disabled:active:scale-100 aria-disabled:active:brightness-100 aria-disabled:not-aria-busy:bg-hairline aria-disabled:not-aria-busy:text-fg-disabled aria-busy:cursor-progress",
 	{
 		variants: {
 			size: {
@@ -29,7 +32,6 @@ export const buttonStyles = cva(
 				secondary: "bg-fill text-fg",
 				ghost: "text-primary",
 				danger: "bg-danger-soft text-danger",
-				outline: "border border-hairline text-fg",
 			},
 		},
 		defaultVariants: { size: "md", variant: "primary" },

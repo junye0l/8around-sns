@@ -12,6 +12,7 @@ import {
 	useState,
 } from "react";
 import { Drawer } from "vaul";
+import { Button } from "@/components/ui/Button";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils/cn";
 
@@ -145,6 +146,47 @@ export function DialogShell({
 				</div>
 			</Primitive.Content>
 		</Primitive.Portal>
+	);
+}
+
+/**
+ * 글쓰기 시트와 프로필 편집 시트의 머리 줄. 왼쪽 ghost "취소", 가운데 headline 제목, 오른쪽 primary sm 보내기.
+ * 보내기는 `form` 속성으로 시트 안 폼에 붙는다. 보내는 중에는 취소가 꺼진다.
+ * @see docs/DESIGN.md 글쓰기 시트
+ */
+export function SheetHeader({
+	title,
+	formId,
+	submitLabel,
+	canSubmit,
+	pending,
+	onCancel,
+}: {
+	title: string;
+	formId: string;
+	submitLabel: string;
+	canSubmit: boolean;
+	pending: boolean;
+	onCancel: () => void;
+}) {
+	return (
+		<div className="relative flex h-14 items-center justify-between px-3">
+			<Button disabled={pending} onClick={onCancel} size="sm" variant="ghost">
+				취소
+			</Button>
+			<Primitive.Title className="-translate-x-1/2 absolute left-1/2 text-headline text-fg">
+				{title}
+			</Primitive.Title>
+			<Button
+				disabled={!canSubmit}
+				form={formId}
+				loading={pending}
+				size="sm"
+				type="submit"
+			>
+				{submitLabel}
+			</Button>
+		</div>
 	);
 }
 

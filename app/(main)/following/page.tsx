@@ -38,7 +38,7 @@ export default async function FollowingPage() {
 			(await listFollowingIds(supabase, profile.id)).length > 0);
 
 	return (
-		<PageShell card={false} title="팔로잉">
+		<PageShell title="팔로잉">
 			{posts.length === 0 ? (
 				<EmptyState
 					action={
@@ -59,7 +59,7 @@ export default async function FollowingPage() {
 					}
 				/>
 			) : (
-				<PostList card from="/following" posts={posts} viewerId={profile?.id} />
+				<PostList from="/following" posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);

@@ -15,7 +15,7 @@ export const FONT_SIZES = [
 	"footnote",
 	"caption",
 	"chip",
-	"body-sm",
+	"name",
 ];
 
 const merge = extendTailwindMerge({

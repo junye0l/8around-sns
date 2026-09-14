@@ -24,58 +24,24 @@ export function SkeletonLine({ className }: { className: string }) {
 }
 
 /**
- * `ContentCard` 한 칸의 자리. 칸의 패딩, 아바타, 이름 줄, 본문 한 줄, 액션 줄을 본 UI와
- * 같은 치수로 세워 데이터가 와도 화면이 튀지 않는다. 본문은 한 줄 글의 높이다.
+ * 글 카드 한 장의 자리. 패딩, 아바타, 이름 줄, 본문 한 줄, 알약 줄을 본 카드와 같은 치수로 세운다.
  * @see components/ui/ContentCard.tsx
  */
-export function ContentCardSkeleton({
-	actions = 0,
-	card = false,
-}: {
-	/** 액션 줄의 알약 수. 0이면 줄이 없다. 목록의 글은 좋아요와 댓글 수로 2다 */
-	actions?: 0 | 1 | 2;
-	/** `ContentCard`의 `card`와 같다. 새 카드 모양의 자리다 */
-	card?: boolean;
-}) {
-	if (card) {
-		return (
-			<div className="flex gap-3 rounded-card bg-canvas px-5 py-4 shadow-card">
-				<Skeleton className="size-10 shrink-0 rounded-full" />
-				<div className="min-w-0 flex-1">
-					<div className="text-subhead">
-						<SkeletonLine className="w-28" />
-					</div>
-					<div className="mt-0.5 text-body">
-						<SkeletonLine className="w-3/4" />
-					</div>
-					{actions > 0 && (
-						<div className="mt-3 flex gap-2">
-							<Skeleton className="h-8 w-14 rounded-full" />
-							{actions > 1 && <Skeleton className="h-8 w-14 rounded-full" />}
-						</div>
-					)}
-				</div>
-			</div>
-		);
-	}
-
+export function ContentCardSkeleton({ actions = 0 }: { actions?: 0 | 1 | 2 }) {
 	return (
-		<div className="flex gap-3 border-hairline border-b px-4 py-4 md:px-6 last:border-b-0">
-			<Skeleton className="size-9 shrink-0 rounded-full" />
-
+		<div className="flex gap-3 rounded-card bg-canvas px-5 py-4 shadow-card">
+			<Skeleton className="size-10 shrink-0 rounded-full" />
 			<div className="min-w-0 flex-1">
-				<div className="text-body-sm">
-					<SkeletonLine className="w-24" />
+				<div className="text-subhead">
+					<SkeletonLine className="w-28" />
 				</div>
-
 				<div className="mt-0.5 text-body">
 					<SkeletonLine className="w-3/4" />
 				</div>
-
 				{actions > 0 && (
-					<div className="-ml-2 mt-1 flex">
-						<ActionSkeleton />
-						{actions > 1 && <ActionSkeleton />}
+					<div className="mt-3 flex gap-2">
+						<Skeleton className="h-8 w-14 rounded-full" />
+						{actions > 1 && <Skeleton className="h-8 w-14 rounded-full" />}
 					</div>
 				)}
 			</div>
@@ -141,16 +107,6 @@ export function GroupListSkeleton() {
 	);
 }
 
-// `LikeButton`, `CommentCount`와 같은 패딩과 줄 상자. 숫자 한 자리 폭(w-2)은 비워둔다
-function ActionSkeleton() {
-	return (
-		<div className="inline-flex items-center gap-1 p-2 text-body-sm">
-			<Skeleton className="size-5 shrink-0 rounded-full" />
-			<div className="h-lh w-2" />
-		</div>
-	);
-}
-
 /**
  * `ComposeRow` 카드의 자리. 아바타, 문구 막대, 원형 보내기 자리를 같은 치수로 세운다.
  * @see components/ui/ComposeRow.tsx
@@ -163,18 +119,6 @@ export function ComposeRowSkeleton() {
 				<SkeletonLine className="w-48" />
 			</div>
 			<Skeleton className="size-9.5 shrink-0 rounded-full" />
-		</div>
-	);
-}
-
-/**
- * `SectionHeading`의 자리. 글자는 그리지 않고 높이와 구분선만 남긴다.
- * @see components/ui/SectionHeading.tsx
- */
-export function SectionHeadingSkeleton() {
-	return (
-		<div className="border-hairline border-b px-4 py-3 md:px-6 text-body-sm">
-			<div className="h-lh" />
 		</div>
 	);
 }

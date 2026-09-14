@@ -11,7 +11,7 @@ describe("cn", () => {
 	});
 
 	it("크기 토큰끼리는 뒤가 이긴다", () => {
-		expect(cn("text-body", "text-body-sm")).toBe("text-body-sm");
+		expect(cn("text-body", "text-subhead")).toBe("text-subhead");
 	});
 
 	it("이름이 다른 색 토큰끼리도 뒤가 이긴다", () => {

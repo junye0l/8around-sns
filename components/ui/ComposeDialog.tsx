@@ -15,8 +15,8 @@ import {
 	ConfirmContent,
 	Dialog,
 	DialogShell,
-	DialogTitle,
 	Sheet,
+	SheetHeader,
 } from "@/components/ui/Dialog";
 import { useSubmitAction } from "@/hooks/useSubmitAction";
 
@@ -176,23 +176,14 @@ function ComposeBody({
 
 	return (
 		<>
-			<div className="relative flex h-14 items-center justify-between px-3">
-				<Button disabled={pending} onClick={onCancel} size="sm" variant="ghost">
-					취소
-				</Button>
-				<DialogTitle className="-translate-x-1/2 absolute left-1/2 text-headline text-fg">
-					{title}
-				</DialogTitle>
-				<Button
-					disabled={!canSubmit}
-					form={formId}
-					loading={pending}
-					size="sm"
-					type="submit"
-				>
-					{submitLabel}
-				</Button>
-			</div>
+			<SheetHeader
+				canSubmit={canSubmit}
+				formId={formId}
+				onCancel={onCancel}
+				pending={pending}
+				submitLabel={submitLabel}
+				title={title}
+			/>
 
 			<Composer
 				{...composer}

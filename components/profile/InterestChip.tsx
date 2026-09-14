@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 import { type Tone, toneOf } from "@/lib/utils/tone";
 
 const TONE: Record<Tone, string> = {
@@ -25,9 +26,9 @@ export function InterestTag({ label }: { label: string }) {
 }
 
 /**
- * 관심사 한 개. 테두리 없는 회색 채움 알약이고 누를 수 없다. 파랑을 쓰지 않는다, 동작이 아니다.
- * `onRemove`를 주면 오른쪽에 지우기 버튼이 붙는다. 프로필 편집 모달이 쓴다.
- * 결정 0036, 0038, 0039.
+ * 큰 관심사 칩. 프로필 헤더, 내 프로필 요약, 편집 시트가 쓴다. 14px / 600, 좌우 12px, 위아래 4px, 관심사 톤.
+ * `onRemove`를 주면 오른쪽에 지우기 버튼이 붙는다.
+ * @see docs/DESIGN.md 관심사 칩
  */
 export function InterestChip({
 	label,
@@ -41,14 +42,18 @@ export function InterestChip({
 }) {
 	return (
 		<span
-			className={`inline-flex h-8 max-w-full items-center gap-1 rounded-full bg-background text-body-sm text-fg ${onRemove ? "pr-1 pl-3" : "px-3"}`}
+			className={cn(
+				"inline-flex max-w-full items-center gap-1 rounded-full py-1 text-subhead font-semibold",
+				TONE[toneOf(label)],
+				onRemove ? "pr-1.5 pl-3" : "px-3",
+			)}
 		>
 			<span className="truncate">{label}</span>
 			{onRemove && (
 				<button
 					aria-disabled={disabled || undefined}
 					aria-label={`${label} 지우기`}
-					className="flex size-6 shrink-0 items-center justify-center rounded-full text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-hairline hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:bg-fg/10 aria-disabled:cursor-not-allowed aria-disabled:hover:bg-transparent aria-disabled:hover:text-fg-muted"
+					className="flex size-5 shrink-0 items-center justify-center rounded-full transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97 aria-disabled:cursor-not-allowed"
 					onClick={() => {
 						if (!disabled) onRemove();
 					}}
@@ -61,15 +66,12 @@ export function InterestChip({
 	);
 }
 
-/**
- * 프로필 화면의 관심사 줄. 비면 아무것도 그리지 않는다.
- * 칩 바깥 끝이 위아래 별명, 소개와 같은 왼쪽 끝에 선다. 칩 글자는 안쪽 여백만큼 들어간다. 결정 0039.
- */
+/** 관심사 칩 줄. 비면 아무것도 그리지 않는다 */
 export function InterestChips({ items }: { items: string[] }) {
 	if (items.length === 0) return null;
 
 	return (
-		<ul aria-label="관심사" className="flex flex-wrap gap-2">
+		<ul aria-label="관심사" className="flex flex-wrap gap-1.5">
 			{items.map((item) => (
 				<li className="max-w-full" key={item}>
 					<InterestChip label={item} />

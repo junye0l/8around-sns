@@ -18,6 +18,7 @@ import {
 	DropdownMenuRadioItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
+import { SEGMENT, SEGMENT_ITEM } from "@/components/ui/Segment";
 import { signOutAction } from "@/lib/actions/auth";
 import { setThemeAction } from "@/lib/actions/theme";
 import { cn } from "@/lib/utils/cn";
@@ -30,10 +31,6 @@ const THEMES = [
 ] as const;
 
 const GROUP_LABEL = "mb-2 text-footnote font-semibold text-fg-muted";
-const SEGMENT = "flex h-10 gap-1 rounded-xl bg-hairline p-1";
-const SEGMENT_ITEM =
-	"flex flex-1 cursor-pointer select-none items-center justify-center rounded-lg text-subhead font-semibold text-fg-muted transition duration-(--motion-fast) ease-(--ease-standard) active:scale-97";
-
 /**
  * "더 보기". 디자인(테마 고르기)과 로그아웃이 들어 있다.
  *

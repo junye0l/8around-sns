@@ -14,6 +14,11 @@ const BOX = [
 
 const INVALID = "border-danger focus:border-danger";
 
+// 시트 안의 쉬는 칸. 테두리 없는 fill 면이다가 포커스되면 canvas 면에 primary 테두리가 선다
+const SHEET =
+	"border-transparent bg-fill focus:bg-canvas focus:ring-0 disabled:bg-fill";
+const SHEET_LABEL = "bg-fill peer-focus:bg-canvas";
+
 type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
 	label: string;
 	/** 인라인 에러 문구. 있으면 테두리와 아래 문구가 danger로 바뀐다 */
@@ -22,6 +27,8 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
 	hint?: string;
 	/** 여러 줄로 받는다. 칸이 textarea가 되고 96px에서 시작해 내용만큼 늘지 않는다 */
 	multiline?: boolean;
+	/** 시트 안에 선다. 쉬는 칸이 `fill` 면이다 (docs/DESIGN.md TextField) */
+	sheet?: boolean;
 };
 
 /**
@@ -49,6 +56,7 @@ export function TextField({
 	error,
 	hint,
 	multiline = false,
+	sheet = false,
 	placeholder,
 	type,
 	"aria-invalid": ariaInvalid,
@@ -73,6 +81,7 @@ export function TextField({
 						className={cn(
 							BOX,
 							"block min-h-24 resize-none py-4",
+							sheet && SHEET,
 							invalid && INVALID,
 						)}
 						placeholder={placeholder ?? " "}
@@ -87,6 +96,7 @@ export function TextField({
 						className={cn(
 							BOX,
 							"h-14.5",
+							sheet && SHEET,
 							invalid && INVALID,
 							password && "pr-12",
 						)}
@@ -105,6 +115,7 @@ export function TextField({
 							: "peer-placeholder-shown:top-1/2",
 						"peer-placeholder-shown:text-body",
 						"peer-focus:top-0 peer-focus:text-footnote",
+						sheet && SHEET_LABEL,
 					)}
 					htmlFor={id}
 				>

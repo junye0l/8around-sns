@@ -30,7 +30,7 @@ export default async function LikesPage() {
 	]);
 
 	return (
-		<PageShell card={false} title="좋아요">
+		<PageShell title="좋아요">
 			{posts.length === 0 ? (
 				<EmptyState
 					action={
@@ -43,7 +43,7 @@ export default async function LikesPage() {
 					title="아직 좋아요한 글이 없어요"
 				/>
 			) : (
-				<PostList card from="/likes" posts={posts} viewerId={profile?.id} />
+				<PostList from="/likes" posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);

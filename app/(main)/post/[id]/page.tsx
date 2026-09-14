@@ -71,12 +71,7 @@ export default async function PostPage({
 	};
 
 	return (
-		<PageShell
-			backHref={back.href}
-			backLabel={back.label}
-			card={false}
-			title="게시글"
-		>
+		<PageShell backHref={back.href} backLabel={back.label} title="게시글">
 			<div className="flex flex-col gap-3">
 				<article className="rounded-card bg-canvas px-5 py-4 shadow-card">
 					<AuthorLine

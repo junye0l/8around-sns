@@ -11,7 +11,7 @@ import {
  */
 export default function CommentLoading() {
 	return (
-		<PageShell backHref="/" backLabel="게시글" card={false} title="댓글">
+		<PageShell backHref="/" backLabel="게시글" title="댓글">
 			<div className="flex flex-col gap-3">
 				<DetailCardSkeleton />
 				<div className="max-md:hidden">

@@ -36,7 +36,7 @@ export default async function Home() {
 	const displayName = profile?.display_name ?? "나";
 
 	return (
-		<PageShell card={false} title="전체">
+		<PageShell title="전체">
 			<div className="flex flex-col gap-3">
 				<ComposeRow
 					{...POST_COMPOSE}
@@ -64,7 +64,7 @@ export default async function Home() {
 						title="아직 올라온 글이 없어요"
 					/>
 				) : (
-					<PostList card from="/" posts={posts} viewerId={profile?.id} />
+					<PostList from="/" posts={posts} viewerId={profile?.id} />
 				)}
 			</div>
 		</PageShell>

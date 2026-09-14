@@ -25,9 +25,7 @@ const TONE_BG: Record<Tone, string> = {
 /**
  * 프로필 사진 원. 사진이 없으면 별명 첫 글자를 `seed`(사용자 id)로 고른 톤 위에 흰 글자로 둔다.
  * 크기는 `docs/DESIGN.md` Avatar의 여섯 가지다.
- *
- * `name`을 넘기지 않은 호출부는 리뉴얼 전 모양(중립색 원에 사람 아이콘)을 그대로 보인다.
- * 쓰는 화면이 옮겨가면 그 갈래를 지운다.
+
  *
  * `path`는 `profiles.avatar_path`, avatars 버킷 안의 경로다. 결정 0030.
  * `preview`는 올리기 전 고른 파일의 `blob:` 주소이고, 있으면 `path`보다 앞선다.
@@ -41,7 +39,6 @@ export function Avatar({
 	seed,
 	size = 36,
 	eager = false,
-	className,
 }: {
 	path?: string | null;
 	preview?: string | null;
@@ -51,7 +48,6 @@ export function Avatar({
 	seed?: string;
 	size?: keyof typeof SIZES;
 	eager?: boolean;
-	className?: string;
 }) {
 	const src =
 		preview ??
@@ -70,7 +66,6 @@ export function Avatar({
 				src || !initial
 					? "bg-hairline text-fg-muted"
 					: [TONE_BG[toneOf(seed ?? name ?? "")], "text-on-primary"],
-				className,
 			)}
 		>
 			{src ? (

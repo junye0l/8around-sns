@@ -9,7 +9,7 @@ type ContentCardProps = {
 		id: string;
 		display_name: string;
 		avatar_path: string | null;
-		/** 새 카드 모양일 때 이름 옆 칩으로 선다 */
+		/** 이름 옆 칩으로 선다. 최대 3개 */
 		interests?: string[];
 	};
 	createdAt: string;
@@ -18,21 +18,18 @@ type ContentCardProps = {
 	footer?: ReactNode;
 	/** 오른쪽 위 모서리. 내 글이면 더보기 메뉴가 여기 선다 */
 	menu?: ReactNode;
-	/**
-	 * 새 카드 모양. 글 하나가 카드 한 장이고, `href`를 주면 카드 전체가 그 주소로 가는 링크다.
-	 * 리뉴얼 전 한 줄 모양을 쓰는 프로필 화면이 리뉴얼 6단계(`docs/PLAN.md`)에서 옮기면 이 갈래를 지운다.
-	 */
-	card?: boolean;
+	/** 카드 전체가 가는 주소 */
 	href?: string;
 };
 
 /**
- * 누군가 쓴 글 한 칸. 게시글과 댓글이 같은 모양이라 하나를 같이 쓴다.
+ * 글 카드. 글 하나가 카드 한 장이고 카드 전체가 상세로 가는 링크다. 이름, 알약, 더 보기는 각자 누른다.
  *
- * 이름과 시간이 한 줄에 왼쪽부터 선다. 시간을 오른쪽 끝으로 밀지 않는다,
- * 눈이 이름에서 본문으로 내려가는 길에 시간이 같이 읽힌다. 레퍼런스(Threads)의 배치다.
- *
- * 목록의 마지막 칸은 바깥 테두리와 겹치므로 아래 선을 뺀다.
+ * 카드 전체 링크는 카드 뒤에 깐 링크 하나다. 링크 안에 이름 링크, 알약, 더 보기를
+ * 넣으면 누를 수 있는 것이 겹쳐 HTML이 깨진다. 면은 누름을 통과시키고(`pointer-events-none`)
+ * 각자 누르는 것만 다시 받는다. 링크를 누르는 동안 면이 `scale(.97)`로 줄어든다.
+ * 줄 간격 값은 docs/DESIGN.md 글 카드와 작업 중 사용자가 정한 값이다.
+ * @see docs/DESIGN.md 글 카드
  */
 export function ContentCard({
 	author,
@@ -40,74 +37,8 @@ export function ContentCard({
 	content,
 	footer,
 	menu,
-	card = false,
 	href,
 }: ContentCardProps) {
-	if (card) {
-		return (
-			<CardSurface
-				author={author}
-				content={content}
-				createdAt={createdAt}
-				footer={footer}
-				href={href}
-				menu={menu}
-			/>
-		);
-	}
-
-	return (
-		<article className="flex gap-3 border-hairline border-b px-4 py-4 md:px-6 last:border-b-0">
-			<div className="flex flex-col items-center gap-2">
-				<Avatar path={author.avatar_path} />
-			</div>
-
-			{/* min-w-0 이 없으면 긴 이름이 flex 칸을 밀어내 시각이 잘린다 */}
-			<div className="min-w-0 flex-1">
-				<div className="flex min-w-0 items-baseline gap-2 text-body-sm">
-					{/* 이름을 누르면 그 사람의 프로필로 간다. 아바타는 aria-hidden이라
-					    링크로 감싸면 이름 없는 링크가 하나 더 생긴다 */}
-					<Link
-						className="-m-1 min-w-0 truncate rounded-md p-1 font-semibold text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-						href={`/u/${author.id}`}
-					>
-						{author.display_name}
-					</Link>
-					<time className="shrink-0 text-fg-muted" dateTime={createdAt}>
-						{formatRelativeTime(createdAt)}
-					</time>
-
-					{/* -my-2 -mr-2 는 아이콘 버튼의 누를 자리(p-2)만큼 되돌린다. 메뉴가 있는 칸과
-					    없는 칸의 높이가 같아지고, 아이콘이 카드 오른쪽 여백에 맞춰 선다 */}
-					{menu && <div className="-my-2 -mr-2 ml-auto self-start">{menu}</div>}
-				</div>
-
-				{/* 줄바꿈은 살리고, 띄어쓰기 없는 긴 문자열은 칸을 넘지 않게 끊는다 */}
-				<p className="mt-0.5 whitespace-pre-wrap break-words text-body text-fg">
-					{content}
-				</p>
-
-				{/* -ml-2 는 아이콘 버튼의 누를 자리(p-2)만큼 되돌려 아이콘이 본문과 같은 선에 서게 한다 */}
-				{footer && <div className="-ml-2 mt-1 flex">{footer}</div>}
-			</div>
-		</article>
-	);
-}
-
-/*
- * 새 카드 모양. 카드 전체 링크는 카드 뒤에 깐 링크 하나다. 링크 안에 이름 링크, 알약, 더 보기를
- * 넣으면 누를 수 있는 것이 겹쳐 HTML이 깨진다. 면은 누름을 통과시키고(`pointer-events-none`)
- * 각자 누르는 것만 다시 받는다. 링크를 누르는 동안 면이 `scale(.97)`로 줄어든다.
- * 줄 간격 값은 docs/DESIGN.md 글 카드와 작업 중 사용자가 정한 값이다
- */
-function CardSurface({
-	author,
-	createdAt,
-	content,
-	footer,
-	menu,
-	href,
-}: Omit<ContentCardProps, "card">) {
 	return (
 		<article className="relative">
 			{href && (

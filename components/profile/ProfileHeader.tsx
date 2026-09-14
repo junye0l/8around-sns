@@ -2,17 +2,15 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { InterestChips } from "@/components/profile/InterestChip";
 import { Avatar } from "@/components/ui/Avatar";
+import { PILL } from "@/components/ui/CommentCount";
 import type { ProfileDetail } from "@/lib/queries/profile";
+import { cn } from "@/lib/utils/cn";
 
 /**
- * 수를 누르면 그 목록으로 간다. 팔로워와 팔로잉이 같은 모양이라 하나를 같이 쓴다.
- * 링크가 아니라 버튼처럼 보이지 않게 파랑을 쓰지 않는다 — 파랑은 동작에만 칠한다.
- *
- * 숫자는 `tabular-nums`로 고정폭을 쓴다. 폰트 스택이 실제로 집는 SF는 기본 숫자가
- * 비례폭이라 `1`이 `9`보다 좁고, 팔로우 한 번에 수가 0에서 1로 바뀌면 그 차이만큼
- * 옆 글자와 다음 링크가 밀렸다. 자릿수가 같으면 이제 아무것도 움직이지 않는다.
+ * 팔로워 · 팔로잉 수 알약. 숫자를 굵게 앞에 두고 글자는 `fg`다. 누르면 그 목록으로 간다.
+ * 숫자는 `tabular-nums`라 팔로우 한 번에 수가 바뀌어도 옆이 밀리지 않는다.
  */
-function CountLink({
+function CountPill({
 	href,
 	count,
 	label,
@@ -22,67 +20,77 @@ function CountLink({
 	label: string;
 }) {
 	return (
-		<Link
-			// 누를 자리를 넓히되 -m-2 로 되돌려서 줄 간격은 그대로 둔다
-			className="-m-2 rounded-md p-2 text-body-sm text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-			href={href}
-		>
-			{label} <span className="tabular-nums">{count}</span>
+		<Link className={cn(PILL, "font-medium text-fg")} href={href}>
+			{label}
+			<span className="font-bold tabular-nums">{count}</span>
 		</Link>
 	);
 }
 
 /**
- * 프로필 맨 위 칸. 오른쪽에 큰 아바타, 왼쪽 한 컬럼에 별명, 소개, 팔로워 · 팔로잉 수가
- * 같은 왼쪽 끝으로 쌓이고 맨 아래 전폭 버튼이 선다. 레퍼런스(Threads)의 배치다.
- * 검정 버튼과 여백 치수는 결정 0015를 따른다.
+ * 프로필 헤더 카드. 아바타 76과 이름, 이름 아래 큰 관심사 칩, 그 아래 전체 폭 소개, 수 알약 둘, 전체 폭 버튼.
+ * 소개는 자르지 않는다. 최대 폭 34em이다.
  *
- * 아래 자리는 부르는 쪽이 채운다. 남의 프로필이면 팔로우 버튼, 내 프로필이면
- * 프로필 편집 버튼이 온다. 둘 다 40px이다. 이 컴포넌트가 "누가 보고 있는지"를 알 필요가 없다.
+ * 버튼 자리(`action`)와 칩이 비었을 때의 자리(`emptyInterests`)는 부르는 쪽이 채운다.
+ * 내 프로필이면 프로필 편집과 관심사 추가, 남의 프로필이면 팔로우 버튼이 온다.
+ * @see docs/DESIGN.md 프로필
  */
 export function ProfileHeader({
 	profile,
 	action,
+	emptyInterests,
 }: {
 	profile: ProfileDetail;
-	/** 맨 아래 전폭으로 설 것. 팔로우 버튼이나 프로필 편집 버튼이 들어온다 */
 	action?: ReactNode;
+	/** 관심사가 없을 때 칩 자리에 설 것. 남의 프로필은 비워 칩 줄이 없다 */
+	emptyInterests?: ReactNode;
 }) {
+	const chips =
+		profile.interests.length > 0 ? (
+			<InterestChips items={profile.interests} />
+		) : (
+			emptyInterests
+		);
+
 	return (
-		<section className="border-hairline border-b px-4 py-5 md:px-6">
-			<div className="flex items-start gap-4">
-				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 아바타가 잘린다 */}
+		<section className="rounded-card bg-canvas p-5 shadow-card">
+			<div className="flex items-center gap-4">
+				<Avatar
+					eager
+					name={profile.display_name}
+					path={profile.avatar_path}
+					seed={profile.id}
+					size={76}
+				/>
+				{/* min-w-0 이 없으면 긴 별명이 flex 칸을 밀어내 아바타가 줄어든다 */}
 				<div className="min-w-0 flex-1">
-					<p className="truncate text-title text-fg">{profile.display_name}</p>
-
-					{/* 아바타 줄 아래로 내리면 84px만큼 떠서 별명과 멀어진다 */}
-					{profile.bio && (
-						<p className="mt-1 whitespace-pre-wrap break-words text-body text-fg">
-							{profile.bio}
-						</p>
-					)}
-
-					{profile.interests.length > 0 && (
-						<div className="mt-3">
-							<InterestChips items={profile.interests} />
-						</div>
-					)}
-
-					<div className="mt-4 flex gap-6">
-						<CountLink
-							count={profile.follower_count}
-							href={`/u/${profile.id}/followers`}
-							label="팔로워"
-						/>
-						<CountLink
-							count={profile.following_count}
-							href={`/u/${profile.id}/following`}
-							label="팔로잉"
-						/>
-					</div>
+					<p className="break-keep text-name text-fg wrap-anywhere">
+						{profile.display_name}
+					</p>
+					{chips && <div className="mt-1.5">{chips}</div>}
 				</div>
-				{/* 84px. 레퍼런스 프로필 아바타의 관측치이고 4px 그리드 위에 있다 */}
-				<Avatar className="size-21" eager path={profile.avatar_path} />
+			</div>
+
+			{profile.bio && (
+				<p
+					// 허용: 소개 최대 폭 34em은 docs/DESIGN.md 프로필 값이다
+					className="mt-4 max-w-[34em] whitespace-pre-line break-keep text-callout text-fg wrap-anywhere"
+				>
+					{profile.bio}
+				</p>
+			)}
+
+			<div className="mt-4 flex flex-wrap gap-2">
+				<CountPill
+					count={profile.follower_count}
+					href={`/u/${profile.id}/followers`}
+					label="팔로워"
+				/>
+				<CountPill
+					count={profile.following_count}
+					href={`/u/${profile.id}/following`}
+					label="팔로잉"
+				/>
 			</div>
 
 			{action && <div className="mt-4">{action}</div>}

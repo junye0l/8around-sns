@@ -79,7 +79,7 @@ export default async function CommentPage({
 	);
 
 	return (
-		<PageShell backHref={postHref} backLabel="게시글" card={false} title="댓글">
+		<PageShell backHref={postHref} backLabel="게시글" title="댓글">
 			<div className="flex flex-col gap-3">
 				<article className="rounded-card bg-canvas px-5 py-4 shadow-card">
 					<Link

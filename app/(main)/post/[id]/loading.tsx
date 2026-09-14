@@ -11,7 +11,7 @@ import {
  */
 export default function PostLoading() {
 	return (
-		<PageShell backHref="/" card={false} title="게시글">
+		<PageShell backHref="/" title="게시글">
 			<div className="flex flex-col gap-3">
 				<DetailCardSkeleton actions={2} />
 				<div className="max-md:hidden">
