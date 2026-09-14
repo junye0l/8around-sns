@@ -55,3 +55,79 @@ export async function createComment(
 
 	return { ok: true };
 }
+
+export type UpdateCommentResult = { ok: true } | { ok: false; error: string };
+
+const updateCommentSchema = z.object({
+	commentId: z.uuid("사라진 댓글이에요"),
+	content: contentSchema(COMMENT_CONTENT_MAX),
+});
+
+/**
+ * 댓글과 답글 수정. 본문만 바꾼다. 어느 글, 어느 댓글 아래인지는 트리거가 고정한다
+ * (`supabase/migrations/0002_comments_immutable_thread.sql`).
+ *
+ * 작성자를 받지 않는다. "본인 댓글만 수정한다"(`supabase/migrations/0001_init.sql`)가 본다 (규칙 9).
+ * 남의 댓글이면 RLS가 0행으로 만들고, 그 경우를 문구로 바꾼다. `updatePost`와 같다.
+ */
+export async function updateComment(
+	supabase: SupabaseClient<Database>,
+	input: { commentId: unknown; content: unknown },
+): Promise<UpdateCommentResult> {
+	const parsed = updateCommentSchema.safeParse(input);
+	if (!parsed.success) {
+		return { ok: false, error: parsed.error.issues[0].message };
+	}
+
+	const { data, error } = await supabase
+		.from("comments")
+		.update({ content: parsed.data.content })
+		.eq("id", parsed.data.commentId)
+		.select("id")
+		.maybeSingle();
+
+	if (error) {
+		return {
+			ok: false,
+			error: "댓글을 고치지 못했어요. 잠시 뒤에 다시 해주세요",
+		};
+	}
+	if (!data) return { ok: false, error: "내가 쓴 댓글만 고칠 수 있어요" };
+
+	return { ok: true };
+}
+
+export type DeleteCommentResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * 댓글과 답글 삭제. 최상위 댓글을 지우면 달린 답글은 외래키의 `on delete cascade`가
+ * 같이 지운다 (`supabase/migrations/0001_init.sql:79`).
+ *
+ * 권한과 0행 판정은 `updateComment`와 같다 ("본인 댓글만 지운다").
+ */
+export async function deleteComment(
+	supabase: SupabaseClient<Database>,
+	input: unknown,
+): Promise<DeleteCommentResult> {
+	const parsed = z.uuid("사라진 댓글이에요").safeParse(input);
+	if (!parsed.success) {
+		return { ok: false, error: parsed.error.issues[0].message };
+	}
+
+	const { data, error } = await supabase
+		.from("comments")
+		.delete()
+		.eq("id", parsed.data)
+		.select("id")
+		.maybeSingle();
+
+	if (error) {
+		return {
+			ok: false,
+			error: "댓글을 지우지 못했어요. 잠시 뒤에 다시 해주세요",
+		};
+	}
+	if (!data) return { ok: false, error: "내가 쓴 댓글만 지울 수 있어요" };
+
+	return { ok: true };
+}

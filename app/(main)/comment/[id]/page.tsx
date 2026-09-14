@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { commentMenu } from "@/components/comment/CommentThread";
+import { COMMENT_MENU, REPLY_MENU } from "@/components/comment/comment-menu";
 import { PageShell } from "@/components/layout/PageShell";
 import { ComposeRow } from "@/components/ui/ComposeRow";
 import { ContentCard } from "@/components/ui/ContentCard";
@@ -28,6 +30,9 @@ export const metadata: Metadata = {
  * 순서대로 읽는 이유는 `app/(main)/post/[id]/page.tsx`와 같다 — uuid가 아닌 주소가 뒤쪽
  * 쿼리까지 가면 캐스팅에서 터져 에러 화면으로 샌다. 댓글을 먼저 확인하고 나면
  * 뒤에 넘기는 id는 이미 검증된 값이다.
+ *
+ * 내 댓글과 답글에는 더보기 메뉴가 붙는다. 이 화면에서 댓글을 지우면 그 자리에 404가 뜬다,
+ * 결정 0022의 게시글 상세와 같다 (결정 0037).
  *
  * 로딩은 `loading.tsx`, 없는 댓글은 `not-found.tsx`, 에러는 `app/error.tsx`가 받는다 (규칙 10).
  */
@@ -67,6 +72,7 @@ export default async function CommentPage({
 				author={comment.author}
 				content={comment.content}
 				createdAt={comment.created_at}
+				menu={commentMenu(comment, profile?.id, COMMENT_MENU)}
 			/>
 
 			<ComposeRow
@@ -95,6 +101,7 @@ export default async function CommentPage({
 						content={reply.content}
 						createdAt={reply.created_at}
 						key={reply.id}
+						menu={commentMenu(reply, profile?.id, REPLY_MENU)}
 					/>
 				))
 			)}

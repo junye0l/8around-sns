@@ -2,7 +2,6 @@
 
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
 import { useActionState, useRef, useState } from "react";
-import { POST_COMPOSE } from "@/components/post/post-compose";
 import { ComposeDialog } from "@/components/ui/ComposeDialog";
 import {
 	Dialog,
@@ -17,24 +16,50 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
-import { deletePostAction, updatePostAction } from "@/lib/actions/post";
+
+type MenuResult = { ok: true } | { ok: false; error: string };
+type MenuAction = (
+	prev: MenuResult | null,
+	formData: FormData,
+) => Promise<MenuResult>;
 
 /**
- * 내가 쓴 글 오른쪽 위의 더보기. 수정과 삭제가 들어 있다.
+ * 더보기 메뉴가 무엇을 고치고 지우는지. 게시글은 `components/post/post-compose.ts`,
+ * 댓글은 `components/comment/comment-menu.ts`가 채운다.
+ */
+export type ContentMenuConfig = {
+	/** "글", "댓글". 더보기 버튼의 이름에 들어간다 */
+	noun: string;
+	/** 액션이 id를 읽는 폼 필드 이름 */
+	idName: string;
+	updateAction: MenuAction;
+	deleteAction: MenuAction;
+	maxLength: number;
+	placeholder: string;
+	editTitle: string;
+	deleteTitle: string;
+	/** 확인 모달의 설명. 같이 사라지는 것이 있으면 그것을 말한다 */
+	deleteDescription: string;
+};
+
+/**
+ * 내가 쓴 글이나 댓글 오른쪽 위의 더보기. 수정과 삭제가 들어 있다. 결정 0022, 0037.
  *
- * 부르는 쪽이 내 글일 때만 그린다. 그건 친절함이고, 남의 글을 고치거나 지우는 요청을
- * 실제로 막는 것은 RLS다 (규칙 9, `lib/services/post.ts`).
+ * 부르는 쪽이 내 것일 때만 그린다. 그건 친절함이고, 남의 것을 고치거나 지우는 요청을
+ * 실제로 막는 것은 RLS다 (규칙 9, `lib/services/post.ts`, `lib/services/comment.ts`).
  *
  * 모달을 메뉴 안에 두지 않는다. 항목을 고르면 메뉴가 닫히면서 그 안의 것이 같이
  * 사라지므로, 열림 상태를 여기서 들고 `ComposeDialog`에 넘긴다.
  */
-export function PostMenu({
-	postId,
+export function ContentMenu({
+	config,
+	id,
 	content,
 	authorName,
 	authorAvatar,
 }: {
-	postId: string;
+	config: ContentMenuConfig;
+	id: string;
 	/** 지금 본문. 수정 모달이 이걸 채운 채로 열린다 */
 	content: string;
 	/** 수정 모달 아바타에 쓸 이름 */
@@ -47,7 +72,7 @@ export function PostMenu({
 	const trigger = useRef<HTMLButtonElement>(null);
 
 	// 모달을 연 메뉴 항목은 이미 사라져 radix가 포커스를 돌려줄 곳이 없다. 더보기 버튼으로 보낸다.
-	// 글이 지워지면 버튼도 없어져 돌려줄 곳이 없다
+	// 지워지면 버튼도 없어져 돌려줄 곳이 없다
 	const returnFocus = (event: Event) => {
 		event.preventDefault();
 		trigger.current?.focus();
@@ -58,7 +83,7 @@ export function PostMenu({
 			<DropdownMenu>
 				{/* 아이콘만 있는 버튼이라 이름을 따로 준다. 모양은 좋아요·댓글 수와 맞춘다 */}
 				<DropdownMenuTrigger
-					aria-label="이 글 더 보기"
+					aria-label={`이 ${config.noun} 더 보기`}
 					ref={trigger}
 					className="inline-flex cursor-pointer items-center rounded-full p-2 text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 				>
@@ -78,34 +103,36 @@ export function PostMenu({
 				</DropdownMenuContent>
 			</DropdownMenu>
 
-			{/* 입력칸과 모달은 새 글과 같은 것을 쓴다 (규칙 2). 액션과 문구만 갈린다 */}
+			{/* 입력칸과 모달은 새로 쓸 때와 같은 것을 쓴다 (규칙 2). 액션과 문구만 갈린다 */}
 			<ComposeDialog
-				{...POST_COMPOSE}
-				action={updatePostAction}
+				action={config.updateAction}
 				authorAvatar={authorAvatar}
 				authorName={authorName}
 				initialContent={content}
+				maxLength={config.maxLength}
 				onCloseAutoFocus={returnFocus}
 				onOpenChange={setEditing}
 				open={editing}
+				placeholder={config.placeholder}
 				submitLabel="수정"
-				title="글 수정"
+				title={config.editTitle}
 			>
-				<input name="post_id" type="hidden" value={postId} />
+				<input name={config.idName} type="hidden" value={id} />
 			</ComposeDialog>
 
 			<DeleteDialog
+				config={config}
+				id={id}
 				onCloseAutoFocus={returnFocus}
 				onOpenChange={setDeleting}
 				open={deleting}
-				postId={postId}
 			/>
 		</>
 	);
 }
 
 /**
- * 삭제 확인. 되돌릴 수 없고 댓글과 좋아요까지 같이 사라지므로 한 번 묻는다.
+ * 삭제 확인. 되돌릴 수 없고 딸린 것까지 같이 사라지므로 한 번 묻는다.
  *
  * 입력 모달과 모양이 다르다. 물음과 답 둘뿐이라 제목줄을 위에 따로 두지 않고,
  * 질문이 곧 제목이고 아래 한 줄에 취소와 삭제가 나란히 선다. 껍데기는 같은 것을 쓴다.
@@ -113,17 +140,22 @@ export function PostMenu({
  * 지워지면 목록을 다시 그리면서 이 컴포넌트가 통째로 사라진다. 닫는 처리를 따로 하지 않는다.
  */
 function DeleteDialog({
-	postId,
+	config,
+	id,
 	open,
 	onOpenChange,
 	onCloseAutoFocus,
 }: {
-	postId: string;
+	config: ContentMenuConfig;
+	id: string;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	onCloseAutoFocus: (event: Event) => void;
 }) {
-	const [result, formAction, pending] = useActionState(deletePostAction, null);
+	const [result, formAction, pending] = useActionState(
+		config.deleteAction,
+		null,
+	);
 
 	return (
 		<Dialog onOpenChange={onOpenChange} open={open}>
@@ -133,14 +165,14 @@ function DeleteDialog({
 				onCloseAutoFocus={onCloseAutoFocus}
 			>
 				<form action={formAction}>
-					<input name="post_id" type="hidden" value={postId} />
+					<input name={config.idName} type="hidden" value={id} />
 
 					<div className="px-6 py-6 text-center">
 						<DialogTitle className="text-body font-semibold text-fg">
-							게시물을 삭제하시겠어요?
+							{config.deleteTitle}
 						</DialogTitle>
 						<DialogDescription className="mt-1 text-body-sm text-fg-muted">
-							좋아요와 댓글도 함께 삭제됩니다.
+							{config.deleteDescription}
 						</DialogDescription>
 
 						{result && !result.ok && (

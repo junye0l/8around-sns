@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { CommentThread } from "@/components/comment/CommentThread";
 import { PageShell } from "@/components/layout/PageShell";
 import { LikeButton } from "@/components/post/LikeButton";
-import { PostMenu } from "@/components/post/PostMenu";
+import { POST_MENU } from "@/components/post/post-compose";
 import { ComposeRow } from "@/components/ui/ComposeRow";
 import { ContentCard } from "@/components/ui/ContentCard";
+import { ContentMenu } from "@/components/ui/ContentMenu";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { createCommentAction } from "@/lib/actions/comment";
@@ -63,11 +64,12 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 				}
 				menu={
 					post.author.id === profile?.id ? (
-						<PostMenu
+						<ContentMenu
 							authorAvatar={post.author.avatar_path}
 							authorName={post.author.display_name}
+							config={POST_MENU}
 							content={post.content}
-							postId={post.id}
+							id={post.id}
 						/>
 					) : undefined
 				}
@@ -91,7 +93,11 @@ export default async function PostPage({ params }: PageProps<"/post/[id]">) {
 				<EmptyState message="아직 댓글이 없어요. 먼저 남겨보세요." />
 			) : (
 				comments.map((comment) => (
-					<CommentThread comment={comment} key={comment.id} />
+					<CommentThread
+						comment={comment}
+						key={comment.id}
+						viewerId={profile?.id}
+					/>
 				))
 			)}
 		</PageShell>

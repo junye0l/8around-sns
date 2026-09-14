@@ -1,8 +1,13 @@
 import Link from "next/link";
+import { COMMENT_MENU, REPLY_MENU } from "@/components/comment/comment-menu";
 import { Avatar } from "@/components/ui/Avatar";
 import { CommentCount } from "@/components/ui/CommentCount";
 import { ContentCard } from "@/components/ui/ContentCard";
-import type { PostComment } from "@/lib/queries/comment";
+import {
+	ContentMenu,
+	type ContentMenuConfig,
+} from "@/components/ui/ContentMenu";
+import type { CommentReply, PostComment } from "@/lib/queries/comment";
 import { cn } from "@/lib/utils/cn";
 
 /** 스택에 세울 아바타 수. 레퍼런스(Threads)가 셋까지 겹친다 */
@@ -24,8 +29,17 @@ const STACK_MAX = 3;
  *
  * 바깥 테두리는 이 묶음이 그린다. 안쪽 카드는 이어진 동안 구분선이 없고, 마지막 칸은
  * `last:border-b-0`이라 아래 선이 빠진다. 그 자리를 이 div가 대신 채운다.
+ *
+ * 내가 쓴 댓글과 답글에는 더보기 메뉴가 붙는다. 결정 0037.
  */
-export function CommentThread({ comment }: { comment: PostComment }) {
+export function CommentThread({
+	comment,
+	viewerId,
+}: {
+	comment: PostComment;
+	/** 지금 보는 사람의 id. 없으면 어느 칸에도 메뉴가 붙지 않는다 */
+	viewerId?: string;
+}) {
 	const { replies } = comment;
 	const last = replies.length - 1;
 
@@ -41,6 +55,7 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 				connected={replies.length > 0}
 				content={comment.content}
 				createdAt={comment.created_at}
+				menu={commentMenu(comment, viewerId, COMMENT_MENU)}
 				footer={
 					<CommentCount
 						count={replies.length}
@@ -85,9 +100,29 @@ export function CommentThread({ comment }: { comment: PostComment }) {
 						content={reply.content}
 						createdAt={reply.created_at}
 						key={reply.id}
+						menu={commentMenu(reply, viewerId, REPLY_MENU)}
 					/>
 				))
 			)}
 		</div>
+	);
+}
+
+/** 내 칸이면 더보기 메뉴, 아니면 없음. 답글 화면도 같은 판정을 쓴다 */
+export function commentMenu(
+	comment: CommentReply,
+	viewerId: string | undefined,
+	config: ContentMenuConfig,
+) {
+	if (comment.author.id !== viewerId) return undefined;
+
+	return (
+		<ContentMenu
+			authorAvatar={comment.author.avatar_path}
+			authorName={comment.author.display_name}
+			config={config}
+			content={comment.content}
+			id={comment.id}
+		/>
 	);
 }

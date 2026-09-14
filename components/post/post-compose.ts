@@ -1,4 +1,9 @@
-import { createPostAction } from "@/lib/actions/post";
+import type { ContentMenuConfig } from "@/components/ui/ContentMenu";
+import {
+	createPostAction,
+	deletePostAction,
+	updatePostAction,
+} from "@/lib/actions/post";
 import { POST_CONTENT_MAX } from "@/lib/utils/content-limits";
 
 /**
@@ -12,3 +17,16 @@ export const POST_COMPOSE = {
 	submitLabel: "게시",
 	title: "새로운 게시글",
 } as const;
+
+/** 내 글 더보기 메뉴의 설정. 목록과 상세가 같이 쓴다 */
+export const POST_MENU: ContentMenuConfig = {
+	noun: "글",
+	idName: "post_id",
+	updateAction: updatePostAction,
+	deleteAction: deletePostAction,
+	maxLength: POST_CONTENT_MAX,
+	placeholder: POST_COMPOSE.placeholder,
+	editTitle: "글 수정",
+	deleteTitle: "게시물을 삭제하시겠어요?",
+	deleteDescription: "좋아요와 댓글도 함께 삭제됩니다.",
+};
