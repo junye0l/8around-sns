@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 /**
  * 관심사 한 개. 테두리 없는 회색 채움 알약이고 누를 수 없다. 파랑을 쓰지 않는다, 동작이 아니다.
  * `onRemove`를 주면 오른쪽에 지우기 버튼이 붙는다. 프로필 편집 모달이 쓴다.
- * 결정 0036.
+ * 결정 0036, 0038.
  */
 export function InterestChip({
 	label,
