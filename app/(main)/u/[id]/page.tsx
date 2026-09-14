@@ -49,6 +49,7 @@ export default async function ProfilePage({ params }: PageProps<"/u/[id]">) {
 					isMe ? (
 						<ProfileEditDialog
 							avatarPath={profile.avatar_path}
+							bio={profile.bio}
 							displayName={profile.display_name}
 						/>
 					) : (

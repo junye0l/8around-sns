@@ -15,6 +15,9 @@ export const COMMENT_CONTENT_MAX = 1000;
 /** 별명 1~30자(`supabase/migrations/0001_init.sql`의 `profiles_display_name_length`) */
 export const DISPLAY_NAME_MAX = 30;
 
+/** 자기소개 160자(`supabase/migrations/0001_init.sql`의 `profiles_bio_length`) */
+export const BIO_MAX = 160;
+
 /** 프로필 이미지 상한. 버킷의 `file_size_limit`과 같다(`supabase/migrations/0007_profile_avatars.sql`) */
 export const AVATAR_MAX_BYTES = 500 * 1024;
 
