@@ -7,15 +7,21 @@ import {
 } from "@/lib/utils/display-name";
 import type { Database } from "@/types/database";
 
+// 비었을 때와 모양이 틀렸을 때 문구를 나눈다. 빈 칸에 "다시 확인"은 무엇을 확인할지 모른다
+const emailSchema = z
+	.string("이메일을 입력해 주세요")
+	.min(1, "이메일을 입력해 주세요")
+	.pipe(z.email("이메일 형식을 확인해 주세요"));
+
 export const signUpSchema = z.object({
-	email: z.email("이메일 주소를 다시 확인해 주세요"),
+	email: emailSchema,
 	// supabase/config.toml:181 minimum_password_length = 6
 	password: z.string().min(6, "비밀번호는 6자 이상으로 만들어 주세요"),
 	display_name: displayNameSchema,
 });
 
 export const signInSchema = z.object({
-	email: z.email("이메일 주소를 다시 확인해 주세요"),
+	email: emailSchema,
 	password: z.string().min(1, "비밀번호를 입력해 주세요"),
 });
 
@@ -53,7 +59,7 @@ function fromAuthCode(error: AuthError): SignUpResult | null {
 		case "email_address_invalid":
 			return {
 				ok: false,
-				errors: { email: "이메일 주소를 다시 확인해 주세요" },
+				errors: { email: "이메일 형식을 확인해 주세요" },
 			};
 		// 내장 메일러는 팀 멤버 주소로만 보낸다. 이메일 확인이 켜져 있으면
 		// 확인 메일을 보내려다 여기로 떨어진다 — 주소가 아니라 설정 문제다
