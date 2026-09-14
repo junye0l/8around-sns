@@ -46,7 +46,7 @@ export function InterestsField({
 				<div className="min-w-0 flex-1">
 					<TextField
 						error={error}
-						hint={`한 개에 ${INTEREST_CHARS_MAX}글자까지, ${INTERESTS_MAX}개까지 가능해요`}
+						hint={`한 개에 ${INTEREST_CHARS_MAX}글자까지, 최대 ${INTERESTS_MAX}개 가능해요`}
 						label="관심사"
 						maxLength={INTEREST_CHARS_MAX}
 						onChange={(event) => setDraft(event.target.value)}

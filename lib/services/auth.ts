@@ -11,7 +11,7 @@ import type { Database } from "@/types/database";
 const emailSchema = z
 	.string("이메일을 입력해 주세요")
 	.min(1, "이메일을 입력해 주세요")
-	.pipe(z.email("이메일 주소를 다시 확인해 주세요"));
+	.pipe(z.email("이메일 형식을 확인해 주세요"));
 
 export const signUpSchema = z.object({
 	email: emailSchema,
@@ -59,7 +59,7 @@ function fromAuthCode(error: AuthError): SignUpResult | null {
 		case "email_address_invalid":
 			return {
 				ok: false,
-				errors: { email: "이메일 주소를 다시 확인해 주세요" },
+				errors: { email: "이메일 형식을 확인해 주세요" },
 			};
 		// 내장 메일러는 팀 멤버 주소로만 보낸다. 이메일 확인이 켜져 있으면
 		// 확인 메일을 보내려다 여기로 떨어진다 — 주소가 아니라 설정 문제다

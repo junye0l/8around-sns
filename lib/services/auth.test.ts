@@ -55,9 +55,7 @@ describe("signUp", () => {
 		const wrong = await signUp(stub({}), { ...input, email: "not-an-email" });
 
 		expect(empty.ok || empty.errors.email).toBe("이메일을 입력해 주세요");
-		expect(wrong.ok || wrong.errors.email).toBe(
-			"이메일 주소를 다시 확인해 주세요",
-		);
+		expect(wrong.ok || wrong.errors.email).toBe("이메일 형식을 확인해 주세요");
 	});
 
 	it("이메일 중복은 이메일 필드에 붙인다", async () => {
