@@ -26,23 +26,14 @@ export function SkeletonLine({ className }: { className: string }) {
 /**
  * `ContentCard` 한 칸의 자리. 칸의 패딩, 아바타, 이름 줄, 본문 한 줄, 액션 줄을 본 UI와
  * 같은 치수로 세워 데이터가 와도 화면이 튀지 않는다. 본문은 한 줄 글의 높이다.
- * 액션은 아이콘 자리만 그리고 숫자는 그리지 않는다.
  * @see components/ui/ContentCard.tsx
  */
 export function ContentCardSkeleton({
 	actions = 0,
-	connected = false,
 	card = false,
 }: {
-	/**
-	 * 액션 줄의 버튼 수. 0이면 줄이 없다. 목록의 글은 좋아요와 댓글 수로 2,
-	 * 상세의 글(좋아요)과 댓글(답글 수)은 1이다.
-	 * @see components/post/PostList.tsx
-	 * @see app/(main)/post/[id]/page.tsx
-	 */
+	/** 액션 줄의 알약 수. 0이면 줄이 없다. 목록의 글은 좋아요와 댓글 수로 2다 */
 	actions?: 0 | 1 | 2;
-	/** `ContentCard`의 `connected`와 같다. 아래 구분선이 빠진다 */
-	connected?: boolean;
 	/** `ContentCard`의 `card`와 같다. 새 카드 모양의 자리다 */
 	card?: boolean;
 }) {
@@ -69,12 +60,7 @@ export function ContentCardSkeleton({
 	}
 
 	return (
-		<div
-			className={cn(
-				"flex gap-3 px-4 py-4 md:px-6",
-				!connected && "border-hairline border-b last:border-b-0",
-			)}
-		>
+		<div className="flex gap-3 border-hairline border-b px-4 py-4 md:px-6 last:border-b-0">
 			<Skeleton className="size-9 shrink-0 rounded-full" />
 
 			<div className="min-w-0 flex-1">
@@ -97,6 +83,64 @@ export function ContentCardSkeleton({
 	);
 }
 
+/**
+ * 상세 화면 맨 위 카드의 자리. 머리 줄(아바타 32)과 본문 두 줄, 알약 줄을 세운다.
+ * 게시글 상세의 원글 카드와 댓글 상세의 맥락 카드가 같이 쓴다.
+ * @see app/(main)/post/[id]/page.tsx
+ */
+export function DetailCardSkeleton({ actions = 0 }: { actions?: 0 | 2 }) {
+	return (
+		<div className="rounded-card bg-canvas px-5 py-4 shadow-card">
+			<div className="flex items-center gap-2">
+				<Skeleton className="size-8 shrink-0 rounded-full" />
+				<div className="text-subhead">
+					<SkeletonLine className="w-28" />
+				</div>
+			</div>
+			<div className="mt-3 text-title">
+				<SkeletonLine className="w-full" />
+				<SkeletonLine className="w-2/3" />
+			</div>
+			{actions > 0 && (
+				<div className="mt-4 flex gap-2">
+					<Skeleton className="h-8 w-14 rounded-full" />
+					<Skeleton className="h-8 w-14 rounded-full" />
+				</div>
+			)}
+		</div>
+	);
+}
+
+/**
+ * `GroupList`와 댓글 행의 자리. 라벨 줄과 행 둘을 같은 치수로 세운다.
+ * @see components/ui/GroupList.tsx
+ * @see components/comment/CommentThread.tsx
+ */
+export function GroupListSkeleton() {
+	return (
+		<div className="rounded-card bg-canvas shadow-card">
+			<div className="px-4.5 pt-3.5 pb-1.5 text-footnote">
+				<SkeletonLine className="w-12" />
+			</div>
+			<div className="divide-y divide-hairline">
+				{[0, 1].map((row) => (
+					<div className="flex gap-3 px-4.5 py-3" key={row}>
+						<Skeleton className="size-8.5 shrink-0 rounded-full" />
+						<div className="min-w-0 flex-1">
+							<div className="text-subhead">
+								<SkeletonLine className="w-24" />
+							</div>
+							<div className="mt-0.5 text-callout">
+								<SkeletonLine className="w-3/4" />
+							</div>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+	);
+}
+
 // `LikeButton`, `CommentCount`와 같은 패딩과 줄 상자. 숫자 한 자리 폭(w-2)은 비워둔다
 function ActionSkeleton() {
 	return (
@@ -108,29 +152,17 @@ function ActionSkeleton() {
 }
 
 /**
- * `ComposeRow`의 자리. 아바타와 문구 막대만 그리고 버튼 자리는 비운다.
- * 줄 높이는 버튼(36px)이 정하므로 그 높이를 빈 칸으로 남긴다.
+ * `ComposeRow` 카드의 자리. 아바타, 문구 막대, 원형 보내기 자리를 같은 치수로 세운다.
  * @see components/ui/ComposeRow.tsx
  */
-export function ComposeRowSkeleton({ card = false }: { card?: boolean }) {
-	if (card) {
-		return (
-			<div className="flex items-center gap-3 rounded-card bg-canvas px-5 py-4 shadow-card">
-				<Skeleton className="size-10 shrink-0 rounded-full" />
-				<div className="flex-1 text-body">
-					<SkeletonLine className="w-48" />
-				</div>
-				<Skeleton className="size-9.5 shrink-0 rounded-full" />
-			</div>
-		);
-	}
-
+export function ComposeRowSkeleton() {
 	return (
-		<div className="flex items-center gap-3 border-hairline border-b px-4 py-4 md:px-6">
-			<Skeleton className="size-9 shrink-0 rounded-full" />
-			<div className="text-body">
+		<div className="flex items-center gap-3 rounded-card bg-canvas px-5 py-4 shadow-card">
+			<Skeleton className="size-10 shrink-0 rounded-full" />
+			<div className="flex-1 text-body">
 				<SkeletonLine className="w-48" />
 			</div>
+			<Skeleton className="size-9.5 shrink-0 rounded-full" />
 		</div>
 	);
 }

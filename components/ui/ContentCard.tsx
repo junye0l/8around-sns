@@ -19,13 +19,8 @@ type ContentCardProps = {
 	/** 오른쪽 위 모서리. 내 글이면 더보기 메뉴가 여기 선다 */
 	menu?: ReactNode;
 	/**
-	 * 아래 칸과 한 스레드로 이어진다. 아바타 밑으로 세로선이 흐르고 구분선은 빠진다.
-	 * @see docs/decisions/0008-reply-tree-on-post.md
-	 */
-	connected?: boolean;
-	/**
 	 * 새 카드 모양. 글 하나가 카드 한 장이고, `href`를 주면 카드 전체가 그 주소로 가는 링크다.
-	 * 리뉴얼 전 한 줄 모양을 쓰는 상세 화면이 리뉴얼 5단계(`docs/PLAN.md`)에서 옮기면 이 갈래를 지운다.
+	 * 리뉴얼 전 한 줄 모양을 쓰는 프로필 화면이 리뉴얼 6단계(`docs/PLAN.md`)에서 옮기면 이 갈래를 지운다.
 	 */
 	card?: boolean;
 	href?: string;
@@ -45,7 +40,6 @@ export function ContentCard({
 	content,
 	footer,
 	menu,
-	connected = false,
 	card = false,
 	href,
 }: ContentCardProps) {
@@ -63,16 +57,9 @@ export function ContentCard({
 	}
 
 	return (
-		<article
-			className={`flex gap-3 px-4 py-4 md:px-6 ${connected ? "" : "border-hairline border-b last:border-b-0"}`}
-		>
+		<article className="flex gap-3 border-hairline border-b px-4 py-4 md:px-6 last:border-b-0">
 			<div className="flex flex-col items-center gap-2">
 				<Avatar path={author.avatar_path} />
-
-				{/* 칸 사이가 위아래 패딩 16px씩 = 32px 벌어져 있다. 그만큼 아래로 넘겨야
-				    선이 다음 아바타에 닿는다 (`-mb-8`, 4px 그리드 위의 값).
-				    위 패딩을 바꾸면 이 값도 같이 바꾼다 */}
-				{connected && <div className="-mb-8 w-px flex-1 bg-hairline" />}
 			</div>
 
 			{/* min-w-0 이 없으면 긴 이름이 flex 칸을 밀어내 시각이 잘린다 */}
@@ -120,7 +107,7 @@ function CardSurface({
 	footer,
 	menu,
 	href,
-}: Omit<ContentCardProps, "card" | "connected">) {
+}: Omit<ContentCardProps, "card">) {
 	return (
 		<article className="relative">
 			{href && (

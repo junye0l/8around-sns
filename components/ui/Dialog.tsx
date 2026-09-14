@@ -149,6 +149,43 @@ export function DialogShell({
 }
 
 /**
+ * 짧게 묻는 작은 모달. 가운데 제목과 설명 아래에 부르는 쪽이 버튼 둘을 나란히 둔다(`mt-5 flex gap-2`).
+ * 글쓰기 닫기 확인과 삭제 확인이 같이 쓴다 (규칙 2). 첫 포커스는 radix대로 첫 버튼에 간다.
+ * 안쪽 좌우 여백 16px씩을 더해 면이 320px이다.
+ */
+export function ConfirmContent({
+	title,
+	description,
+	children,
+	...props
+}: ComponentProps<typeof Primitive.Content> & {
+	title: string;
+	description?: string;
+	children: ReactNode;
+}) {
+	return (
+		<DialogShell
+			// 설명이 없으면 radix가 찾을 대상이 없다고 경고한다
+			{...(description ? {} : { "aria-describedby": undefined })}
+			className="-translate-y-1/2 top-1/2 max-w-88"
+			{...props}
+		>
+			<div className="p-5 text-center">
+				<Primitive.Title className="break-keep text-headline text-fg">
+					{title}
+				</Primitive.Title>
+				{description && (
+					<Primitive.Description className="mt-1 break-keep text-subhead font-normal text-fg-muted">
+						{description}
+					</Primitive.Description>
+				)}
+				{children}
+			</div>
+		</DialogShell>
+	);
+}
+
+/**
  * 화면 가운데 카드. 제목은 반드시 받는다 — 접근성 트리에서 이 창이 무엇인지
  * 말하는 유일한 수단이고, radix도 없으면 경고한다.
  *

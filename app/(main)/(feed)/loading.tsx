@@ -14,7 +14,7 @@ export default function Loading() {
 	return (
 		<PageShell card={false} title="전체">
 			<div className="flex flex-col gap-3">
-				<ComposeRowSkeleton card />
+				<ComposeRowSkeleton />
 				{[0, 1, 2].map((row) => (
 					<ContentCardSkeleton actions={2} card key={row} />
 				))}

@@ -43,7 +43,7 @@ export default async function LikesPage() {
 					title="아직 좋아요한 글이 없어요"
 				/>
 			) : (
-				<PostList card posts={posts} viewerId={profile?.id} />
+				<PostList card from="/likes" posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);

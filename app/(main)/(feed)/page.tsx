@@ -43,7 +43,6 @@ export default async function Home() {
 					authorAvatar={profile?.avatar_path}
 					authorId={profile?.id}
 					authorName={displayName}
-					card
 				/>
 
 				{posts.length === 0 ? (
@@ -65,7 +64,7 @@ export default async function Home() {
 						title="아직 올라온 글이 없어요"
 					/>
 				) : (
-					<PostList card posts={posts} viewerId={profile?.id} />
+					<PostList card from="/" posts={posts} viewerId={profile?.id} />
 				)}
 			</div>
 		</PageShell>

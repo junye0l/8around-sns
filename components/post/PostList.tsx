@@ -4,6 +4,7 @@ import { CommentCount } from "@/components/ui/CommentCount";
 import { ContentCard } from "@/components/ui/ContentCard";
 import { ContentMenu } from "@/components/ui/ContentMenu";
 import type { FeedPost } from "@/lib/queries/post";
+import { postHref } from "@/lib/utils/back-target";
 
 /**
  * 글 목록. 전체, 팔로잉, 좋아요, 프로필 네 화면이 같은 모양이라 하나를 같이 쓴다 (규칙 2).
@@ -18,11 +19,14 @@ export function PostList({
 	posts,
 	viewerId,
 	card = false,
+	from,
 }: {
 	posts: FeedPost[];
 	/** 지금 보는 사람의 id. 없으면 어느 글에도 메뉴가 붙지 않는다 */
 	viewerId?: string;
 	card?: boolean;
+	/** 지금 화면의 경로. 글 상세의 뒤로 가기가 이 화면으로 돌아온다 (`lib/utils/back-target.ts`) */
+	from?: string;
 }) {
 	const items = posts.map((post) => (
 		<ContentCard
@@ -39,12 +43,12 @@ export function PostList({
 					/>
 					<CommentCount
 						count={post.comment_count}
-						href={`/post/${post.id}`}
+						href={postHref(post.id, from)}
 						label="댓글"
 					/>
 				</>
 			}
-			href={card ? `/post/${post.id}` : undefined}
+			href={card ? postHref(post.id, from) : undefined}
 			key={post.id}
 			menu={
 				post.author.id === viewerId ? (

@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Composer } from "@/components/ui/Composer";
 import {
+	ConfirmContent,
 	Dialog,
 	DialogShell,
 	DialogTitle,
@@ -220,28 +221,20 @@ function DiscardDialog({
 }) {
 	return (
 		<Dialog onOpenChange={onOpenChange} open={open}>
-			<DialogShell
-				aria-describedby={undefined}
-				className="-translate-y-1/2 top-1/2 max-w-80"
-			>
-				<div className="p-5">
-					<DialogTitle className="break-keep text-center text-headline text-fg">
-						작성 중인 글을 버릴까요?
-					</DialogTitle>
-					<div className="mt-5 flex gap-2">
-						<Button
-							className="flex-1"
-							onClick={() => onOpenChange(false)}
-							variant="secondary"
-						>
-							계속 쓰기
-						</Button>
-						<Button className="flex-1" onClick={onDiscard} variant="danger">
-							버리기
-						</Button>
-					</div>
+			<ConfirmContent title="작성 중인 글을 버릴까요?">
+				<div className="mt-5 flex gap-2">
+					<Button
+						className="flex-1"
+						onClick={() => onOpenChange(false)}
+						variant="secondary"
+					>
+						계속 쓰기
+					</Button>
+					<Button className="flex-1" onClick={onDiscard} variant="danger">
+						버리기
+					</Button>
 				</div>
-			</DialogShell>
+			</ConfirmContent>
 		</Dialog>
 	);
 }

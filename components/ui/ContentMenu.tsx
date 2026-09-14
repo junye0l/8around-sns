@@ -2,14 +2,9 @@
 
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
+import { Button } from "@/components/ui/Button";
 import { ComposeDialog } from "@/components/ui/ComposeDialog";
-import {
-	Dialog,
-	DialogClose,
-	DialogDescription,
-	DialogShell,
-	DialogTitle,
-} from "@/components/ui/Dialog";
+import { ConfirmContent, Dialog } from "@/components/ui/Dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -85,11 +80,11 @@ export function ContentMenu({
 	return (
 		<>
 			<DropdownMenu>
-				{/* 아이콘만 있는 버튼이라 이름을 따로 준다. 모양은 좋아요·댓글 수와 맞춘다 */}
+				{/* 아이콘만 있는 버튼이라 이름을 따로 준다 */}
 				<DropdownMenuTrigger
 					aria-label={`이 ${config.noun} 더 보기`}
 					ref={trigger}
-					className="inline-flex cursor-pointer items-center rounded-full p-2 text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+					className="inline-flex cursor-pointer items-center rounded-full p-2 text-fg-muted transition duration-(--motion-fast) ease-(--ease-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97 active:bg-fill"
 				>
 					<Ellipsis aria-hidden className="size-5 shrink-0" />
 				</DropdownMenuTrigger>
@@ -138,9 +133,7 @@ export function ContentMenu({
 
 /**
  * 삭제 확인. 되돌릴 수 없고 딸린 것까지 같이 사라지므로 한 번 묻는다.
- *
- * 입력 모달과 모양이 다르다. 물음과 답 둘뿐이라 제목줄을 위에 따로 두지 않고,
- * 질문이 곧 제목이고 아래 한 줄에 취소와 삭제가 나란히 선다. 껍데기는 같은 것을 쓴다.
+ * 모양은 글쓰기 닫기 확인과 같은 작은 모달이다. secondary 취소와 danger 삭제가 나란히 선다.
  *
  * 지워지면 목록을 다시 그리면서 이 컴포넌트가 통째로 사라진다. 닫는 처리를 따로 하지 않는다.
  */
@@ -164,50 +157,38 @@ function DeleteDialog({
 
 	return (
 		<Dialog onOpenChange={onOpenChange} open={open}>
-			{/* 입력이 없어 세로 가운데에 둔다. 키보드가 올라와 자리가 흔들릴 일이 없다 */}
-			<DialogShell
-				className="-translate-y-1/2 top-1/2 max-w-sm"
+			<ConfirmContent
+				description={config.deleteDescription}
 				onCloseAutoFocus={onCloseAutoFocus}
+				title={config.deleteTitle}
 			>
 				<form action={formAction}>
 					<input name={config.idName} type="hidden" value={id} />
-
-					<div className="px-6 py-6 text-center">
-						<DialogTitle className="text-body font-semibold text-fg">
-							{config.deleteTitle}
-						</DialogTitle>
-						<DialogDescription className="mt-1 text-body-sm text-fg-muted">
-							{config.deleteDescription}
-						</DialogDescription>
-
-						{result && !result.ok && (
-							<p className="mt-2 text-body-sm text-danger" role="alert">
-								{result.error}
-							</p>
-						)}
-					</div>
-
-					{/* 두 답이 같은 무게로 나란히 선다. 가르는 것은 카드 구분선과 같은 1px이다 */}
-					<div className="flex border-hairline border-t text-body">
-						<DialogClose className="flex-1 py-4 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
+					{result && !result.ok && (
+						<p className="mt-2 text-footnote text-danger" role="alert">
+							{result.error}
+						</p>
+					)}
+					<div className="mt-5 flex gap-2">
+						<Button
+							className="flex-1"
+							disabled={pending}
+							onClick={() => onOpenChange(false)}
+							variant="secondary"
+						>
 							취소
-						</DialogClose>
-						<div aria-hidden className="w-px bg-hairline" />
-						<button
-							aria-busy={pending || undefined}
-							// 진짜 disabled는 포커스를 body로 떨어뜨린다. 결정 0012, components/ui/Button.tsx와 같다
-							aria-disabled={pending || undefined}
-							className="flex-1 py-4 font-semibold text-danger transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary aria-busy:text-fg-muted"
-							onClick={(event) => {
-								if (pending) event.preventDefault();
-							}}
+						</Button>
+						<Button
+							className="flex-1"
+							loading={pending}
 							type="submit"
+							variant="danger"
 						>
 							삭제
-						</button>
+						</Button>
 					</div>
 				</form>
-			</DialogShell>
+			</ConfirmContent>
 		</Dialog>
 	);
 }

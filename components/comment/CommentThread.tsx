@@ -1,114 +1,78 @@
 import Link from "next/link";
-import { COMMENT_MENU, REPLY_MENU } from "@/components/comment/comment-menu";
+import { COMMENT_MENU } from "@/components/comment/comment-menu";
 import { Avatar } from "@/components/ui/Avatar";
-import { CommentCount } from "@/components/ui/CommentCount";
-import { ContentCard } from "@/components/ui/ContentCard";
 import {
 	ContentMenu,
 	type ContentMenuConfig,
 } from "@/components/ui/ContentMenu";
+import { GROUP_ROW } from "@/components/ui/GroupList";
 import type { CommentReply, PostComment } from "@/lib/queries/comment";
-import { cn } from "@/lib/utils/cn";
-
-/** 스택에 세울 아바타 수. 레퍼런스(Threads)가 셋까지 겹친다 */
-const STACK_MAX = 3;
+import { formatRelativeTime } from "@/lib/utils/relative-time";
 
 /**
- * 댓글 하나와 거기 딸린 답글. 답글이 하나면 아래에 그대로 펴고, 둘 이상이면 접어서
- * 겹친 아바타와 "답글 보기"만 둔다
- * ([결정 0008](../../docs/decisions/0008-reply-tree-on-post.md) ·
- * [0019](../../docs/decisions/0019-comment-compose-modal.md)).
- *
- * 펴는 쪽은 답글 화면(`app/(main)/comment/[id]/page.tsx`)이 본문과 댓글을 잇는 것과 **같은 방식**으로
- * 잇는다 — 아바타 밑으로 세로선이 흐른다.
- *
- * 들여쓰지 않는다. 선이 아바타 가운데를 지나는데 답글을 옆으로 밀면 선이 아무것도
- * 가리키지 않는 빈자리로 떨어진다. 답글인지 아닌지는 선이 말한다.
- *
- * 마지막 칸만 선을 끊는다. 선이 이 묶음 밖으로 이어지면 다음 댓글까지 한 스레드로 읽힌다.
- *
- * 바깥 테두리는 이 묶음이 그린다. 안쪽 카드는 이어진 동안 구분선이 없고, 마지막 칸은
- * `last:border-b-0`이라 아래 선이 빠진다. 그 자리를 이 div가 대신 채운다.
- *
- * 내가 쓴 댓글과 답글에는 더보기 메뉴가 붙는다. 결정 0037.
+ * 그룹 목록의 댓글 한 행. 아바타 34, 이름과 시각, 본문, 내 것이면 더 보기. 답글 화면의 답글 행도 같다.
+ * 답글이 있으면 행 아래 `primary` 글자 "답글 N개 보기" 한 줄만 둔다. 답글 본문은 댓글 상세에서 본다.
+ * 줄 간격 값은 docs/DESIGN.md 게시글 상세와 작업 중 사용자가 정한 값이다
+ * @see docs/DESIGN.md 게시글 상세
  */
 export function CommentThread({
 	comment,
 	viewerId,
+	config = COMMENT_MENU,
 }: {
-	comment: PostComment;
-	/** 지금 보는 사람의 id. 없으면 어느 칸에도 메뉴가 붙지 않는다 */
+	comment: CommentReply | PostComment;
+	/** 지금 보는 사람의 id. 없으면 어느 행에도 메뉴가 붙지 않는다 */
 	viewerId?: string;
+	/** 더 보기가 무엇을 고치고 지우는지. 답글 행은 `REPLY_MENU` */
+	config?: ContentMenuConfig;
 }) {
-	const { replies } = comment;
-	const last = replies.length - 1;
-
-	// 같은 사람이 여러 번 답글을 달아도 원은 하나다. Map은 처음 넣은 순서를 지킨다
-	const stacked = [
-		...new Map(replies.map((reply) => [reply.author.id, reply.author])),
-	].slice(0, STACK_MAX);
+	const replies = "replies" in comment ? comment.replies.length : 0;
 
 	return (
-		<div className="border-hairline border-b last:border-b-0">
-			<ContentCard
-				author={comment.author}
-				connected={replies.length > 0}
-				content={comment.content}
-				createdAt={comment.created_at}
-				menu={commentMenu(comment, viewerId, COMMENT_MENU)}
-				footer={
-					<CommentCount
-						count={replies.length}
-						href={`/comment/${comment.id}`}
-						label="답글"
-					/>
-				}
+		<li className={`flex gap-3 ${GROUP_ROW}`}>
+			<Avatar
+				name={comment.author.display_name}
+				path={comment.author.avatar_path}
+				seed={comment.author.id}
+				size={34}
 			/>
-
-			{replies.length > 1 ? (
-				// 세로선이 여기서 끝난다. 겹친 원이 선 끝에 서고 그 옆이 들어가는 길이다.
-				// 위아래 패딩은 `ContentCard`와 같아야 한다 — 위 칸에서 내려오는 선의 길이가
-				// 두 패딩의 합으로 계산돼 있다
-				<div className="flex items-center gap-3 px-4 py-4 md:px-6">
-					{/* 세로선은 위 칸의 36px 아바타 가운데(칸 왼쪽에서 18px)로 흐른다.
-					    여기 원은 24px이라 6px 밀어야 선 끝과 중심이 맞는다 */}
-					<div className="ml-1.5 flex">
-						{stacked.map(([authorId, author], index) => (
-							<Avatar
-								className={cn(
-									"size-6",
-									// 겹치는 원은 카드 바탕색 테두리로 서로를 끊는다. 그림자를 쓰지 않는다
-									index > 0 && "-ml-2 ring-2 ring-canvas",
-								)}
-								key={authorId}
-								path={author.avatar_path}
-							/>
-						))}
-					</div>
+			<div className="min-w-0 flex-1">
+				<div className="flex min-w-0 items-center gap-1.5">
 					<Link
-						className="rounded-md text-body-sm text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						className="-m-1 min-w-0 truncate rounded-lg p-1 text-subhead font-bold text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+						href={`/u/${comment.author.id}`}
+					>
+						{comment.author.display_name}
+					</Link>
+					<time
+						className="shrink-0 text-footnote text-fg-muted"
+						dateTime={comment.created_at}
+					>
+						{formatRelativeTime(comment.created_at)}
+					</time>
+					{comment.author.id === viewerId && (
+						<div className="-my-2 -mr-2 ml-auto">
+							{commentMenu(comment, viewerId, config)}
+						</div>
+					)}
+				</div>
+				<p className="mt-0.5 whitespace-pre-line break-keep text-callout text-fg wrap-anywhere">
+					{comment.content}
+				</p>
+				{replies > 0 && (
+					<Link
+						className="-m-1 mt-0.5 inline-block rounded-lg p-1 text-subhead font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:scale-97"
 						href={`/comment/${comment.id}`}
 					>
-						답글 보기
+						답글 {replies}개 보기
 					</Link>
-				</div>
-			) : (
-				replies.map((reply, index) => (
-					<ContentCard
-						author={reply.author}
-						connected={index < last}
-						content={reply.content}
-						createdAt={reply.created_at}
-						key={reply.id}
-						menu={commentMenu(reply, viewerId, REPLY_MENU)}
-					/>
-				))
-			)}
-		</div>
+				)}
+			</div>
+		</li>
 	);
 }
 
-/** 내 칸이면 더보기 메뉴, 아니면 없음. 답글 화면도 같은 판정을 쓴다 */
+/** 내 칸이면 더보기 메뉴, 아니면 없음. 댓글 상세의 맥락 카드도 같은 판정을 쓴다 */
 export function commentMenu(
 	comment: CommentReply,
 	viewerId: string | undefined,
@@ -119,6 +83,7 @@ export function commentMenu(
 	return (
 		<ContentMenu
 			authorAvatar={comment.author.avatar_path}
+			authorId={comment.author.id}
 			authorName={comment.author.display_name}
 			config={config}
 			content={comment.content}

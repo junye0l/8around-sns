@@ -59,7 +59,7 @@ export default async function FollowingPage() {
 					}
 				/>
 			) : (
-				<PostList card posts={posts} viewerId={profile?.id} />
+				<PostList card from="/following" posts={posts} viewerId={profile?.id} />
 			)}
 		</PageShell>
 	);

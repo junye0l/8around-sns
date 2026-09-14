@@ -31,9 +31,8 @@ const COMMENT_DETAIL_SELECT =
 /**
  * 한 글에 달린 댓글과 답글. 한 번에 읽고 앱에서 두 층으로 접는다.
  *
- * 답글까지 같이 읽는 이유: 게시글 화면이 답글을 부모 아래 세로선으로 이어 보여준다
- * ([결정 0008](../../docs/decisions/0008-reply-tree-on-post.md)). 최상위만 읽던
- * 결정 0007을 이 지점에서 뒤집었다.
+ * 답글까지 같이 읽는 이유: 게시글 화면이 댓글마다 "답글 N개 보기"로 답글 수를 보여준다
+ * (`components/comment/CommentThread.tsx`).
  *
  * 쿼리를 나누지 않는 이유: 답글 수를 DB에서 세려면 자기 참조 임베드가 필요한데
  * PostgREST가 그걸 못 한다 — `comments!comments_parent_id_fkey` 힌트를 실제 DB에
