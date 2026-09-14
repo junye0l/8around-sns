@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/PageShell";
-import { SideNav } from "@/components/layout/SideNav";
 import { UserRow } from "@/components/profile/UserRow";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listFollowers } from "@/lib/queries/follow";
-import { getCurrentProfile, getProfile } from "@/lib/queries/profile";
+import { getProfile } from "@/lib/queries/profile";
 import { createClient } from "@/lib/supabase/server";
 
 /** 주소의 별명만 쓴다. 제목을 위해 프로필을 한 번 더 읽지 않는다 */
@@ -30,20 +29,13 @@ export default async function FollowersPage({
 	const { username } = await params;
 	const supabase = await createClient();
 
-	const [viewer, profile] = await Promise.all([
-		getCurrentProfile(supabase),
-		getProfile(supabase, username),
-	]);
+	const profile = await getProfile(supabase, username);
 	if (!profile) notFound();
 
 	const users = await listFollowers(supabase, profile.id);
 
 	return (
-		<PageShell
-			backHref={`/u/${profile.username}`}
-			nav={<SideNav profile={viewer} />}
-			title="팔로워"
-		>
+		<PageShell backHref={`/u/${profile.username}`} title="팔로워">
 			{users.length === 0 ? (
 				<EmptyState message="아직 팔로워가 없어요." />
 			) : (

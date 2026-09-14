@@ -99,7 +99,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 - [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
 - [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다. 카운터 없음, 높이 고정 ([결정 0014](decisions/0014-composer-layout.md))
 - [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
-- [x] `PageShell` — 아이콘 레일 · 가운데 카드 컬럼 · 붙박이 제목줄. 카드 상자도 여기서 그린다 ([결정 0015](decisions/0015-threads-shell.md))
+- [x] `PageShell` — 가운데 카드 컬럼 · 붙박이 제목줄. 카드 상자도 여기서 그린다 ([결정 0015](decisions/0015-threads-shell.md)). 레일은 `app/(main)/layout.tsx`가 그린다 ([결정 0028](decisions/0028-sidenav-in-layout.md))
 - [x] `SideNav` — 왼쪽 아이콘 레일. 로고 · 추천 · 새로운 게시글 · 팔로잉 · 프로필, 하단에 더 보기(로그아웃). `TabBar`는 모바일 대응 때 §7에서 같이 본다
 - [x] `Skeleton` — `bg-hairline` 블록, 최종 레이아웃과 같은 치수 (§4 States)
 - [x] `EmptyState` — 한 줄 문구. 버튼은 받지 않는다(세 화면 모두 위에 입력칸이 있다). 같은 마크업이 세 번째로 나타나 올렸다 (규칙 2)

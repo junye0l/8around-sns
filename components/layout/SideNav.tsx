@@ -3,6 +3,7 @@
 import { Home, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense, use } from "react";
 import { MoreMenu } from "@/components/layout/MoreMenu";
 import { ComposeButton } from "@/components/post/ComposeButton";
 import { BrandMark } from "@/components/ui/BrandMark";
@@ -23,6 +24,9 @@ import { BrandMark } from "@/components/ui/BrandMark";
  *
  * 프로필을 모르면 프로필 줄과 글쓰기 줄을 세우지 않는다. 세션은 있는데 `profiles`
  * 조회가 빌 수 있고, 그때 자리를 채우려고 지어낸 이름은 없는 주소로 가는 링크가 된다.
+ *
+ * 프로필은 Promise로 받아 그 두 줄만 기다린다. 기다리는 동안 같은 크기의 빈칸을 두어
+ * 가운데 정렬된 다른 아이콘이 움직이지 않는다. 결정 0028.
  */
 // px-3은 접힌 48px 칸에서 24px 아이콘을 가운데 놓는 값이라 펼칠 때 정렬 클래스를 바꾸지 않는다
 const ITEM =
@@ -34,18 +38,10 @@ const LABEL =
 
 const CURRENT = "text-fg";
 
-export function SideNav({
-	profile,
-}: {
-	profile: { username: string; display_name: string } | null;
-}) {
-	const pathname = usePathname();
-	const profileHref = profile && `/u/${profile.username}`;
+type NavProfile = { username: string; display_name: string } | null;
 
-	// startsWith만 쓰면 `/u/bobby`가 `/u/bob`의 현재 위치로 잡힌다
-	const onProfile =
-		profileHref !== null &&
-		(pathname === profileHref || pathname.startsWith(`${profileHref}/`));
+export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
+	const pathname = usePathname();
 
 	return (
 		<nav className="group fixed inset-y-0 left-0 z-20 flex w-19 flex-col overflow-hidden px-3.5 py-4 text-body transition-all duration-[var(--motion-fast)] ease-(--ease-standard) hover:w-60 hover:bg-background has-focus-visible:w-60 has-focus-visible:bg-background">
@@ -61,13 +57,9 @@ export function SideNav({
 					<span className={LABEL}>추천</span>
 				</Link>
 
-				{profile && (
-					<ComposeButton
-						authorName={profile.display_name}
-						className={`${ITEM} bg-background`}
-						labelClassName={LABEL}
-					/>
-				)}
+				<Suspense fallback={<div className="size-12" />}>
+					<ComposeItem profile={profile} />
+				</Suspense>
 
 				<Link
 					aria-current={pathname === "/following" ? "page" : undefined}
@@ -78,19 +70,51 @@ export function SideNav({
 					<span className={LABEL}>팔로잉</span>
 				</Link>
 
-				{profileHref && (
-					<Link
-						aria-current={onProfile ? "page" : undefined}
-						className={`${ITEM} ${onProfile ? CURRENT : ""}`}
-						href={profileHref}
-					>
-						<User aria-hidden className="size-6 shrink-0" />
-						<span className={LABEL}>프로필</span>
-					</Link>
-				)}
+				<Suspense fallback={<div className="size-12" />}>
+					<ProfileItem pathname={pathname} profile={profile} />
+				</Suspense>
 			</div>
 
 			<MoreMenu className={ITEM} labelClassName={LABEL} />
 		</nav>
+	);
+}
+
+function ComposeItem({ profile }: { profile: Promise<NavProfile> }) {
+	const me = use(profile);
+	if (!me) return null;
+
+	return (
+		<ComposeButton
+			authorName={me.display_name}
+			className={`${ITEM} bg-background`}
+			labelClassName={LABEL}
+		/>
+	);
+}
+
+function ProfileItem({
+	profile,
+	pathname,
+}: {
+	profile: Promise<NavProfile>;
+	pathname: string;
+}) {
+	const me = use(profile);
+	if (!me) return null;
+
+	const href = `/u/${me.username}`;
+	// startsWith만 쓰면 `/u/bobby`가 `/u/bob`의 현재 위치로 잡힌다
+	const current = pathname === href || pathname.startsWith(`${href}/`);
+
+	return (
+		<Link
+			aria-current={current ? "page" : undefined}
+			className={`${ITEM} ${current ? CURRENT : ""}`}
+			href={href}
+		>
+			<User aria-hidden className="size-6 shrink-0" />
+			<span className={LABEL}>프로필</span>
+		</Link>
 	);
 }
