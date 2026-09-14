@@ -19,7 +19,7 @@ export function SignUpForm() {
 	return (
 		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 필드 아래에 깐다
 		<form action={formAction} className="flex flex-col gap-4" noValidate>
-			<h1 className="mb-4 text-title text-fg">가입</h1>
+			<h1 className="mb-4 text-title text-fg">회원가입</h1>
 
 			<TextField
 				autoComplete="email"
@@ -35,7 +35,7 @@ export function SignUpForm() {
 				autoComplete="nickname"
 				readOnly={pending}
 				error={errors.display_name}
-				hint={`${DISPLAY_NAME_MAX}자까지, 다른 사람과 겹치지 않게`}
+				hint={`${DISPLAY_NAME_MAX}자까지 가능해요`}
 				label="별명"
 				maxLength={DISPLAY_NAME_MAX}
 				name="display_name"
@@ -45,7 +45,7 @@ export function SignUpForm() {
 				autoComplete="new-password"
 				readOnly={pending}
 				error={errors.password}
-				hint="6자 이상"
+				hint="6자 이상, 특수문자도 가능해요"
 				label="비밀번호"
 				name="password"
 				required
@@ -60,7 +60,7 @@ export function SignUpForm() {
 			)}
 
 			<Button className="h-14 w-full text-body" loading={pending} type="submit">
-				{pending ? "가입하는 중" : "가입하기"}
+				{pending ? "회원가입하는 중" : "회원가입하기"}
 			</Button>
 		</form>
 	);

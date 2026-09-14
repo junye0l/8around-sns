@@ -50,10 +50,11 @@
 | [0024](0024-like-without-refresh.md) | 좋아요는 화면을 다시 그리지 않는다 | 확정 |
 | [0025](0025-following-feed-in-db.md) | 팔로잉 피드는 DB가 한 번에 거른다 | 확정 |
 | [0026](0026-auth-floating-label.md) | 입력칸 라벨을 보이게 두고, 누르면 테두리 위로 올린다 | 확정 |
-| [0027](0027-auth-page-layout.md) | 인증 화면을 왼쪽 정렬로 바꾸고, 건너가는 줄을 버튼으로 둔다 | 확정 |
+| [0027](0027-auth-page-layout.md) | 인증 화면을 왼쪽 정렬로 바꾸고, 건너가는 줄을 버튼으로 둔다 | 일부 대체됨 → 0034 |
 | [0028](0028-sidenav-in-layout.md) | 왼쪽 레일을 레이아웃으로 올리고, 프로필에 걸린 두 줄만 기다린다 | 확정 |
 | [0029](0029-liked-feed-from-post-likes.md) | 좋아요한 글 피드는 `post_likes`에서 출발해 글을 임베드한다 | 확정 |
 | [0030](0030-profile-avatar-upload.md) | 프로필 이미지는 Storage에 두고, 브라우저가 줄여서 Server Action으로 올린다 | 확정 |
 | [0031](0031-post-likes-private.md) | 누가 좋아요했는지는 본인만 보고, 수는 계산 컬럼이 준다 | 확정 |
 | [0032](0032-nickname-as-handle.md) | 아이디를 없애고 별명을 유일한 이름으로, 주소는 id로 한다 | 확정 |
 | [0033](0033-responsive-shell.md) | 768px 하나로 나누고, 좁으면 레일을 아래 탭바로 내린다 | 확정 |
+| [0034](0034-auth-responsive.md) | 인증 화면의 건너가는 줄을 글자로 잇고, 모바일은 로고를 가운데에 둔다 | 확정 |

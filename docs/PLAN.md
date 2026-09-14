@@ -109,7 +109,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 - [ ] 낙관적 업데이트 — 팔로우 토글, 댓글 작성. 좋아요는 먼저 넣었다 ([결정 0021](decisions/0021-like-optimistic.md))
 - [ ] 전환은 `--motion-fast`(150ms) / `--motion-standard`(250ms), 이징은 `--ease-enter` / `--ease-exit` / `--ease-standard` 셋만
 - [x] `prefers-reduced-motion` 존중 — `app/globals.css:100-106`이 `motion-*`를 전부 0ms로 내린다 (DESIGN.md §3 Reduce motion)
-- [ ] **태블릿 · 모바일 대응** — 로그인 뒤 화면은 끝냈다. 768px 미만에서 레일이 아래 탭바로 내려간다 ([결정 0033](decisions/0033-responsive-shell.md)). 로그인, 회원가입 화면이 남았다
+- [x] **태블릿 · 모바일 대응** — 로그인 뒤 화면은 768px 미만에서 레일이 아래 탭바로 내려간다 ([결정 0033](decisions/0033-responsive-shell.md)). 로그인, 회원가입 화면은 모바일에서 로고가 가운데, 건너가는 줄이 바닥에 선다 ([결정 0034](decisions/0034-auth-responsive.md))
 
 ## 8. 애니메이션
 
