@@ -17,6 +17,9 @@ type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
  * 입력칸 하나와 안내 또는 에러 한 줄. 라벨이 칸 안에 있다가, 칸을 누르거나 값이 차면
  * 테두리 위로 올라가 작아진다. 라벨 뒤를 `canvas`로 칠해 테두리를 끊는다. 결정 0026.
  *
+ * 칠하는 면은 글자 높이(`leading-none`, 14px)와 좌우 4px뿐이다. 올라간 라벨은 칸 위로 7px 튀어나오므로
+ * 여러 칸을 쌓을 때 사이를 7px보다 넓게 둔다. 좁으면 흰 면이 윗칸 아래 테두리를 덮는다.
+ *
  * `placeholder`는 라벨이 올라간 뒤에만 보인다. 올라가기 전에는 라벨과 겹치므로 투명하게 둔다.
  * 라벨이 뜨는지는 `:placeholder-shown`으로 가르므로 예시 문구가 없어도 빈 칸 하나를 넣는다.
  *
@@ -64,7 +67,7 @@ export function TextField({
 				    Tailwind가 placeholder-shown 변형을 focus보다 앞에 내보내서 이 순서가 선다 */}
 				<label
 					className={cn(
-						"pointer-events-none absolute top-0 left-3 -translate-y-1/2 bg-canvas px-1 text-body-sm transition-all duration-[var(--motion-fast)] ease-(--ease-standard)",
+						"pointer-events-none absolute top-0 left-3 -translate-y-1/2 bg-canvas px-1 text-body-sm leading-none transition-all duration-[var(--motion-fast)] ease-(--ease-standard)",
 						"peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-body",
 						"peer-focus:top-0 peer-focus:text-body-sm",
 						invalid ? "text-danger" : "text-fg-muted peer-focus:text-fg",

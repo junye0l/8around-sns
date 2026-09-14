@@ -17,8 +17,8 @@ export function SignUpForm() {
 
 	return (
 		// noValidate: 브라우저 말풍선 대신 서버가 돌려준 문구를 필드 아래에 깐다
-		<form action={formAction} className="flex flex-col gap-2" noValidate>
-			<h1 className="mb-2 text-center text-body font-semibold text-fg">
+		<form action={formAction} className="flex flex-col gap-4" noValidate>
+			<h1 className="text-center text-body font-semibold text-fg">
 				8around 계정 만들기
 			</h1>
 
@@ -59,7 +59,7 @@ export function SignUpForm() {
 				type="password"
 			/>
 
-			<Button className="mt-2 h-14 w-full" loading={pending} type="submit">
+			<Button className="h-14 w-full" loading={pending} type="submit">
 				{pending ? "가입하는 중" : "가입하기"}
 			</Button>
 		</form>
