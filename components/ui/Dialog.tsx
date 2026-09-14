@@ -18,7 +18,7 @@ export const DialogTitle = Primitive.Title;
 export const DialogDescription = Primitive.Description;
 
 /**
- * 떠 있는 카드의 껍데기. 어두운 바탕과 1px 테두리를 두른 흰 면까지가 여기다.
+ * 떠 있는 카드의 껍데기. 어두운 막과 1px 테두리를 두른 카드 면까지가 여기다.
  * 안에 무엇이 들어가는지는 부르는 쪽이 정한다 — 입력 모달과 확인 모달이 같이 쓴다 (규칙 2).
  *
  * 자리와 너비는 `className`으로 받는다. 가로 가운데 정렬만 여기서 한다.
@@ -30,7 +30,7 @@ export function DialogShell({
 }: ComponentProps<typeof Primitive.Content> & { children: ReactNode }) {
 	return (
 		<Primitive.Portal>
-			<Primitive.Overlay className="fixed inset-0 z-40 bg-fg/40" />
+			<Primitive.Overlay className="fixed inset-0 z-40 bg-scrim/40" />
 			<Primitive.Content
 				className={cn(
 					"fixed left-1/2 z-50 w-full -translate-x-1/2 px-4",
