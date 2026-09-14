@@ -24,12 +24,15 @@ const FEED_LIMIT = 50;
 /**
  * 다섯 질의가 같은 모양을 쓴다. 한 곳만 고치면 다섯 화면이 같이 바뀐다 (규칙 2).
  *
- * `comments(count)`와 `post_likes(count)`는 글마다 수를 DB에서 세어 온다. 글을 읽고
+ * `comments(count)`와 `like_count`는 글마다 수를 DB에서 세어 온다. 글을 읽고
  * 나서 수를 따로 물으면 N+1이 된다. 댓글은 `comments_post_id_idx`(0001_init.sql:88),
  * 좋아요는 기본키 앞부분(`0003_post_likes.sql:15`)이 받는다.
  *
- * `liked_by_viewer`는 컬럼이 아니라 계산 컬럼이다. 보는 사람 id를 화면에서 넘기지
- * 않고 DB가 요청의 JWT에서 꺼낸다 (`supabase/migrations/0004_post_liked_by_viewer.sql`).
+ * 좋아요 수는 `post_likes(count)` 임베드로 세지 않는다. `post_likes`는 본인 행만 읽혀서
+ * 내 좋아요만 세어진다. 결정 0031.
+ *
+ * `like_count`와 `liked_by_viewer`는 컬럼이 아니라 계산 컬럼이다
+ * (`supabase/migrations/0004_post_liked_by_viewer.sql`, `0008_post_likes_private.sql`).
  * 생성된 타입에서는 Functions에 있어 select 문자열의 타입 추론이 닿지 않는다.
  * 그래서 행 모양을 `PostRow`로 직접 적는다.
  *
@@ -38,25 +41,18 @@ const FEED_LIMIT = 50;
  * PostgREST가 PGRST201로 거절한다.
  */
 const POST_SELECT =
-	"id, content, created_at, author:profiles!posts_author_id_fkey(username, display_name, avatar_path), comments(count), post_likes(count), liked_by_viewer";
+	"id, content, created_at, author:profiles!posts_author_id_fkey(username, display_name, avatar_path), comments(count), like_count, liked_by_viewer";
 
-type PostRow = Omit<FeedPost, "comment_count" | "like_count" | "liked"> & {
+type PostRow = Omit<FeedPost, "comment_count" | "liked"> & {
 	comments: { count: number }[];
-	post_likes: { count: number }[];
 	liked_by_viewer: boolean;
 };
 
 // PostgREST는 집계를 배열 한 칸으로 돌려준다. 화면까지 그 모양을 들고 가지 않는다
-function toFeedPost({
-	comments,
-	post_likes,
-	liked_by_viewer,
-	...post
-}: PostRow): FeedPost {
+function toFeedPost({ comments, liked_by_viewer, ...post }: PostRow): FeedPost {
 	return {
 		...post,
 		comment_count: comments[0]?.count ?? 0,
-		like_count: post_likes[0]?.count ?? 0,
 		liked: liked_by_viewer,
 	};
 }
