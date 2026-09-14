@@ -25,16 +25,22 @@ export function SkeletonLine({ className }: { className: string }) {
 }
 
 /**
- * `ContentCard` 한 칸의 자리. 칸의 패딩, 아바타, 이름 줄, 본문 두 줄, 액션 줄의 높이를
- * 그대로 두어 데이터가 와도 화면이 튀지 않는다. 안에는 아바타, 이름, 본문 막대만 그린다.
+ * `ContentCard` 한 칸의 자리. 칸의 패딩, 아바타, 이름 줄, 본문 한 줄, 액션 줄을 본 UI와
+ * 같은 치수로 세워 데이터가 와도 화면이 튀지 않는다. 본문은 한 줄 글의 높이다.
+ * 액션은 아이콘 자리만 그리고 숫자는 그리지 않는다.
  * @see components/ui/ContentCard.tsx
  */
 export function ContentCardSkeleton({
-	actions = false,
+	actions = 0,
 	connected = false,
 }: {
-	/** 액션 줄(좋아요, 댓글 수)의 높이를 비워둔다. 그림은 그리지 않는다 */
-	actions?: boolean;
+	/**
+	 * 액션 줄의 버튼 수. 0이면 줄이 없다. 목록의 글은 좋아요와 댓글 수로 2,
+	 * 상세의 글(좋아요)과 댓글(답글 수)은 1이다.
+	 * @see components/post/PostList.tsx
+	 * @see app/post/[id]/page.tsx
+	 */
+	actions?: 0 | 1 | 2;
 	/** `ContentCard`의 `connected`와 같다. 아래 구분선이 빠진다 */
 	connected?: boolean;
 }) {
@@ -53,17 +59,26 @@ export function ContentCardSkeleton({
 				</div>
 
 				<div className="mt-0.5 text-body">
-					<SkeletonLine className="w-full" />
-					<SkeletonLine className="w-1/2" />
+					<SkeletonLine className="w-3/4" />
 				</div>
 
-				{/* 액션 버튼 한 칸(p-2 + 줄 상자)의 높이만 잡는다 */}
-				{actions && (
-					<div className="mt-1 py-2 text-body-sm">
-						<div className="h-lh" />
+				{actions > 0 && (
+					<div className="-ml-2 mt-1 flex">
+						<ActionSkeleton />
+						{actions > 1 && <ActionSkeleton />}
 					</div>
 				)}
 			</div>
+		</div>
+	);
+}
+
+// `LikeButton`, `CommentCount`와 같은 패딩과 줄 상자. 숫자 한 자리 폭(w-2)은 비워둔다
+function ActionSkeleton() {
+	return (
+		<div className="inline-flex items-center gap-1 p-2 text-body-sm">
+			<Skeleton className="size-5 shrink-0 rounded-full" />
+			<div className="h-lh w-2" />
 		</div>
 	);
 }

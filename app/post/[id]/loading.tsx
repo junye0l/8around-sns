@@ -12,11 +12,11 @@ import {
 export default function PostLoading() {
 	return (
 		<PageShell backHref="/" title="게시글">
-			<ContentCardSkeleton actions />
+			<ContentCardSkeleton actions={1} />
 			<ComposeRowSkeleton />
 			<SectionHeadingSkeleton />
 			{[0, 1].map((row) => (
-				<ContentCardSkeleton actions key={row} />
+				<ContentCardSkeleton actions={1} key={row} />
 			))}
 		</PageShell>
 	);

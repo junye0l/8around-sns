@@ -9,7 +9,7 @@ export default function FollowingLoading() {
 	return (
 		<PageShell title="팔로잉">
 			{[0, 1, 2, 3].map((row) => (
-				<ContentCardSkeleton actions key={row} />
+				<ContentCardSkeleton actions={2} key={row} />
 			))}
 		</PageShell>
 	);
