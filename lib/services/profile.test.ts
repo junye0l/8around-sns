@@ -35,34 +35,75 @@ const stub = () => {
 };
 
 describe("updateProfile", () => {
-	it("이미지 없이 이름만 다듬어서 저장한다", async () => {
+	it("이미지 없이 이름과 소개를 다듬어서 저장한다", async () => {
 		const { client, calls } = stub();
 		expect(
 			await updateProfile(client, USER, {
 				displayName: "  새 이름 ",
+				bio: " 러닝하는 개발자\n",
 				avatar: new File([], ""),
 			}),
 		).toEqual({ ok: true });
-		expect(calls).toEqual([{ display_name: "새 이름" }]);
+		expect(calls).toEqual([
+			{ display_name: "새 이름", bio: "러닝하는 개발자" },
+		]);
+	});
+
+	it("폼이 실은 \\r\\n 줄바꿈을 한 글자로 세고 \\n으로 저장한다", async () => {
+		const { client, calls } = stub();
+		const bio = `${"가".repeat(79)}\r\n${"나".repeat(80)}`;
+		expect(
+			await updateProfile(client, USER, {
+				displayName: "이름",
+				bio,
+				avatar: null,
+			}),
+		).toEqual({ ok: true });
+		expect(calls).toEqual([
+			{ display_name: "이름", bio: `${"가".repeat(79)}\n${"나".repeat(80)}` },
+		]);
+	});
+
+	it("공백뿐인 소개는 null로 지운다", async () => {
+		const { client, calls } = stub();
+		await updateProfile(client, USER, {
+			displayName: "이름",
+			bio: "   ",
+			avatar: null,
+		});
+		expect(calls).toEqual([{ display_name: "이름", bio: null }]);
 	});
 
 	it("이미지를 자기 폴더에 올리고 그 경로를 저장한다", async () => {
 		const { client, calls } = stub();
 		const avatar = new Blob(["x"], { type: "image/webp" });
 		expect(
-			await updateProfile(client, USER, { displayName: "이름", avatar }),
+			await updateProfile(client, USER, {
+				displayName: "이름",
+				bio: "",
+				avatar,
+			}),
 		).toEqual({ ok: true });
 		expect(calls[0]).toMatch(new RegExp(`^${USER}/[0-9a-f-]{36}\\.webp$`));
-		expect(calls[1]).toEqual({ display_name: "이름", avatar_path: calls[0] });
+		expect(calls[1]).toEqual({
+			display_name: "이름",
+			bio: null,
+			avatar_path: calls[0],
+		});
 	});
 
-	it("빈 이름, 긴 이름, 다른 형식, 큰 파일은 DB까지 가지 않는다", async () => {
+	it("빈 이름, 긴 이름, 긴 소개, 다른 형식, 큰 파일은 DB까지 가지 않는다", async () => {
 		const cases = [
-			[{ displayName: "   ", avatar: null }, "display_name"],
-			[{ displayName: "가".repeat(31), avatar: null }, "display_name"],
+			[{ displayName: "   ", bio: null, avatar: null }, "display_name"],
+			[
+				{ displayName: "가".repeat(31), bio: null, avatar: null },
+				"display_name",
+			],
+			[{ displayName: "이름", bio: "가".repeat(161), avatar: null }, "bio"],
 			[
 				{
 					displayName: "이름",
+					bio: null,
 					avatar: new Blob(["x"], { type: "text/plain" }),
 				},
 				"avatar",
@@ -70,6 +111,7 @@ describe("updateProfile", () => {
 			[
 				{
 					displayName: "이름",
+					bio: null,
 					avatar: new Blob([new Uint8Array(AVATAR_MAX_BYTES + 1)], {
 						type: "image/png",
 					}),
@@ -95,6 +137,7 @@ describe("updateProfile", () => {
 
 		const result = await updateProfile(client, USER, {
 			displayName: "minsu",
+			bio: null,
 			avatar: null,
 		});
 

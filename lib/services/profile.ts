@@ -1,6 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { AVATAR_MAX_BYTES, AVATAR_TYPES } from "@/lib/utils/content-limits";
+import {
+	AVATAR_MAX_BYTES,
+	AVATAR_TYPES,
+	BIO_MAX,
+} from "@/lib/utils/content-limits";
 import {
 	DISPLAY_NAME_TAKEN,
 	displayNameSchema,
@@ -9,7 +13,16 @@ import type { Database } from "@/types/database";
 
 export type UpdateProfileResult =
 	| { ok: true }
-	| { ok: false; error: string; field?: "display_name" | "avatar" };
+	| { ok: false; error: string; field?: "display_name" | "bio" | "avatar" };
+
+// 다 지우고 저장하면 빈 문자열이 아니라 null이다. 프로필에서 소개 줄이 사라진다.
+// 폼 제출은 줄바꿈을 \r\n으로 싣는다. 브라우저 maxLength는 줄바꿈을 1자로 세므로 여기서도 1자로 맞춘다
+const bioSchema = z
+	.string()
+	.transform((bio) => bio.replaceAll("\r\n", "\n"))
+	.pipe(z.string().trim().max(BIO_MAX, `소개는 ${BIO_MAX}자까지 쓸 수 있어요`))
+	.nullish()
+	.transform((bio) => bio || null);
 
 // 파일을 고르지 않으면 폼에 값이 없거나 빈 파일이 실린다. 둘 다 "안 바꾼다"다
 const avatarSchema = z
@@ -24,7 +37,7 @@ const avatarSchema = z
 	});
 
 /**
- * 프로필 편집. 별명과 프로필 이미지를 한 번에 저장한다.
+ * 프로필 편집. 별명, 소개, 프로필 이미지를 한 번에 저장한다.
  * 검증은 여기서 한다 (규칙 9). Next를 모르므로 테스트에서 그대로 부를 수 있다.
  *
  * 이미지가 있으면 `<userId>/<uuid>.<ext>`에 새로 올리고 프로필이 그 경로를 가리키게 한 뒤
@@ -34,7 +47,7 @@ const avatarSchema = z
 export async function updateProfile(
 	supabase: SupabaseClient<Database>,
 	userId: string,
-	input: { displayName: unknown; avatar: unknown },
+	input: { displayName: unknown; bio: unknown; avatar: unknown },
 ): Promise<UpdateProfileResult> {
 	const name = displayNameSchema.safeParse(input.displayName);
 	if (!name.success) {
@@ -43,6 +56,11 @@ export async function updateProfile(
 			error: name.error.issues[0].message,
 			field: "display_name",
 		};
+	}
+
+	const bio = bioSchema.safeParse(input.bio);
+	if (!bio.success) {
+		return { ok: false, error: bio.error.issues[0].message, field: "bio" };
 	}
 
 	const avatar = avatarSchema.safeParse(input.avatar);
@@ -58,7 +76,7 @@ export async function updateProfile(
 	if (!file) {
 		const { error } = await supabase
 			.from("profiles")
-			.update({ display_name: name.data })
+			.update({ display_name: name.data, bio: bio.data })
 			.eq("id", userId);
 		return error ? failed(error.code) : { ok: true };
 	}
@@ -78,7 +96,7 @@ export async function updateProfile(
 
 	const { error } = await supabase
 		.from("profiles")
-		.update({ display_name: name.data, avatar_path: path })
+		.update({ display_name: name.data, bio: bio.data, avatar_path: path })
 		.eq("id", userId);
 
 	if (error) {
