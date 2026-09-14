@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 /**
  * 관심사 한 개. 테두리 없는 회색 채움 알약이고 누를 수 없다. 파랑을 쓰지 않는다, 동작이 아니다.
  * `onRemove`를 주면 오른쪽에 지우기 버튼이 붙는다. 프로필 편집 모달이 쓴다.
- * 결정 0036, 0038.
+ * 결정 0036, 0038, 0039.
  */
 export function InterestChip({
 	label,
@@ -39,13 +39,13 @@ export function InterestChip({
 
 /**
  * 프로필 화면의 관심사 줄. 비면 아무것도 그리지 않는다.
- * 칩 글자가 위아래 별명, 소개와 같은 왼쪽 끝에 서도록 칩 안쪽 여백(px-3)만큼 왼쪽으로 당긴다. 채움만 컬럼 밖으로 나간다.
+ * 칩 바깥 끝이 위아래 별명, 소개와 같은 왼쪽 끝에 선다. 칩 글자는 안쪽 여백만큼 들어간다. 결정 0039.
  */
 export function InterestChips({ items }: { items: string[] }) {
 	if (items.length === 0) return null;
 
 	return (
-		<ul aria-label="관심사" className="-ml-3 flex flex-wrap gap-2">
+		<ul aria-label="관심사" className="flex flex-wrap gap-2">
 			{items.map((item) => (
 				<li className="max-w-full" key={item}>
 					<InterestChip label={item} />
