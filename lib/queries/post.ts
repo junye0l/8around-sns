@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { getSessionUserId } from "@/lib/supabase/session";
 import type { Database } from "@/types/database";
 
 export type FeedPost = {
@@ -17,7 +18,7 @@ export type FeedPost = {
 const FEED_LIMIT = 50;
 
 /**
- * 네 질의가 같은 모양을 쓴다. 한 곳만 고치면 네 화면이 같이 바뀐다 (규칙 2).
+ * 다섯 질의가 같은 모양을 쓴다. 한 곳만 고치면 다섯 화면이 같이 바뀐다 (규칙 2).
  *
  * `comments(count)`와 `post_likes(count)`는 글마다 수를 DB에서 세어 온다. 글을 읽고
  * 나서 수를 따로 물으면 N+1이 된다. 댓글은 `comments_post_id_idx`(0001_init.sql:88),
@@ -132,6 +133,39 @@ export async function listFollowingFeed(
 	if (error) throw new Error(`팔로잉 피드를 읽지 못했다: ${error.message}`);
 
 	return data.map(toFeedPost);
+}
+
+/**
+ * 내가 좋아요한 글만. 좋아요를 누른 시각의 역순이다 — 글이 쓰인 시각이 아니다. 개수는 추천 피드와 같다.
+ *
+ * `post_likes`에서 출발해 글을 임베드한다. 정렬 기준이 `post_likes.created_at`이라
+ * `posts`를 돌려주는 DB 함수로는 이 순서로 줄 세울 수 없다. 결정 0029.
+ * 필터와 정렬은 `post_likes_user_id_created_at_idx`
+ * (`supabase/migrations/0006_post_likes_user_idx.sql`)가 받는다.
+ *
+ * 보는 사람 id는 네트워크 없이 꺼낸다(결정 0023). 그래서 프로필 조회와 나란히 던질 수 있다.
+ * 세션이 없으면 빈 목록이다. 읽기 권한은 RLS가 본다 — "좋아요는 누구나 본다"
+ * (`supabase/migrations/0003_post_likes.sql`)와 "게시글은 누구나 본다".
+ *
+ * 실패하면 던진다. 화면의 에러 상태는 `app/error.tsx`가 받는다 (규칙 10).
+ */
+export async function listLikedFeed(
+	supabase: SupabaseClient<Database>,
+): Promise<FeedPost[]> {
+	const userId = await getSessionUserId(supabase);
+	if (!userId) return [];
+
+	const { data, error } = await supabase
+		.from("post_likes")
+		.select(`post:posts(${POST_SELECT})`)
+		.eq("user_id", userId)
+		.order("created_at", { ascending: false })
+		.limit(FEED_LIMIT)
+		.returns<{ post: PostRow }[]>();
+
+	if (error) throw new Error(`좋아요한 글을 읽지 못했다: ${error.message}`);
+
+	return data.map(({ post }) => toFeedPost(post));
 }
 
 /**

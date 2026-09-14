@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, User, Users } from "lucide-react";
+import { Heart, Home, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, use } from "react";
@@ -11,7 +11,7 @@ import { BrandMark } from "@/components/ui/BrandMark";
 /**
  * 왼쪽 아이콘 레일. 로고가 위, 항목이 가운데, 더 보기가 아래다. 웹 폭만 맞춘다.
  *
- * 항목은 추천, 새로운 게시글, 팔로잉, 프로필뿐이다. 검색, 알림, 메시지는 범위 밖이라
+ * 항목은 추천, 새로운 게시글, 팔로잉, 좋아요, 프로필뿐이다. 글 목록인 셋을 붙여 두고 내 프로필을 맨 끝에 둔다. 검색, 알림, 메시지는 범위 밖이라
  * 자리를 만들지 않는다.
  * @see docs/PLAN.md 좁은 폭 대응과 남은 화면
  *
@@ -68,6 +68,15 @@ export function SideNav({ profile }: { profile: Promise<NavProfile> }) {
 				>
 					<Users aria-hidden className="size-6 shrink-0" />
 					<span className={LABEL}>팔로잉</span>
+				</Link>
+
+				<Link
+					aria-current={pathname === "/likes" ? "page" : undefined}
+					className={`${ITEM} ${pathname === "/likes" ? CURRENT : ""}`}
+					href="/likes"
+				>
+					<Heart aria-hidden className="size-6 shrink-0" />
+					<span className={LABEL}>좋아요</span>
 				</Link>
 
 				<Suspense fallback={<div className="size-12" />}>
