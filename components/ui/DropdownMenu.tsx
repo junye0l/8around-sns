@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils/cn";
  * @see docs/PLAN.md 애니메이션 절
  */
 const SURFACE =
-	"z-50 min-w-56 origin-(--radix-dropdown-menu-content-transform-origin) animate-menu-open overflow-hidden rounded-md border border-hairline bg-canvas py-1";
+	"z-50 min-w-56 origin-(--radix-dropdown-menu-content-transform-origin) animate-menu-open overflow-hidden rounded-menu border border-hairline bg-canvas-raised p-1.5 shadow-raised";
 
 // radix는 키보드와 포인터 강조를 같은 data 속성으로 준다
 const ITEM =
-	"flex cursor-pointer select-none items-center gap-3 px-4 py-3 text-body text-fg outline-none transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) data-highlighted:bg-background";
+	"flex cursor-pointer select-none items-center gap-3 rounded-xl px-3 py-2.5 text-body text-fg outline-none transition-colors duration-(--motion-fast) ease-(--ease-standard) data-highlighted:bg-fill";
 
 /**
  * 무엇으로 열었는지와 그 트리거가 무엇인지. 닫을 때 포커스를 어떻게 돌려줄지가 여기서 갈린다.
@@ -69,7 +69,7 @@ export function DropdownMenuTrigger(
 }
 
 /**
- * 떠 있는 면. 그림자를 쓰지 않으므로 1px 선이 분리를 맡는다.
+ * 떠 있는 면. 라이트는 그림자와 1px 선이, 다크는 `canvas-raised` 면 색과 선이 뒤와 가른다.
  * 기본값은 버튼 오른쪽 위 정렬이다 — 레일이 화면 왼쪽 끝에 붙어 있어 아래로 열 자리가 없다.
  *
  * 열릴 때 트리거 쪽 모서리에서 펼쳐진다. 어느 모서리인지는 radix가 자리를 잡고 나서

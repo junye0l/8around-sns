@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils/cn";
  * shadcn 구조를 따라 radix 위에 우리 토큰만 입힌 얇은 껍데기.
  * 포커스 가두기, Esc 닫기, 바깥 클릭, 스크롤 잠금은 radix가 한다 — 직접 만들지 않는다.
  *
- * 열고 닫는 애니메이션은 없다. 레이아웃이 다 선 뒤에 얹는다.
- * @see docs/PLAN.md 애니메이션 절
+ * 여는 것만 움직인다. 막은 페이드로, 시트는 아래에서 올라온다.
+ * @see docs/DESIGN.md 드롭다운, 모달, 시트
  */
 export const Dialog = Primitive.Root;
 export const DialogTrigger = Primitive.Trigger;
@@ -18,27 +18,50 @@ export const DialogTitle = Primitive.Title;
 export const DialogDescription = Primitive.Description;
 
 /**
- * 떠 있는 카드의 껍데기. 어두운 막과 1px 테두리를 두른 카드 면까지가 여기다.
+ * 떠 있는 면의 껍데기. 막과 `canvas-raised` 면까지가 여기다.
  * 안에 무엇이 들어가는지는 부르는 쪽이 정한다 — 입력 모달과 확인 모달이 같이 쓴다 (규칙 2).
  *
  * 자리와 너비는 `className`으로 받는다. 가로 가운데 정렬만 여기서 한다.
+ * `variant="sheet"`면 768px 미만에서 화면 아래에 붙는 바텀 시트가 되고, 이상에서는 `className`의 자리를 따른다.
+ * 시트 끌어내리기는 아직 없다. 리뉴얼 4단계(`docs/PLAN.md`)에서 닫기 확인과 같이 만든다.
  */
 export function DialogShell({
+	variant = "modal",
 	className,
 	children,
 	...props
-}: ComponentProps<typeof Primitive.Content> & { children: ReactNode }) {
+}: ComponentProps<typeof Primitive.Content> & {
+	variant?: "modal" | "sheet";
+	children: ReactNode;
+}) {
+	const sheet = variant === "sheet";
+
 	return (
 		<Primitive.Portal>
-			<Primitive.Overlay className="fixed inset-0 z-40 bg-scrim/40" />
+			<Primitive.Overlay className="fixed inset-0 z-40 animate-fade-in bg-scrim" />
 			<Primitive.Content
 				className={cn(
 					"fixed left-1/2 z-50 w-full -translate-x-1/2 px-4",
 					className,
+					sheet &&
+						"max-md:inset-x-0 max-md:top-auto max-md:bottom-0 max-md:max-w-none max-md:translate-x-0 max-md:animate-sheet-in max-md:px-0",
 				)}
 				{...props}
 			>
-				<div className="overflow-hidden rounded-xl border border-hairline bg-canvas">
+				<div
+					className={cn(
+						"overflow-hidden rounded-sheet bg-canvas-raised shadow-raised",
+						sheet &&
+							// 허용: 시트 최대 높이와 아래 안전영역은 기기 뷰포트에 묶인 값이라 토큰이 없다
+							"max-md:flex max-md:max-h-[90dvh] max-md:flex-col max-md:overflow-y-auto max-md:rounded-b-none max-md:pb-[env(safe-area-inset-bottom)]",
+					)}
+				>
+					{sheet && (
+						<span
+							aria-hidden
+							className="mx-auto mt-2 block h-1.25 w-9 shrink-0 rounded-full bg-hairline md:hidden"
+						/>
+					)}
 					{children}
 				</div>
 			</Primitive.Content>

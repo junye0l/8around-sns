@@ -1,101 +1,127 @@
 @import "tailwindcss";
 
 /*
- * 디자인 토큰. 값의 출처는 docs/DESIGN.md(Toss TDS)이며 문서에 있는 값만 옮긴다.
- * 문서에 없는 값을 그럴듯하게 지어내지 않는다 (DESIGN.md §7 Unknowns, AGENTS.md 규칙 3·4).
- * 문서에 근거가 없는데 남겨둔 것은 "로컬 확장"이라고 적고 이유를 붙인다 (DESIGN.md §7 Agent Prompt Guide).
- * 라이트와 다크를 둘 다 지원한다. 색은 light-dark(라이트, 다크)로 한 줄에 둘 다 적는다. 결정 0040.
+ * 디자인 토큰. 값의 출처는 docs/DESIGN.md이며 거기 있는 값만 옮긴다. 결정 0043.
+ * 문서에 없는데 남긴 값은 "로컬 확장"이라고 적고 이유를 붙인다 (AGENTS.md 규칙 3).
+ * 색은 light-dark(라이트, 다크)로 한 줄에 둘 다 적는다. 결정 0040.
  */
 
 @theme {
-	/*
-	 * §2 Color Palette & Roles — bg-canvas, text-fg, border-hairline 처럼 쓴다.
-	 * 앞 값이 문서의 라이트 값이다. 뒤 다크 값은 로컬 확장이다, 문서에 다크 팔레트가 없다. 결정 0040
-	 */
-	--color-primary: #3182f6; /* TDS interaction blue. 두 테마 공통. 포커스 링에만 쓴다, 결정 0010 · 0015 */
-
-	--color-canvas: light-dark(
-		#ffffff,
-		#17171c
-	); /* 카드·입력면. on-primary 텍스트도 이 값이다 */
-	--color-background: light-dark(#f2f4f6, #101013); /* surface, 페이지 바탕 */
-
-	--color-fg: light-dark(#191f28, #f2f4f6); /* 가장 강한 본문 */
-	--color-fg-muted: #8b95a1; /* 보조 텍스트. 두 테마 공통 */
-
-	--color-hairline: light-dark(
-		#e5e8eb,
-		#2c2c35
-	); /* border, 구분선·스켈레톤 블록 */
-
-	--color-danger: light-dark(#e42939, #f04452); /* 파괴적 동작과 에러 텍스트 */
-
-	/* 로컬 확장 — 문서에 없다. 모달 뒤 바탕을 누르는 막. 라이트는 fg와 같은 값이고, 다크에서 fg를 쓰면
-	   밝은 막이 되어 오히려 뒤를 환하게 비추므로 따로 둔다. 결정 0040 */
-	--color-scrim: light-dark(#191f28, #000000);
-	/* 로컬 확장 — 문서에 없다. 막 위에 올린 아이콘. 막이 두 테마에서 다 어두우니 두 테마 공통이다 */
+	/* 색 — bg-canvas, text-fg, border-hairline 처럼 쓴다 */
+	--color-background: light-dark(#f2f3f7, #000000);
+	--color-canvas: light-dark(#ffffff, #1c1c1e);
+	--color-canvas-raised: light-dark(#ffffff, #2c2c2e);
+	--color-fill: light-dark(#f2f3f7, #2c2c2e);
+	--color-fg: light-dark(#1c1c1e, #f2f2f7);
+	--color-fg-muted: light-dark(#6a6a70, #9d9da4);
+	--color-fg-disabled: light-dark(#a5a5ab, #5c5c62);
+	--color-hairline: light-dark(#e8e8ee, #2c2c30);
+	/* 글자 동작, 아이콘, 현재 탭, 포커스 링. 결정 0010 */
+	--color-primary: light-dark(#5750e6, #8c86ff);
+	--color-primary-fill: light-dark(#5750e6, #5e57ea);
+	--color-primary-soft: light-dark(#ecebfd, #2a2850);
+	--color-on-primary: #ffffff;
+	--color-danger: light-dark(#d92d20, #ff6b5e);
+	--color-danger-soft: light-dark(#fdecea, #3a1d1b);
+	/* 불투명도가 테마마다 달라 토큰에 담는다. bg-scrim 그대로 쓴다 */
+	--color-scrim: light-dark(rgb(20 20 40 / 40%), rgb(0 0 0 / 60%));
+	/* 로컬 확장 — 문서에 없다. 막 위에 올린 아이콘. 쓰는 곳(components/profile/ProfileEditDialog.tsx)이
+	   리뉴얼 6단계에서 사라지면 같이 지운다 */
 	--color-on-scrim: #ffffff;
 
-	/*
-	 * §3 타이포 — 웹폰트를 받지 않는다. 문서 §3이 "No general redistribution right"이라
-	 * 못박는다. 이름만 먼저 두고 설치된 사람만 보게 한다 (§1 Do "with a system fallback").
-	 */
+	/* 사진 없는 아바타 바탕. 두 테마 공통이고 위 글자는 흰색이다. 고르는 함수는 lib/utils/tone.ts */
+	--color-tone-violet: #7c5cd6;
+	--color-tone-blue: #3a6fd8;
+	--color-tone-green: #267a4c;
+	--color-tone-orange: #ad5415;
+	--color-tone-pink: #c23b7a;
+	--color-tone-teal: #197676;
+
+	/* 글자. 가변 폰트의 굵기 축으로 굵기를 낸다. app/layout.tsx가 --font-pretendard를 심는다. 결정 0044 */
 	--font-sans:
-		"Toss Product Sans", -apple-system, BlinkMacSystemFont, system-ui,
-		sans-serif;
+		var(--font-pretendard), -apple-system, BlinkMacSystemFont,
+		"Apple SD Gothic Neo", system-ui, sans-serif;
 
-	--text-h1: 48px;
-	--text-h1--line-height: 1.35;
-	--text-h1--font-weight: 700;
+	/* 768px 미만 28px, 이상 30px. 크기는 아래 :root가 바꾼다 */
+	--text-large-title: var(--large-title-size);
+	--text-large-title--line-height: 1.2;
+	--text-large-title--font-weight: 800;
+	--text-large-title--letter-spacing: -0.02em;
 
-	--text-h2: 42px;
-	--text-h2--line-height: 1.35;
-	--text-h2--font-weight: 700;
+	--text-title: 20px;
+	--text-title--line-height: 1.4;
+	--text-title--font-weight: 600;
 
-	--text-h3: 34px;
-	--text-h3--line-height: 1.35;
-	--text-h3--font-weight: 700;
-
-	--text-title: 24px;
-	--text-title--line-height: 1.35;
-	--text-title--font-weight: 700;
+	--text-headline: 17px;
+	--text-headline--line-height: 1.4;
+	--text-headline--font-weight: 700;
 
 	--text-body: 16px;
-	--text-body--line-height: 1.5;
+	--text-body--line-height: 1.55;
+	--text-body--font-weight: 400;
 
+	--text-callout: 15px;
+	--text-callout--line-height: 1.5;
+	--text-callout--font-weight: 400;
+
+	--text-subhead: 14px;
+	--text-subhead--line-height: 1.45;
+	--text-subhead--font-weight: 500;
+
+	--text-footnote: 13px;
+	--text-footnote--line-height: 1.4;
+	--text-footnote--font-weight: 500;
+
+	--text-caption: 11px;
+	--text-caption--line-height: 1.2;
+	--text-caption--font-weight: 500;
+
+	/* 로컬 확장 — 문서에 없다. 리뉴얼 전 이름이다. 쓰는 화면이 3~6단계에서 subhead나 footnote로
+	   옮겨가면 지운다 */
 	--text-body-sm: 14px;
 	--text-body-sm--line-height: 1.5;
 
-	/*
-	 * §5 스페이싱 — 모든 값은 4px 그리드. Tailwind 기본 숫자 스케일이 곧 4px 그리드라
-	 * (p-1=4px, p-4=16px, p-16=64px) 별도 이름 토큰을 만들지 않는다.
-	 */
+	/* 모서리. rounded-lg(8px), rounded-xl(12px), rounded-2xl(16px)은 Tailwind 기본값을 쓴다 */
+	--radius-card: 20px;
+	--radius-sheet: 28px;
+	--radius-menu: 18px;
+	--radius-field: 16px;
 
-	/* §5 Border Radius Scale — 작은 면 4·6px, 버튼 8·10·14·16px */
-	--radius-sm: 6px;
-	--radius-md: 8px;
-	--radius-lg: 10px; /* TDS medium 버튼 */
-	--radius-xl: 24px; /* 로컬 확장 — 문서에 없다. 가운데 컬럼 카드의 윗모서리. 결정 0015 */
-	--radius-full: 9999px; /* 로컬 확장 — 문서에 없다. Avatar 원형이 이 값에 의존한다 */
-
-	/* 로컬 확장 — 문서에 없다. 펼친 레일이 컬럼을 덮을 때 뒤 본문을 흐리게 비친다.
-	   흐림이 없으면 뒤 글자가 레일 문구와 겹쳐 읽히지 않는다. 결정 0035 */
+	/* 로컬 확장 — 문서에 없다. 리뉴얼 전 레일(components/layout/SideNav.tsx)이 쓴다. 결정 0035.
+	   리뉴얼 2단계에서 레일이 바뀌면 지운다 */
 	--blur-rail: 12px;
+
+	/* 그림자. 다크는 색을 투명으로 두어 그림자 없이 면 색으로 나눈다 */
+	--shadow-card: 0 1px 2px light-dark(rgb(20 20 40 / 5%), transparent);
+	--shadow-raised: 0 12px 36px light-dark(rgb(20 20 40 / 16%), transparent);
 
 	/* 로컬 확장 — 문서에 없다. 좋아요를 눌렀을 때 한 번 튀고 제자리로 온다.
 	   길이와 이징은 기존 토큰을 그대로 쓴다. 스프링도 오버슈트도 아니다. 결정 0021 */
 	--animate-like-pop: like-pop var(--motion-fast) var(--ease-standard);
 
-	/* 로컬 확장 — 문서에 없다. 드롭다운이 열릴 때 트리거 쪽 모서리에서 펼쳐진다.
-	   길이와 이징은 기존 토큰을 그대로 쓴다. 스프링도 오버슈트도 아니다 */
+	/* 로컬 확장 — 문서에 없다. 드롭다운이 열릴 때 트리거 쪽 모서리에서 펼쳐진다 */
 	--animate-menu-open: menu-open var(--motion-fast) var(--ease-enter);
 
-	/* 로컬 확장 — 문서 §2는 모션 토큰을 주지 않는다. 값을 지어내는 대신 쓰던 것을 유지한다 */
+	/* 시트는 아래에서 올라오고 막은 페이드로 들어온다 (docs/DESIGN.md 움직임) */
+	--animate-sheet-in: sheet-in var(--motion-standard) var(--ease-enter);
+	--animate-fade-in: fade-in var(--motion-fast) var(--ease-standard);
+
+	/* 로컬 확장 — 문서가 "지금 것을 그대로 쓴다"고만 적는다. 값을 새로 만들지 않는다 */
 	--ease-enter: cubic-bezier(0, 0, 0.2, 1);
 	--ease-exit: cubic-bezier(0.4, 0, 1, 1);
 	--ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 	--default-transition-duration: 250ms; /* motion-standard */
 	--default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root {
+	--large-title-size: 28px;
+}
+
+@media (width >= 48rem) {
+	:root {
+		--large-title-size: 30px;
+	}
 }
 
 /*
@@ -131,7 +157,7 @@
 	animation-timing-function: var(--ease-standard);
 }
 
-/* 로컬 확장 — durations. duration-[var(--motion-fast)] 로 참조한다 */
+/* 로컬 확장 — durations. duration-(--motion-fast) 로 참조한다 */
 :root {
 	--motion-instant: 0ms;
 	--motion-fast: 150ms;
@@ -154,6 +180,18 @@
 	}
 }
 
+@keyframes sheet-in {
+	from {
+		translate: 0 100%;
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+}
+
 body {
 	background: var(--color-background);
 	color: var(--color-fg);
@@ -164,7 +202,7 @@ body {
  * 브라우저는 button에 화살표 커서를 준다. 링크는 손 모양인데 버튼은 아니라서,
  * 눌러보기 전에는 누를 수 있는 것인지 알 수 없다. 여기 한 줄로 전부 손 모양이 된다.
  *
- * base 레이어라 utilities가 이긴다 — disabled:cursor-not-allowed 와
+ * base 레이어라 utilities가 이긴다 — aria-disabled:cursor-not-allowed 와
  * aria-busy:cursor-progress (components/ui/Button.tsx)는 그대로 덮어쓴다.
  */
 @layer base {
