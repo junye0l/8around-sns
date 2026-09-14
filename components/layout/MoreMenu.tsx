@@ -1,6 +1,7 @@
 "use client";
 
 import { LogOut, Menu, Palette } from "lucide-react";
+import { useState } from "react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -72,24 +73,41 @@ export function MoreMenu({
 	);
 }
 
-// 하위 메뉴가 열릴 때만 그려지므로 서버에서 돌지 않는다. 지금 값은 `app/layout.tsx`가 박은 속성에서 읽는다
+const THEMES = [
+	{ value: "dark", label: "다크" },
+	{ value: "light", label: "라이트" },
+	{ value: "system", label: "시스템" },
+] as const;
+
+// 하위 메뉴가 열릴 때만 그려지므로 서버에서 돌지 않는다. 처음 값은 `app/layout.tsx`가 박은 속성에서 읽는다.
+// 골라도 메뉴를 닫지 않는다. 체크가 옮겨가는 것을 보고 다른 테마와 바로 견줘 볼 수 있다
 function ThemeOptions() {
-	const root = document.documentElement;
+	const [theme, setTheme] = useState(() =>
+		parseTheme(document.documentElement.dataset.theme),
+	);
 
 	return (
 		<DropdownMenuRadioGroup
 			onValueChange={(value) => {
 				// 서버 응답을 기다리지 않고 바로 바꾼다. 응답으로 다시 그려질 때도 같은 값이 온다
-				const theme = parseTheme(value);
-				if (theme === "system") delete root.dataset.theme;
-				else root.dataset.theme = theme;
-				setThemeAction(theme);
+				const next = parseTheme(value);
+				const root = document.documentElement;
+				if (next === "system") delete root.dataset.theme;
+				else root.dataset.theme = next;
+				setTheme(next);
+				setThemeAction(next);
 			}}
-			value={parseTheme(root.dataset.theme)}
+			value={theme}
 		>
-			<DropdownMenuRadioItem value="dark">다크</DropdownMenuRadioItem>
-			<DropdownMenuRadioItem value="light">라이트</DropdownMenuRadioItem>
-			<DropdownMenuRadioItem value="system">시스템</DropdownMenuRadioItem>
+			{THEMES.map(({ value, label }) => (
+				<DropdownMenuRadioItem
+					key={value}
+					onSelect={(event) => event.preventDefault()}
+					value={value}
+				>
+					{label}
+				</DropdownMenuRadioItem>
+			))}
 		</DropdownMenuRadioGroup>
 	);
 }
