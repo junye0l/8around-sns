@@ -1,7 +1,7 @@
 "use client";
 
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { POST_COMPOSE } from "@/components/post/post-compose";
 import { ComposeDialog } from "@/components/ui/ComposeDialog";
 import {
@@ -44,6 +44,14 @@ export function PostMenu({
 }) {
 	const [editing, setEditing] = useState(false);
 	const [deleting, setDeleting] = useState(false);
+	const trigger = useRef<HTMLButtonElement>(null);
+
+	// 모달을 연 메뉴 항목은 이미 사라져 radix가 포커스를 돌려줄 곳이 없다. 더보기 버튼으로 보낸다.
+	// 글이 지워지면 버튼도 없어져 돌려줄 곳이 없다
+	const returnFocus = (event: Event) => {
+		event.preventDefault();
+		trigger.current?.focus();
+	};
 
 	return (
 		<>
@@ -51,6 +59,7 @@ export function PostMenu({
 				{/* 아이콘만 있는 버튼이라 이름을 따로 준다. 모양은 좋아요·댓글 수와 맞춘다 */}
 				<DropdownMenuTrigger
 					aria-label="이 글 더 보기"
+					ref={trigger}
 					className="inline-flex cursor-pointer items-center rounded-full p-2 text-fg-muted transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 				>
 					<Ellipsis aria-hidden className="size-5 shrink-0" />
@@ -76,6 +85,7 @@ export function PostMenu({
 				authorAvatar={authorAvatar}
 				authorName={authorName}
 				initialContent={content}
+				onCloseAutoFocus={returnFocus}
 				onOpenChange={setEditing}
 				open={editing}
 				submitLabel="수정"
@@ -85,6 +95,7 @@ export function PostMenu({
 			</ComposeDialog>
 
 			<DeleteDialog
+				onCloseAutoFocus={returnFocus}
 				onOpenChange={setDeleting}
 				open={deleting}
 				postId={postId}
@@ -105,17 +116,22 @@ function DeleteDialog({
 	postId,
 	open,
 	onOpenChange,
+	onCloseAutoFocus,
 }: {
 	postId: string;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	onCloseAutoFocus: (event: Event) => void;
 }) {
 	const [result, formAction, pending] = useActionState(deletePostAction, null);
 
 	return (
 		<Dialog onOpenChange={onOpenChange} open={open}>
 			{/* 입력이 없어 세로 가운데에 둔다. 키보드가 올라와 자리가 흔들릴 일이 없다 */}
-			<DialogShell className="-translate-y-1/2 top-1/2 max-w-sm">
+			<DialogShell
+				className="-translate-y-1/2 top-1/2 max-w-sm"
+				onCloseAutoFocus={onCloseAutoFocus}
+			>
 				<form action={formAction}>
 					<input name="post_id" type="hidden" value={postId} />
 
@@ -141,8 +157,13 @@ function DeleteDialog({
 						</DialogClose>
 						<div aria-hidden className="w-px bg-hairline" />
 						<button
-							className="flex-1 py-4 font-semibold text-danger transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary disabled:text-fg-muted"
-							disabled={pending}
+							aria-busy={pending || undefined}
+							// 진짜 disabled는 포커스를 body로 떨어뜨린다. 결정 0012, components/ui/Button.tsx와 같다
+							aria-disabled={pending || undefined}
+							className="flex-1 py-4 font-semibold text-danger transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-background focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary aria-busy:text-fg-muted"
+							onClick={(event) => {
+								if (pending) event.preventDefault();
+							}}
 							type="submit"
 						>
 							삭제

@@ -23,7 +23,7 @@ export function SignUpForm() {
 
 			<TextField
 				autoComplete="email"
-				disabled={pending}
+				readOnly={pending}
 				error={errors.email}
 				label="이메일"
 				name="email"
@@ -33,7 +33,7 @@ export function SignUpForm() {
 			/>
 			<TextField
 				autoComplete="nickname"
-				disabled={pending}
+				readOnly={pending}
 				error={errors.display_name}
 				hint={`${DISPLAY_NAME_MAX}자까지, 다른 사람과 겹치지 않게`}
 				label="별명"
@@ -43,7 +43,7 @@ export function SignUpForm() {
 			/>
 			<TextField
 				autoComplete="new-password"
-				disabled={pending}
+				readOnly={pending}
 				error={errors.password}
 				hint="6자 이상"
 				label="비밀번호"

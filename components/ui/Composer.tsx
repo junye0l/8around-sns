@@ -96,7 +96,7 @@ export function Composer({
 				</label>
 				<textarea
 					className="mt-0.5 w-full resize-none text-body text-fg outline-none placeholder:text-fg-muted"
-					disabled={pending}
+					readOnly={pending}
 					id={id}
 					// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)
 					maxLength={maxLength}

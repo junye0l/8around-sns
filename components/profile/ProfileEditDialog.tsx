@@ -206,7 +206,7 @@ function ProfileEditForm({
 			</div>
 
 			<TextField
-				disabled={pending}
+				readOnly={pending}
 				error={nameError}
 				label="별명"
 				// 브라우저 쪽 상한은 친절함이다. 진짜 방어는 서버와 DB 제약이 한다 (규칙 9)

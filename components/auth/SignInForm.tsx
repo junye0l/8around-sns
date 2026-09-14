@@ -25,7 +25,7 @@ export function SignInForm() {
 				// 문구는 아래 한 자리에서만 띄운다. 여기서는 빨간 테두리만 켠다
 				aria-invalid={errors.email ? true : undefined}
 				autoComplete="email"
-				disabled={pending}
+				readOnly={pending}
 				label="이메일"
 				name="email"
 				placeholder="you@example.com"
@@ -37,7 +37,7 @@ export function SignInForm() {
 				<TextField
 					aria-invalid={errors.password ? true : undefined}
 					autoComplete="current-password"
-					disabled={pending}
+					readOnly={pending}
 					label="비밀번호"
 					name="password"
 					required
