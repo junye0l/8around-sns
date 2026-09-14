@@ -37,7 +37,7 @@ export function PageShell({
 							className="rounded-full p-2 text-fg transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) hover:bg-canvas focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 							href={backHref}
 						>
-							<ChevronLeft aria-hidden className="size-6 shrink-0" />
+							<ChevronLeft aria-hidden className="size-5 shrink-0" />
 						</Link>
 					)}
 					{/* 뒤로 버튼이 없으면 카드 안 내용의 px-6에 맞춘다. 버튼이 있으면
