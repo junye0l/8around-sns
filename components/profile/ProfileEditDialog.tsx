@@ -13,6 +13,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { DialogShell, Sheet, SheetHeader } from "@/components/ui/Dialog";
 import { TextField } from "@/components/ui/TextField";
+import { useFocusFirstInvalid } from "@/hooks/useFocusFirstInvalid";
 import { useSubmitAction } from "@/hooks/useSubmitAction";
 import { updateProfileAction } from "@/lib/actions/profile";
 import type { UpdateProfileResult } from "@/lib/services/profile";
@@ -147,14 +148,11 @@ function ProfileEditForm({
 	const [preview, setPreview] = useState<string | null>(null);
 	const [fileError, setFileError] = useState<string | null>(null);
 	const fileInput = useRef<HTMLInputElement>(null);
-	const form = useRef<HTMLFormElement>(null);
+	const form = useFocusFirstInvalid(result);
 	const formId = useId();
 
 	useEffect(() => {
-		if (!result) return;
-		if (result.ok) return onSuccess();
-		// 제출 뒤 첫 에러 칸으로 포커스를 옮긴다
-		form.current?.querySelector<HTMLElement>("[aria-invalid]")?.focus();
+		if (result?.ok) onSuccess();
 	}, [result, onSuccess]);
 
 	// 고를 때마다 새 주소를 만들므로 옛 주소를 놓아준다
