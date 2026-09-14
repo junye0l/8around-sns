@@ -11,8 +11,7 @@ import { interestLength, normalizeInterests } from "@/lib/utils/interests";
  * 프로필 편집 모달의 관심사 칸. 입력칸에 쓰고 Enter나 추가 버튼으로 넣는다. 넣은 것은 지울 수 있는 칩이 된다.
  * 폼에는 항목마다 `name="interests"` hidden input으로 실린다. 검증은 서버가 다시 한다(규칙 9).
  *
- * 3개가 차면 입력칸은 readOnly, 추가 버튼은 aria-disabled다. 진짜 disabled로 바꾸면
- * 방금 누른 요소에서 포커스가 body로 떨어진다(`components/ui/Button.tsx`와 같은 이유).
+ * 3개가 차면 입력칸은 readOnly, 추가 버튼은 꺼진다(`Button`의 `disabled`는 `aria-disabled`라 포커스가 남는다).
  * 결정 0036.
  */
 export function InterestsField({
@@ -71,8 +70,8 @@ export function InterestsField({
 					/>
 				</div>
 				<Button
-					aria-disabled={locked || undefined}
-					className="h-14 aria-disabled:cursor-not-allowed aria-disabled:text-fg-muted aria-disabled:hover:bg-transparent"
+					className="h-14"
+					disabled={locked}
 					onClick={add}
 					variant="outline"
 				>
