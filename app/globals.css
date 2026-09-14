@@ -4,22 +4,31 @@
  * 디자인 토큰. 값의 출처는 docs/DESIGN.md(Toss TDS)이며 문서에 있는 값만 옮긴다.
  * 문서에 없는 값을 그럴듯하게 지어내지 않는다 (DESIGN.md §7 Unknowns, AGENTS.md 규칙 3·4).
  * 문서에 근거가 없는데 남겨둔 것은 "로컬 확장"이라고 적고 이유를 붙인다 (DESIGN.md §7 Agent Prompt Guide).
- * 라이트 모드만 지원한다. 결정 0009.
+ * 라이트와 다크를 둘 다 지원한다. 색은 light-dark(라이트, 다크)로 한 줄에 둘 다 적는다. 결정 0040.
  */
 
 @theme {
-	/* §2 Color Palette & Roles — bg-canvas, text-fg, border-hairline 처럼 쓴다 */
-	--color-primary: #3182f6; /* TDS interaction blue. 포커스 링에만 쓴다, 결정 0010 · 0015 */
+	/*
+	 * §2 Color Palette & Roles — bg-canvas, text-fg, border-hairline 처럼 쓴다.
+	 * 앞 값이 문서의 라이트 값이다. 뒤 다크 값은 로컬 확장이다, 문서에 다크 팔레트가 없다. 결정 0040
+	 */
+	--color-primary: #3182f6; /* TDS interaction blue. 두 테마 공통. 포커스 링에만 쓴다, 결정 0010 · 0015 */
 
-	--color-canvas: #ffffff; /* 카드·입력면. on-primary 텍스트도 이 값이다 */
-	--color-background: #f2f4f6; /* surface, 페이지 바탕 */
+	--color-canvas: light-dark(
+		#ffffff,
+		#17171c
+	); /* 카드·입력면. on-primary 텍스트도 이 값이다 */
+	--color-background: light-dark(#f2f4f6, #101013); /* surface, 페이지 바탕 */
 
-	--color-fg: #191f28; /* 가장 강한 본문 */
-	--color-fg-muted: #8b95a1; /* 보조 텍스트 */
+	--color-fg: light-dark(#191f28, #f2f4f6); /* 가장 강한 본문 */
+	--color-fg-muted: #8b95a1; /* 보조 텍스트. 두 테마 공통 */
 
-	--color-hairline: #e5e8eb; /* border, 구분선·스켈레톤 블록 */
+	--color-hairline: light-dark(
+		#e5e8eb,
+		#2c2c35
+	); /* border, 구분선·스켈레톤 블록 */
 
-	--color-danger: #e42939; /* 파괴적 동작과 에러 텍스트 */
+	--color-danger: light-dark(#e42939, #f04452); /* 파괴적 동작과 에러 텍스트 */
 
 	/*
 	 * §3 타이포 — 웹폰트를 받지 않는다. 문서 §3이 "No general redistribution right"이라
@@ -81,6 +90,22 @@
 	--ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 	--default-transition-duration: 250ms; /* motion-standard */
 	--default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*
+ * light-dark()가 어느 쪽을 고를지는 color-scheme이 정한다. 속성이 없으면 운영체제를 따르고,
+ * 더 보기에서 고르면 app/layout.tsx가 data-theme을 박는다. 스크롤바와 입력칸도 같이 바뀐다. 결정 0040
+ */
+:root {
+	color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+	color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
 }
 
 /* 로컬 확장 — durations. duration-[var(--motion-fast)] 로 참조한다 */

@@ -29,6 +29,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 좋아요는 요구 기능이 아니지만 사용자가 요청해서 범위에 들어왔다. **게시글에만** 단다,
 댓글에는 달지 않는다 ([결정 0020](docs/decisions/0020-post-likes.md)).
+다크 모드도 사용자가 요청해서 들어왔다. 더 보기의 디자인 메뉴에서 고른다 ([결정 0040](docs/decisions/0040-theme-switch.md)).
 
 범위 밖(알림, DM, 이미지 업로드, 검색, 해시태그 등)은 **사용자 요청이 없으면 구현하지 않는다.**
 
@@ -110,7 +111,8 @@ Tailwind v4를 쓴다. 유틸리티를 화면에 직접 흩뿌리지 않고 공�
   loading, disabled, pressed, keyboard focus 넷이다. 하나라도 비면 미완성이다
 - 화면 문구는 `docs/DESIGN.md`에 없다. 새로 쓸 때는 Voice & Tone 절에 맞추고, 이미 있는 화면의 말투를 따른다
 - 문서에 없는 값을 지어내지 않는다. 필요한데 없으면 멈추고 묻는다
-- 라이트 모드만 지원한다. 다크 모드는 범위 밖이라 `prefers-color-scheme` 분기를 만들지 않는다
+- 라이트와 다크를 둘 다 지원한다. 색 토큰은 `app/globals.css`에 `light-dark(라이트, 다크)` 한 줄로 적고,
+  화면 코드에서는 `dark:` 변형이나 `prefers-color-scheme` 분기를 쓰지 않는다 ([결정 0040](docs/decisions/0040-theme-switch.md))
 - 포커스와 키보드를 다뤄야 하는 것은 직접 만들지 않는다. 모달, 시트, 드롭다운, 탭이 그렇다.
   shadcn 소스를 가져와 우리 토큰에 맞춘다. 클래스를 합칠 때는 `lib/utils/cn.ts`의 `cn()`을 쓴다
 - 아이콘은 `lucide-react`에서 가져온다. SVG를 손으로 그리지 않는다.
