@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { InterestChips } from "@/components/profile/InterestChip";
 import { Avatar } from "@/components/ui/Avatar";
 import type { ProfileDetail } from "@/lib/queries/profile";
 
@@ -59,6 +60,12 @@ export function ProfileHeader({
 						<p className="mt-1 whitespace-pre-wrap break-words text-body text-fg">
 							{profile.bio}
 						</p>
+					)}
+
+					{profile.interests.length > 0 && (
+						<div className="mt-3">
+							<InterestChips items={profile.interests} />
+						</div>
 					)}
 
 					<div className="mt-4 flex gap-6">

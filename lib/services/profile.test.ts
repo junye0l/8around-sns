@@ -41,11 +41,12 @@ describe("updateProfile", () => {
 			await updateProfile(client, USER, {
 				displayName: "  새 이름 ",
 				bio: " 러닝하는 개발자\n",
+				interests: [],
 				avatar: new File([], ""),
 			}),
 		).toEqual({ ok: true });
 		expect(calls).toEqual([
-			{ display_name: "새 이름", bio: "러닝하는 개발자" },
+			{ display_name: "새 이름", bio: "러닝하는 개발자", interests: [] },
 		]);
 	});
 
@@ -56,11 +57,16 @@ describe("updateProfile", () => {
 			await updateProfile(client, USER, {
 				displayName: "이름",
 				bio,
+				interests: [],
 				avatar: null,
 			}),
 		).toEqual({ ok: true });
 		expect(calls).toEqual([
-			{ display_name: "이름", bio: `${"가".repeat(79)}\n${"나".repeat(80)}` },
+			{
+				display_name: "이름",
+				bio: `${"가".repeat(79)}\n${"나".repeat(80)}`,
+				interests: [],
+			},
 		]);
 	});
 
@@ -69,9 +75,10 @@ describe("updateProfile", () => {
 		await updateProfile(client, USER, {
 			displayName: "이름",
 			bio: "   ",
+			interests: [],
 			avatar: null,
 		});
-		expect(calls).toEqual([{ display_name: "이름", bio: null }]);
+		expect(calls).toEqual([{ display_name: "이름", bio: null, interests: [] }]);
 	});
 
 	it("이미지를 자기 폴더에 올리고 그 경로를 저장한다", async () => {
@@ -81,6 +88,7 @@ describe("updateProfile", () => {
 			await updateProfile(client, USER, {
 				displayName: "이름",
 				bio: "",
+				interests: [],
 				avatar,
 			}),
 		).toEqual({ ok: true });
@@ -88,22 +96,70 @@ describe("updateProfile", () => {
 		expect(calls[1]).toEqual({
 			display_name: "이름",
 			bio: null,
+			interests: [],
 			avatar_path: calls[0],
 		});
 	});
 
-	it("빈 이름, 긴 이름, 긴 소개, 다른 형식, 큰 파일은 DB까지 가지 않는다", async () => {
+	it("관심사를 다듬어서 이미지 경로와 같이 저장한다", async () => {
+		const { client, calls } = stub();
+		expect(
+			await updateProfile(client, USER, {
+				displayName: "이름",
+				bio: null,
+				interests: [" 운동", "AI", "운동", ""],
+				avatar: new Blob(["x"], { type: "image/png" }),
+			}),
+		).toEqual({ ok: true });
+		expect(calls[1]).toMatchObject({ interests: ["운동", "AI"] });
+	});
+
+	it("빈 이름, 긴 이름, 긴 소개, 관심사 초과, 다른 형식, 큰 파일은 DB까지 가지 않는다", async () => {
 		const cases = [
-			[{ displayName: "   ", bio: null, avatar: null }, "display_name"],
 			[
-				{ displayName: "가".repeat(31), bio: null, avatar: null },
+				{ displayName: "   ", bio: null, interests: [], avatar: null },
 				"display_name",
 			],
-			[{ displayName: "이름", bio: "가".repeat(161), avatar: null }, "bio"],
+			[
+				{
+					displayName: "가".repeat(31),
+					bio: null,
+					interests: [],
+					avatar: null,
+				},
+				"display_name",
+			],
+			[
+				{
+					displayName: "이름",
+					bio: "가".repeat(161),
+					interests: [],
+					avatar: null,
+				},
+				"bio",
+			],
 			[
 				{
 					displayName: "이름",
 					bio: null,
+					interests: ["운동", "맛집", "AI", "여행"],
+					avatar: null,
+				},
+				"interests",
+			],
+			[
+				{ displayName: "이름", bio: null, interests: ["프론트"], avatar: null },
+				"interests",
+			],
+			[
+				{ displayName: "이름", bio: null, interests: "운동", avatar: null },
+				"interests",
+			],
+			[
+				{
+					displayName: "이름",
+					bio: null,
+					interests: [],
 					avatar: new Blob(["x"], { type: "text/plain" }),
 				},
 				"avatar",
@@ -112,6 +168,7 @@ describe("updateProfile", () => {
 				{
 					displayName: "이름",
 					bio: null,
+					interests: [],
 					avatar: new Blob([new Uint8Array(AVATAR_MAX_BYTES + 1)], {
 						type: "image/png",
 					}),
@@ -138,6 +195,7 @@ describe("updateProfile", () => {
 		const result = await updateProfile(client, USER, {
 			displayName: "minsu",
 			bio: null,
+			interests: [],
 			avatar: null,
 		});
 
