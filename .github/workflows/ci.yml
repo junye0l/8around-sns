@@ -1,9 +1,15 @@
 name: CI
 
+# 대화 기록만 바뀌면 돌리지 않는다. 앱 코드가 그대로라 e2e가 매번 같은 결과를 몇 분씩 다시 낸다.
+# 변경 파일이 전부 여기 맞을 때만 건너뛴다. 코드가 섞이면 그대로 돈다
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'exports/**'
   pull_request:
+    paths-ignore:
+      - 'exports/**'
 
 jobs:
   verify:
