@@ -1,0 +1,1496 @@
+ ▐▛███▛█   Claude Code v2.1.269
+▝▜██████▀  Fable 5.1 · Claude Pro
+  ▝▝ ▝▝    ~/Documents/8around-sns
+
+⚠ Your login expires in 3 days · run /login to renew
+
+❯ /model                                                                        
+  ⎿  Set model to Fable 5.1 and saved as your default for new sessions
+
+❯ /goal 1. 각 페이지별로 스켈레톤 UI를 본 UI랑 1px도 어긋나지않게 변경해줘      
+                                                                                
+2. 로그인 페이지 UI 관련 레퍼런스를 찾아서 개선점을 찾고 아티팩트로 생성해줘    
+                                                                                
+3. 회원가입 페이지 UI 관련 레퍼런스를 찾아서 개선점을 찾고 아티팩트로 생성해줘  
+                                                                                
+모든 작업은 병렬로 진행하고 해당 브랜치에 맞게 워크트리 형태로 작업을 진행 후   
+보고                                                                            
+  ⎿  Goal set: 1. 각 페이지별로 스켈레톤 UI를 본 UI랑 1px도 어긋나지않게
+     변경해줘
+
+     2. 로그인 페이지 UI 관련 레퍼런스를 찾아서 개선점을 찾고 아티팩트로
+        생성해줘
+     3. 회원가입 페이지 UI 관련 레퍼런스를 찾아서 개선점을 찾고 아티팩트로
+        생성해줘
+
+     모든 작업은 병렬로 진행하고 해당 브랜치에 맞게 워크트리 형태로 작업을 진행
+     후 보고
+
+⏺ 목표 확인했습니다. 세 작업을 각각 워크트리 브랜치에서 병렬로 진행하고
+  보고하겠습니다. 먼저 메모리와 레포 구조를 읽습니다.
+
+  Listed 1 directory, ran 2 shell commands (ctrl+o to expand)
+
+⏺ 워크트리 3개를 생성하고, 스켈레톤 트리에 node_modules와 .env.local을 복사한 뒤
+  검증용으로 3001 포트에서 개발 서버를 띄웁니다. 이는 규칙 7 대상이지만 검증에
+  필요해 워크트리 전용 포트로만 실행하며, 보고서에 명시하겠습니다. · summarized
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ 3 background agents launched (↓ to manage)
+   ├ Skeleton UI pixel match
+   ├ Login page UI reference review
+   └ Signup page UI reference review
+
+⏺ 세 에이전트가 각 워크트리에서 병렬 작업을 진행 중이니, 완료를 기다리는 동안 UI
+  컴포넌트 구조를 미리 살펴봐서 스켈레톤 검증 결과 대조에 활용하겠습니다. 
+  · summarized
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Monitor(compile/runtime errors in skeleton worktree dev server (port 3001))
+  ⎿  Monitor started · task b1kso6awr · timeout 3600s
+
+⏺ 세 에이전트가 각 워크트리에서 작업 중이고, 개발 서버 로그에 오류가 나면 알림을
+  받도록 걸어 두었습니다. 완료 알림이 오면 결과를 검토하고 종합 보고하겠습니다.
+
+✻ Brewed for 6m 24s · done Sunday 10:13 PM
+
+⏺ Monitor event: "compile/runtime errors in skeleton worktree dev server (port
+3001)"
+
+⏺ 브라우저에 남아 있던 옛 세션 쿠키의 리프레시 토큰 오류입니다. 서버 컴파일
+  문제가 아니라 계속 대기합니다.
+
+✻ Worked for 3s · done Sunday 10:13 PM
+
+⏺ Monitor event: "compile/runtime errors in skeleton worktree dev server (port
+3001)"
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ 한 번만 발생한 오류입니다. 가입 직후 발급된 토큰의 발급 시각이 로컬 시계보다
+  몇 초 앞서면 나는 일시적 시계 오차로 보이며, 이후 재발하지 않았습니다. 계속
+  에이전트 완료를 기다립니다.
+
+✻ Cooked for 10s · done Sunday 10:13 PM
+
+⏺ Agent "Skeleton UI pixel match" finished · 14m 48s
+
+⏺ 스켈레톤 작업이 끝났습니다. 커밋 diff를 직접 검토합니다.
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+⏺ 스크린샷으로 글쓰기 줄, 아바타, 이름 줄, 본문, 액션 줄 위치가 본 UI와 같은
+  구조로 서 있는 것을 확인했습니다. 남은 두 에이전트(로그인, 회원가입
+  레퍼런스)의 완료를 기다립니다.
+
+✻ Churned for 19s · done Sunday 10:26 PM
+
+⏺ Agent "Login page UI reference review" finished · 15m 52s
+
+⏺ 로그인 리뷰가 아티팩트로 나왔습니다. 가장 큰 지적(실패 후 입력값 초기화)을
+  코드에서 확인합니다.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ 코드에서 확인됩니다. 비제어 폼에 action만 걸려 있어 React 19가 액션 뒤 폼을
+  리셋하고, 결과값을 defaultValue로 되돌려주는 코드가 없습니다. 지적이
+  타당합니다. 회원가입 에이전트의 완료를 기다립니다.
+
+✻ Cogitated for 9s · done Sunday 10:28 PM
+⏺ Agent "Signup page UI reference review" finished · 20m 8s
+
+⏺ 세 작업이 모두 끝났습니다. 정리하고 종합 보고합니다.
+
+⏺ Stop Task
+  ⎿  tail -n 0 -f /private/tmp/claude-501/-Users-junyeol-Documents-8around-
+     sns/443d197c-3284-4f4b-86ac-bf3965f72e3a/scratchpad/dev-3001.log |
+     grep -E --line-buffered… · stopped
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Bash(rm -rf .playwright-mcp; git status --short | wc -l)
+  ⎿  0
+  ⎿  Deleted .playwright-mcp/page-2026-09-13T13-22-33-189Z.yml (+0 -0)
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-13-41-898Z.log (+0 -92)
+       1 -[    1850ms] [INFO] %cDownload the React DevTools for a better 
+         -development experience: https://react.dev/link/react-devtools f
+         -ont-weight:bold @ http://localhost:3001/_next/static/chunks/nod
+         -e_modules_next_dist_1e8vcs8._.js:776                           
+       2 -[    1908ms] [LOG] [HMR] connected @ http://localhost:3001/_nex
+         -t/static/chunks/node_modules_next_dist_1e8vcs8._.js:776        
+       3 -[    1951ms] [ERROR] %o                                        
+       4 -                                                               
+       5 -%s Error: 피드를 읽지 못했다: JWT issued at future             
+       6 -    at listFeed (about://React/Server/file:///Users/junyeol/Doc
+         -uments/8around-sns-wt/skeleton/.next/dev/server/chunks/ssr/%5Br
+         -oot-of-the-server%5D__0x6bvel._.js?0:587:22)                   
+       7 -    at  Home (about://React/Server/file:///Users/junyeol/Docume
+         -nts/8around-sns-wt/skeleton/.next/dev/server/chunks/ssr/%5Broot
+         --of-the-server%5D__0x6bvel._.js?1:42:30)                       
+       8 -    at resolveErrorDev (http://localhost:3001/_next/static/chun
+         -ks/node_modules_next_dist_compiled_react-server-dom-turbopack_1
+         -64kp-6._.js:1937:105)                                          
+       9 -    at processFullStringRow (http://localhost:3001/_next/static
+         -/chunks/node_modules_next_dist_compiled_react-server-dom-turbop
+         -ack_164kp-6._.js:2456:29)                                      
+      10 -    at processFullBinaryRow (http://localhost:3001/_next/static
+         -/chunks/node_modules_next_dist_compiled_react-server-dom-turbop
+         -ack_164kp-6._.js:2415:9)                                       
+      11 -    at processBinaryChunk (http://localhost:3001/_next/static/c
+         -hunks/node_modules_next_dist_compiled_react-server-dom-turbopac
+         -k_164kp-6._.js:2524:221)                                       
+      12 -    at progress (http://localhost:3001/_next/static/chunks/node
+         -_modules_next_dist_compiled_react-server-dom-turbopack_164kp-6.
+         -_.js:2711:13) The above error occurred in the <Home> component.
+         - It was handled by the <ErrorBoundaryHandler> error boundary. @
+         - http://localhost:3001/_next/static/chunks/node_modules_next_di
+         -st_client_0_90u2t._.js:17451                                   
+      13 -[   35233ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+      14 -[   35238ms] [LOG] [Fast Refresh] done in 106ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      15 -[  163464ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+      16 -[  164060ms] [LOG] [Fast Refresh] done in 698ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      17 -[  246350ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+      18 -[  246410ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      19 -[  246546ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      20 -[  246610ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      21 -[  246675ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      22 -[  246933ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      23 -[  247034ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      24 -[  248201ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      25 -[  248436ms] [LOG] [Fast Refresh] done in 143ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      26 -[  268748ms] [LOG] [Fast Refresh] done in 19803ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      27 -[  268832ms] [LOG] [Fast Refresh] done in 19803ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      28 -[  268882ms] [LOG] [Fast Refresh] done in 19803ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      29 -[  268990ms] [LOG] [Fast Refresh] done in 19803ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      30 -[  277562ms] [LOG] [Fast Refresh] done in 19803ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      31 -[  277792ms] [LOG] [Fast Refresh] done in 19803ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      32 -[  286236ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      33 -[  286447ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      34 -[  286501ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      35 -[  286559ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      36 -[  298289ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      37 -[  302488ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      38 -[  319348ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      39 -[  319694ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      40 -[  354755ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+     … 52 more lines (ctrl+o to expand)
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-14-18-517Z.log (+0 -2)
+      1 -[     617ms] [INFO] %cDownload the React DevTools for a better d
+        -evelopment experience: https://react.dev/link/react-devtools fon
+        -t-weight:bold @ http://localhost:3001/_next/static/chunks/node_m
+        -odules_next_dist_1e8vcs8._.js:776                               
+      2 -[     989ms] [LOG] [HMR] connected @ http://localhost:3001/_next
+        -/static/chunks/node_modules_next_dist_1e8vcs8._.js:776          
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-14-40-298Z.log (+0 -2)
+      1 -[     267ms] [INFO] %cDownload the React DevTools for a better d
+        -evelopment experience: https://react.dev/link/react-devtools fon
+        -t-weight:bold @ http://localhost:3001/_next/static/chunks/node_m
+        -odules_next_dist_1e8vcs8._.js:776                               
+      2 -[     279ms] [LOG] [HMR] connected @ http://localhost:3001/_next
+        -/static/chunks/node_modules_next_dist_1e8vcs8._.js:776          
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-16-25-012Z.log (+0 -50)
+       1 -[     351ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+       2 -[     947ms] [LOG] [Fast Refresh] done in 698ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+       3 -[    1458ms] [INFO] %cDownload the React DevTools for a better 
+         -development experience: https://react.dev/link/react-devtools f
+         -ont-weight:bold @ http://localhost:3001/_next/static/chunks/nod
+         -e_modules_next_dist_1e8vcs8._.js:776                           
+       4 -[    1468ms] [LOG] [HMR] connected @ http://localhost:3001/_nex
+         -t/static/chunks/node_modules_next_dist_1e8vcs8._.js:776        
+       5 -[   83237ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+       6 -[   83296ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+       7 -[   83433ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+       8 -[   83496ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+       9 -[   83561ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      10 -[   83819ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      11 -[   83920ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      12 -[   85088ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      13 -[   85322ms] [LOG] [Fast Refresh] done in 150ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      14 -[  105635ms] [LOG] [Fast Refresh] done in 19804ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      15 -[  105718ms] [LOG] [Fast Refresh] done in 19804ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      16 -[  105768ms] [LOG] [Fast Refresh] done in 19804ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      17 -[  105876ms] [LOG] [Fast Refresh] done in 19804ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      18 -[  114449ms] [LOG] [Fast Refresh] done in 19804ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      19 -[  114678ms] [LOG] [Fast Refresh] done in 19804ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      20 -[  123122ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      21 -[  123334ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      22 -[  123387ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      23 -[  123445ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      24 -[  135223ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      25 -[  139374ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      26 -[  156234ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      27 -[  156568ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      28 -[  191641ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      29 -[  201441ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      30 -[  201559ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      31 -[  239180ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      32 -[  239285ms] [LOG] [Fast Refresh] done in 37267ms @ http://loca
+         -lhost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+         -.js:776                                                        
+      33 -[  240166ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+      34 -[  240412ms] [LOG] [Fast Refresh] done in 347ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      35 -[  242155ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+      36 -[  242179ms] [LOG] [Fast Refresh] done in 125ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      37 -[  243355ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+      38 -[  243373ms] [LOG] [Fast Refresh] done in 119ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+      39 -[  244618ms] [LOG] [Fast Refresh] rebuilding @ http://localhost
+         -:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js:7
+         -76                                                             
+      40 -[  244639ms] [LOG] [Fast Refresh] done in 122ms @ http://localh
+         -ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.j
+         -s:776                                                          
+     … 10 more lines (ctrl+o to expand)
+  ⎿  … 19 more files changed
+
+⏺ 세 작업이 모두 끝났습니다. 워크트리 세 개는 그대로 두었고, 제가 띄운 3001 개발
+  서버는 껐습니다.
+
+  1. 스켈레톤 UI 1px 맞춤 (fix/skeleton-match-layout, 워크트리
+  8around-sns-wt/skeleton, 커밋 f349cbc, push 안 함)
+
+  - 본 UI와 같은 클래스로 스켈레톤을 다시 짰습니다. Skeleton.tsx에 ContentCard,
+    ComposeRow, SectionHeading용 스켈레톤을, components/profile/에 UserRow용
+    스켈레톤을 추가했습니다.
+  - 글줄 높이는 Tailwind 4.3의 h-lh로 실제 line-height와 같게 잡아 임의 값 없이
+    맞췄습니다.
+  - 프로필 로딩이 헤더(아바타 84px, 이름, 팔로우 수, 버튼)까지 그리게 되어
+    팔로워·팔로잉 라우트에 각각 loading.tsx를 새로 두었습니다.
+  - 각 page.tsx에 임시 60초 지연을 넣어 스켈레톤을 붙잡고
+    getBoundingClientRect로 7개 라우트 × 1280/400 두 뷰포트를 비교했습니다.
+    컨테이너, 아바타, 이름 줄, 본문 첫 줄, 액션 줄, 구분선, 헤더 모두 차이
+    0px입니다. 임시 지연은 제거했고 diff에 page.tsx는 없습니다.
+  - 남은 차이는 좋아요 숫자 폭과 "팔로워 N" 글자 폭에 따른 이웃 요소 x 좌표
+    0.67px, 0.8px뿐입니다. 글자마다 변하는 값이라 4px 스케일로는 맞출 수 없고
+    세로 위치에는 영향이 없습니다.
+  - 가정 두 가지를 TSDoc에 남겼습니다. 프로필 헤더는 남의 프로필(팔로우 버튼
+    포함) 모양이고, 소개 줄은 가입 폼이 받지 않아 그리지 않습니다.
+  - npm run verify 통과 (lint, typecheck, vitest 38 passed, harness).
+
+  2. 로그인 UI 개선안 (docs/login-ui-reference, 커밋 없음)
+  ⧉ https://claude.ai/code/artifact/7dcb9ac8-50ae-420c-9a62-576943e1e60e
+
+  핵심 지적은 이렇습니다.
+  - P1: 실패한 제출 뒤 이메일까지 지워집니다. 비제어 폼을 React 19가 액션 뒤
+    리셋하는데 값을 돌려주지 않습니다. 제가 SignInForm.tsx에서 직접
+    확인했습니다.
+  - P1: placeholder가 유일하게 보이는 라벨인데 대비가 2.76:1입니다. DESIGN.md의
+    Body 색으로 바꾸면 6.45:1입니다.
+  - P2: 빈 제출 시 두 칸이 빨간데 문구는 이메일 것만 뜹니다. 제출 중 입력칸
+    disabled로 포커스가 body로 떨어집니다. 비밀번호 표시 토글이 없습니다.
+  - 잘 된 점: autocomplete, sr-only 라벨, 에러 자리 예약, 버튼 aria-busy, 400px
+    대응.
+
+  3. 회원가입 UI 개선안 (docs/signup-ui-reference, 커밋 없음)
+  ⧉ https://claude.ai/code/artifact/e79b2249-3a14-4cb6-b4e8-29387a3b05ab
+
+  - 높음: 실패 후 입력값 전부 삭제(로그인과 같은 원인), 제출 전 아무 피드백
+    없음(blur 검증 없음), 값을 채우면 어떤 칸인지 알 수 없음(플로팅 라벨 제안,
+    결정 0016 갱신 필요).
+  - 중간: 비밀번호 표시 토글, 별명 중복을 제출해야만 앎, 빈 칸과 형식 오류
+    문구가 같음, 실패 후 포커스가 첫 에러 칸으로 안 감.
+  - 잘 된 점: autocomplete 정확, 필드 3개, 규칙 미리 표시, 가입 즉시 로그인,
+    이메일 중복 처리는 결정 0003 전제 유효.
+
+  참고할 점
+  - 개발 서버는 규칙 7 대상이지만 검증에 필요해 워크트리 포트 3001로만 띄웠다가
+    껐습니다. 메인 트리는 건드리지 않았습니다.
+  - 브랜치 2, 3은 산출물이 아티팩트라 커밋이 없습니다. 개선안을 구현하려면 그
+    브랜치에서 이어가면 됩니다.
+  - 일회용 계정이 Supabase에 두 개 남았습니다. 별명 sref1789305465, 이메일
+    loginui.review.333681@example.org.
+  - 두 리뷰 모두 Threads, Instagram, NN/g, Baymard, WCAG 2.2, web.dev, Apple
+    HIG, Material을 실제로 열어 확인했습니다. 토스와 당근은 이메일 가입 폼이
+    없어 대조에서 빠졌습니다.
+  - 메인 트리와 워크트리의 Playwright 산출물은 지웠고 git status는 모두
+    깨끗합니다.
+
+  다음 단계로는 스켈레톤 브랜치를 push해 PR을 올리는 것과, 두 리뷰에서 공통으로
+  나온 "실패 후 입력값 복원"을 먼저 고치는 것을 추천합니다.
+
+✔ Goal achieved (27m · 1 turn · 221.3k tokens) (ctrl+o to expand)
+
+✻ Brewed for 27m 14s · done Sunday 10:33 PM
+
+※ recap: Three parallel worktree tasks are done: skeleton UI matched pixel-for-pixel and committed on fix/skeleton-match-layout, plus login and signup UI review artifacts published. Next action is your call on pushing the skeleton branch for a PR. (disable recaps in /config)
+
+❯ 기능적인 개선안도 좋은데, 디자인적인 개선안도 포함되어있으면 좋겠음. 지금은   
+  너무 AI틱한 디자인이라서 트렌드에 맞게 변화를 줘야할 것 같아                  
+
+⏺ 디자인 개선안을 두 아티팩트에 추가하겠습니다. 먼저 현재 화면과 디자인 토큰
+  제약을 직접 보고, 두 에이전트에 이어서 작업을 맡깁니다.
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+  ⎿  Resuming agent a50125f
+  ⎿  Resuming agent a878331
+
+⏺ 두 에이전트가 각 아티팩트에 디자인 개선안 절을 추가하고 있습니다. 진단,
+  2025~2026 레퍼런스 대조, 방향 2~3개의 HTML 목업(데스크톱과 400px), 추천 순으로
+  구성하며 같은 URL로 다시 publish합니다. 완료되면 검토해 보고하겠습니다.
+
+✻ Baked for 1m 56s · done Sunday 10:49 PM
+
+⏺ Agent "Login page UI reference review" finished · 7m 13s
+
+⏺ 로그인 아티팩트가 갱신됐습니다. 목업이 실제로 어떻게 보이는지 렌더해서
+  확인합니다.
+
+⏺ 회원가입 에이전트가 아직 같은 브라우저를 쓰고 있어, 탭 간섭을 피하려고 완료
+  뒤에 두 아티팩트를 한꺼번에 렌더해 확인하겠습니다.
+
+✻ Worked for 8s · done Sunday 10:56 PM
+
+⏺ Agent "Signup page UI reference review" finished · 9m 14s
+
+⏺ Both done. I'll render both artifacts' mockup sections locally via file:// to
+  verify they display correctly.
+
+  Read 5 files, called playwright, claude-in-chrome 33 times, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Bash(pkill -f "http.server 3001"; sleep 1; lsof -iTCP:3001 -sTCP:LISTEN ||
+      echo "3001 closed"; cd /Users/junyeol/Documents/8around-sns && rm -rf
+      .playwright-mcp && r…)
+  ⎿  3001 closed
+     0
+  ⎿  Deleted .playwright-mcp/page-2026-09-13T13-50-37-607Z.yml (+0 -0)
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-49-37-290Z.log (+0 -13)
+       1 -[     319ms] [WARNING] Error with Permissions-Policy header: Un
+         -recognized feature: 'attribution-reporting'. @ :0              
+       2 -[     319ms] [WARNING] Error with Permissions-Policy header: Un
+         -recognized feature: 'shared-storage'. @ :0                     
+       3 -[     319ms] [WARNING] Error with Permissions-Policy header: Un
+         -recognized feature: 'shared-storage-select-url'. @ :0          
+       4 -[     694ms] [VERBOSE] [DOM] Password field is not contained in
+         - a form: (More info: https://goo.gl/9p2vKq) %o @ https://www.in
+         -stagram.com/accounts/emailsignup/:0                            
+       5 -[     707ms] [LOG]                                             
+       6 -%c잠깐만! font-family:helvetica; font-size:20px; font-size:50px
+         -; font-weight:bold; color:red; -webkit-text-stroke:1px black; @
+         - https://static.cdninstagram.com/rsrc.php/v4iMgt4/yH/l/ko_KR/4Z
+         -NVFxw0vLR.js:8                                                 
+       7 -[     707ms] [LOG]                                             
+       8 -%c이 기능은 개발자용으로 브라우저에서 제공되는 내용입니다. 누군
+         -가 Instagram 기능을 사용하거나 다른 사람의 계정을 '해킹'하기 위
+         -해 여기에 특정 콘텐츠를 복사하여 붙여넣으라고 했다면 사기 행위 
+         -로 간주하세요. 이 기능은 회원님의 Instagram 계정에 대한 액세스 
+         -권한을 상대편에게 부여하는 것입니다. font-family:helvetica; fon
+         -t-size:20px;  @ https://static.cdninstagram.com/rsrc.php/v4iMgt
+         -4/yH/l/ko_KR/4ZNVFxw0vLR.js:8                                  
+       9 -[     707ms] [LOG]                                             
+      10 -%c자세한 정보는 https://www.facebook.com/selfxss를 참고하세요. 
+         -font-family:helvetica; font-size:20px;  @ https://static.cdnins
+         -tagram.com/rsrc.php/v4iMgt4/yH/l/ko_KR/4ZNVFxw0vLR.js:8        
+      11 -[     707ms] [LOG]                                             
+      12 -%c  @ https://static.cdninstagram.com/rsrc.php/v4iMgt4/yH/l/ko_
+         -KR/4ZNVFxw0vLR.js:8                                            
+      13 -[     723ms] [INFO] Banner not shown: beforeinstallpromptevent.
+         -preventDefault() called. The page must call beforeinstallprompt
+         -event.prompt() to show the banner. @ https://www.instagram.com/
+         -accounts/emailsignup/:0                                        
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-49-56-339Z.log (+0 -17)
+       1 -[     966ms] [LOG] %c __                                       
+         -        _____          __          __           ______         
+         - v1.77505.0                                                    
+       2 -/\ \       __                                    /\  __`\      
+         - /\ \      __/\ \__       /\__  _\                             
+       3 -\ \ \     /\_\    ___      __     __     _ __    \ \ \/\ \  _ _
+         -_\ \ \____/\_\ \ ,_\      \/_/\ \/     ___     ___             
+       4 - \ \ \  __\/\ \ /' _ `\  /'__`\ /'__`\  /\`'__\   \ \ \ \ \/\`'
+         -__\ \ '__`\/\ \ \ \/         \ \ \   /' _ `\  /'___\           
+       5 -  \ \ \L\ \\ \ \/\ \/\ \/\  __//\ \L\.\_\ \ \/     \ \ \_\ \ \ 
+         -\/ \ \ \L\ \ \ \ \ \_  __     \_\ \__/\ \/\ \/\ \__/  __       
+       6 -   \ \____/ \ \_\ \_\ \_\ \____\ \__/.\_\\ \_\      \ \_____\ \
+         -_\  \ \_,__/\ \_\ \__\/\ \    /\_____\ \_\ \_\ \____\/\_\      
+       7 -    \/___/   \/_/\/_/\/_/\/____/\/__/\/_/ \/_/       \/_____/\/
+         -_/   \/___/  \/_/\/__/\ \/    \/_____/\/_/\/_/\/____/\/_/      
+       8 -                                                               
+         -                       \/                                      
+       9 -                                                               
+      10 -The product development system for teams and agents            
+      11 -                                                               
+      12 -WE'RE HIRING: https://linear.app/careers                       
+      13 -CHANGELOG:    https://linear.app/changelog                     
+      14 -                                                               
+      15 -  font-family: monospace;                                      
+      16 -  color: #282A30;                                              
+      17 -   @ https://static.linear.app/client/assets/Logger.vmq0wVRw.js
+         -:18                                                            
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-50-10-421Z.log (+0 -31)
+       1 -[     197ms] [LOG] %c                                          
+       2 -▲                                                              
+       3 -                                                               
+       4 -__  __                                     _            __     
+       5 -\ \/ /___  __  __   _________ _____       (_)_  _______/ /_    
+       6 - \  / __ \/ / / /  / ___/ __ `/ __ \     / / / / / ___/ __/    
+       7 - / / /_/ / /_/ /  / /__/ /_/ / / / /    / / /_/ (__  ) /_      
+       8 -/_/\____/\__,_/   \___/\__,_/_/ /_/  __/ /\__,_/____/\__/      
+       9 -         __    _          __  __    /___/                      
+      10 -   _____/ /_  (_)___     / /_/ /_  (_)___  ____ ______         
+      11 -  / ___/ __ \/ / __ \   / __/ __ \/ / __ \/ __ `/ ___/         
+      12 - (__  ) / / / / /_/ /  / /_/ / / / / / / / /_/ (__  )          
+      13 -/____/_/ /_/_/ .___/   \__/_/ /_/_/_/ /_/\__, /____/           
+      14 -            /_/                         /____/                 
+      15 -                                                               
+      16 -                                                               
+      17 -Hello!                                                         
+      18 -                                                               
+      19 -- Open Source https://vercel.com/oss                           
+      20 -- Careers https://vercel.com/careers                           
+      21 -- Status https://www.vercel-status.com                         
+      22 -                                                               
+      23 - font-family: "Geist Mono", monospace; white-space: pre; line-h
+         -eight: 1; @ https://vercel.com/_next/static/immutable/chunks/35
+         -_3xqkwq68yu.js:78                                              
+      24 -[     658ms] [WARNING] Deprecated API for given entry type. @ h
+         -ttps://vercel.com/_next/static/immutable/chunks/2c36qutjylct-.j
+         -s:18                                                           
+      25 -[     814ms] [ERROR] Failed to load resource: the server respon
+         -ded with a status of 403 () @ https://vercel.com/api/jwt:0     
+      26 -[    4047ms] [WARNING] The resource https://vercel.com/_next/st
+         -atic/immutable/chunks/03-gue-vxowxt.css was preloaded using lin
+         -k preload but not used within a few seconds from the window's l
+         -oad event. Please make sure it has an appropriate `as` value an
+         -d it is preloaded intentionally. @ https://vercel.com/signup:0 
+      27 -[    4047ms] [WARNING] The resource https://vercel.com/_next/st
+         -atic/immutable/chunks/0aumur8n2fp9i.css was preloaded using lin
+         -k preload but not used within a few seconds from the window's l
+         -oad event. Please make sure it has an appropriate `as` value an
+         -d it is preloaded intentionally. @ https://vercel.com/signup:0 
+      28 -[    4047ms] [WARNING] The resource https://vercel.com/_next/st
+         -atic/immutable/chunks/3flhcz7cw314y.css was preloaded using lin
+         -k preload but not used within a few seconds from the window's l
+         -oad event. Please make sure it has an appropriate `as` value an
+         -d it is preloaded intentionally. @ https://vercel.com/signup:0 
+      29 -[   10649ms] [WARNING] The resource https://vercel.com/_next/st
+         -atic/immutable/chunks/03-gue-vxowxt.css was preloaded using lin
+         -k preload but not used within a few seconds from the window's l
+         -oad event. Please make sure it has an appropriate `as` value an
+         -d it is preloaded intentionally. @ https://vercel.com/signup:0 
+      30 -[   10649ms] [WARNING] The resource https://vercel.com/_next/st
+         -atic/immutable/chunks/0aumur8n2fp9i.css was preloaded using lin
+         -k preload but not used within a few seconds from the window's l
+         -oad event. Please make sure it has an appropriate `as` value an
+         -d it is preloaded intentionally. @ https://vercel.com/signup:0 
+      31 -[   10649ms] [WARNING] The resource https://vercel.com/_next/st
+         -atic/immutable/chunks/3flhcz7cw314y.css was preloaded using lin
+         -k preload but not used within a few seconds from the window's l
+         -oad event. Please make sure it has an appropriate `as` value an
+         -d it is preloaded intentionally. @ https://vercel.com/signup:0 
+  ⎿  Deleted .playwright-mcp/console-2026-09-13T13-50-24-227Z.log (+0 -36)
+       1 -[     293ms] [INFO] Resource Sentinel initialized... @ https://
+         -app.notion.com/signup:38                                       
+       2 -[     434ms] [INFO] 2026-09-13T13:50:24.660Z [info] FeatureFlag
+         -TransactionQueue: preferIndexedDB {team: no-team-specified} @ h
+         -ttps://app.notion.com/_assets/app-a05c0e78997bb4bc.js:6        
+       3 -[     452ms] [INFO] 2026-09-13T13:50:24.679Z [error] clientCook
+         -ieHelpers: emptyCheckCookieConsent {data: Object} @ https://app
+         -.notion.com/_assets/app-a05c0e78997bb4bc.js:6                  
+       4 -[     576ms] [LOG] %c                                          
+       5 -        nnnnnnnnnnnnnnnnnnnnnnnnnnnnnn                         
+       6 -        nnnn                         nnnn                      
+       7 -        nnnnnnn                          nnnn                  
+       8 -        nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn                 
+       9 -        nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn                 
+      10 -        nnnnnnnn                           nnn                 
+      11 -        nnnnnnnn    nnnnnnnn     nnnnnnn   nnn                 
+      12 -        nnnnnnnn      nnnnnnn      nnn     nnn                 
+      13 -        nnnnnnnn      nnnnnnnn     nnn     nnn                 
+      14 -        nnnnnnnn      nnnnnnnnnn   nnn     nnn                 
+      15 -        nnnnnnnn      nnn nnnnnnn  nnn     nnn                 
+      16 -        nnnnnnnn      nnn  nnnnnnnnnnn     nnn                 
+      17 -        nnnnnnnn      nnn   nnnnnnnnnn     nnn                 
+      18 -        nnnnnnnn      nnn     nnnnnnnn     nnn                 
+      19 -        nnnnnnnn      nnn      nnnnnnn     nnn                 
+      20 -        nnnnnnnn    nnnnnnnn    nnnnnn     nnn                 
+      21 -          nnnnnn                           nnn                 
+      22 -                nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn             
+         - We're hiring!                                                 
+      23 -                  nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn             
+         - notion.com/careers                                            
+      24 -                                                               
+      25 -        “yeah, I would probably eat a lemon for one hundred dol
+         -lars” -- Ivan Zhao (2023-07-14)                                
+      26 -                                  font-family: monospace @ http
+         -s://app.notion.com/_assets/mainApp-bd0c9be899d3a999.js:37      
+      27 -[     791ms] [INFO] 2026-09-13T13:50:25.018Z [info] useExpPingP
+         -olling: exp_ping_success {data: Object} @ https://app.notion.co
+         -m/_assets/app-a05c0e78997bb4bc.js:6                            
+      28 -[    1006ms] [WARNING] Ignoring inability to install OPFS sqlit
+         -e3_vfs: Cannot install OPFS: Missing SharedArrayBuffer and/or A
+         -tomics. The server must emit the COOP/COEP response headers to 
+         -enable those. See https://sqlite.org/wasm/doc/trunk/persistence
+         -.md#coop-coep @ https://app.notion.com/_assets/wasm-sqlite-work
+         -er-b3cdcfff3285667b.js:0                                       
+      29 -[    1023ms] [WARNING] Amplitude Logger [Warn]: Event not track
+         -ed, no destination plugins on the instance @ https://app.notion
+         -.com/_assets/transport-support-c8dbde906ae5699d.js:0           
+      30 -[    1024ms] [INFO] 2026-09-13T13:50:25.250Z [error] eventTrail
+         -ApiHelpers: trackFailure {error: Object} @ https://app.notion.c
+         -om/_assets/app-a05c0e78997bb4bc.js:6                           
+      31 -[    1138ms] [INFO] 2026-09-13T13:50:25.364Z [info] sqliteSchem
+         -aHelpers: attemptFastForwardMigration {data: Object} @ https://
+         -app.notion.com/_assets/90305-597ffd983e8fca93.js:472           
+      32 -[    1170ms] [INFO] 2026-09-13T13:50:25.396Z [info] sqliteSchem
+         -aHelpers: successfulFastForwardMigration {data: Object} @ https
+         -://app.notion.com/_assets/90305-597ffd983e8fca93.js:472        
+      33 -[    1297ms] [WARNING] [GSI_LOGGER]: Your client application us
+         -es one of the Google One Tap prompt UI status methods that may 
+         -stop functioning when FedCM becomes mandatory. Refer to the mig
+         -ration guide to update your code accordingly and opt-in to FedC
+         -M to test your changes. Learn more: https://developers.google.c
+         -om/identity/gsi/web/guides/fedcm-migration?s=dc#display_moment 
+         -and https://developers.google.com/identity/gsi/web/guides/fedcm
+         --migration?s=dc#skipped_moment @ https://app.notion.com/_assets
+         -/90305-597ffd983e8fca93.js:472                                 
+      34 -[    1299ms] [ERROR] Not signed in with the identity provider. 
+         -@ https://app.notion.com/signup:0                              
+      35 -[    1983ms] [ERROR] Failed to load resource: the server respon
+         -ded with a status of 403 () @ https://cdn.metadata.io/pixel/con
+         -fig/1127.json:0                                                
+      36 -[    6569ms] [ERROR] [GSI_LOGGER]: FedCM get() rejects with Net
+         -workError: Error retrieving a token. @ https://app.notion.com/_
+         -assets/90305-597ffd983e8fca93.js:472                           
+  ⎿  … 20 more files changed
+
+  Called playwright (ctrl+o to expand)
+
+⏺ 두 아티팩트에 디자인 개선안 절을 추가해 같은 URL로 다시 publish했습니다. 요약
+  절도 디자인 방향을 먼저 말하도록 바꿨고, 기능 개선 절은 그대로 뒤에 있습니다.
+  목업은 로컬에서 렌더해 정상 표시를 확인했습니다.
+
+  - 로그인: ⧉
+    https://claude.ai/code/artifact/7dcb9ac8-50ae-420c-9a62-576943e1e60e
+  - 회원가입: ⧉
+    https://claude.ai/code/artifact/e79b2249-3a14-4cb6-b4e8-29387a3b05ab
+
+  진단: 왜 템플릿처럼 읽히는가 (코드와 스크린샷으로 확인한 것만)
+  - 브랜드 표식이 없습니다. 레일의 "8" 마크가 인증 화면에는 없고, 확인한
+    레퍼런스 8곳 전부 폼 위나 좌상단에 마크가 있습니다.
+  - 제목이 입력 글자와 같은 16px이라 위계가 굵기 하나뿐입니다. 레퍼런스 제목은
+    18~32px입니다.
+  - 순백 한 판 가운데 폼이 떠 있습니다. 데스크톱에서 폼 면적이 12~18%입니다.
+    결정 0016의 원본 Threads도 상단 로고 리본이 있어 순백이 아닙니다.
+  - 무엇에 가입하는지 말하는 요소가 없습니다. layout.tsx의 "생각을 짧게 나누는
+    공간"이 화면에 없습니다.
+  - 회원가입은 힌트가 상자 사이에 끼어 간격이 8/33/33px로 갈립니다.
+  - "shadcn 기본값 그대로"라는 후보는 사실이 아니라 뺐습니다. 이 조합은
+    Threads에서 직접 가져온 것입니다. 다만 오늘 Threads 입력칸은 흰 채움에 검정
+    15% 테두리라, 결정 0016의 "채운 상자" 전제 자체가 바뀌었습니다.
+
+  방향 3개, HTML 목업으로 나란히 (데스크톱과 400px, 실제 토큰과 문구만 사용)
+  - A. 브랜드 앵커: "8" 글리프 + 제목 24px/700 + 태그라인. 힌트는 포커스 때만.
+    토큰 다 있고 자간 하나만 로컬 확장. 결정 충돌 없음. 비용 작음.
+  - B. 분할 레이아웃: 데스크톱 왼쪽 background 면에 큰 문장과 실제 글
+    카드(ContentCard 재사용), 오른쪽 폼. 모바일은 한 컬럼. 결정 0016 갱신 필요.
+    비용 중간.
+  - C. 입력칸 재해석: 보이는 라벨(로그인은 상자 위, 가입은 상자 안 12px), 별명 @
+    접두, 비밀번호 토글과 규칙 체크. placeholder 대비 문제도 같이 풉니다. 결정
+    0016 갱신 필요. 비용 중간.
+  - 두 아티팩트 모두 추천은 A 먼저, 그다음 C입니다. B는 "제품을 보여주는 첫
+    화면"을 원할 때만입니다. AuthPanels 셸을 공유하므로 로그인과 가입이 같이
+    바뀝니다.
+
+  레퍼런스 (2026-09-13에 1280 폭으로 실제 열어 계측)
+  Threads, Instagram, Linear, Vercel, Notion, Figma(로그인만), Cursor(로그인만),
+  GitHub. 레이아웃, 표식, 제목 크기, 입력칸, 힌트, 버튼, 배경, 소셜 버튼, 전환
+  링크를 표로 대조했습니다.
+
+  확인하지 못한 것
+  - Raycast, Perplexity, 당근 웹, Mobbin은 404나 403으로 열지 못했습니다. 토스는
+    toss.tech 글로만 봤습니다.
+  - 진입 모션은 정지 캡처라 관찰하지 못했습니다.
+  - 목업 렌더 확인을 위해 3001 포트에 정적 서버를 잠깐 띄웠다가 껐습니다. 규칙 7
+    대상이라 알립니다.
+
+  레포 파일 변경과 커밋은 없습니다. 방향을 고르시면 해당 브랜치에서 구현할 수
+  있습니다.
+
+✻ Brewed for 15m 19s · done Sunday 11:02 PM
+
+❯ /limit-reset                                                                  
+  ⎿  A session-limit reset isn't available right now.
+❯ 혹시 할당량 다됐나?                                                           
+  ⎿  You've hit your session limit · resets 3am (Asia/Seoul)
+     /upgrade or /usage-credits to finish what you’re working on.
+
+✻ Crunched for 1s · done Sunday 11:09 PM
+
+❯ /model                                                                        
+  ⎿  Set model to Opus 5 and saved as your default for new sessions
+
+❯ 회원가입의 입력칸 재해석이라는 디자인을 기준으로 로그인도 수정해주고,         
+  사용자가 입력필드 클릭했을때 입력칸에 있는 이메일이나 별명 같은 텍스트가      
+  아웃라인으로 자연스레 올라가는 애니메이션 추가해줘                            
+                                                                                
+  그리고 스켈레톤은 지금 너무 모든내용을 다 보여줄라고 하고있어 그래서          
+  겹쳐보이는 문제도 있어서 수정해줘야 할것 같아                                 
+
+⏺ 할당량은 제가 볼 수 없습니다. 지금 응답이 나가고 있으니 이 세션은 쓸 수 있는
+  상태입니다. /limit-reset 메시지는 "지금 적용할 초기화가 없다"는 뜻입니다.
+  한도를 다 썼다는 뜻은 아닙니다.
+
+  작업은 두 갈래로 진행합니다. 스켈레톤은 기존 fix/skeleton-match-layout
+  워크트리에서 이어서 고칩니다. 입력칸은 새 브랜치 style/auth-floating-label에서
+  합니다. 먼저 관련 코드를 읽습니다.
+
+  Read 3 files, called playwright 2 times, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Background command "Create auth worktree and copy deps" completed (exit code
+0)
+
+⏺ Bash(cd /Users/junyeol/Documents/8around-sns-wt/skeleton && git checkout --
+      "app/(feed)/page.tsx" "app/post/[id]/page.tsx" "app/comment/[id]/page.tsx"
+      "app/u/[userna…)
+  ⎿  24- */
+     25-export default async function Home() {
+     26:        await new Promise((r) => setTimeout(r, 600_000)); // TMP-SKEL
+     … +11 lines (ctrl+o to expand)
+  ⎿  Shell cwd was reset to /Users/junyeol/Documents/8around-sns
+  ⎿  Updated .playwright-mcp/console-2026-09-14T04-07-32-504Z.log (+6 -0)
+      421    36 |  const { username } = await params;
+      422  
+      423  Parsing ecmascript source code failed @ http://localhost:3001/
+           _next/static/chunks/node_modules_next_dist_1gdrd03._.js:1817
+      424 +[   57409ms] [LOG] [Fast Refresh] rebuilding @ http://localhos
+          +t:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js
+          +:756                                                          
+      425 +[   57473ms] [LOG] [Fast Refresh] done in 12ms @ http://localh
+          +ost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.
+          +js:756                                                        
+      426 +[   57518ms] [LOG] [Fast Refresh] done in 12ms @ http://localh
+          +ost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.
+          +js:756                                                        
+      427 +[   57665ms] [LOG] [Fast Refresh] done in 12ms @ http://localh
+          +ost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.
+          +js:756                                                        
+      428 +[   58156ms] [INFO] %cDownload the React DevTools for a better
+          + development experience: https://react.dev/link/react-devtools
+          + font-weight:bold @ http://localhost:3001/_next/static/chunks/
+          +node_modules_next_dist_1e8vcs8._.js:776                       
+      429 +[   58167ms] [LOG] [HMR] connected @ http://localhost:3001/_ne
+          +xt/static/chunks/node_modules_next_dist_1e8vcs8._.js:776      
+
+  Read 3 files, called playwright (ctrl+o to expand)
+
+⏺ 캡처를 통해 세 가지 문제를 확인했습니다: 글줄 막대가 틈 없이 붙어 겹쳐 보이고,
+  cn() 미사용으로 rounded-sm이 rounded-full을 덮어써 아바타가 네모로 나오며,
+  불필요한 요소들이 과도하게 그려지고 있습니다. 바깥 높이는 유지해 데이터 로딩
+  시 레이아웃이 튀지 않게 하고, 안쪽은 얇은 막대 몇 개로 단순화하겠습니다.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Bash(cd /Users/junyeol/Documents/8around-sns-wt/skeleton && python3 - <<'EOF'
+      import re,pathlib…)
+  ⎿  updated app/(feed)/loading.tsx
+     updated app/following/loading.tsx
+     updated app/u/[username]/loading.tsx
+     … +28 lines (ctrl+o to expand)
+  ⎿  Shell cwd was reset to /Users/junyeol/Documents/8around-sns
+  ⎿  Updated .playwright-mcp/console-2026-09-14T04-07-32-504Z.log (+5 -0)
+      440  [  158267ms] [LOG] [Fast Refresh] rebuilding @ http://localhos
+           t:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js
+           :776
+      441  [  158322ms] [LOG] [Fast Refresh] done in 113ms @ http://local
+           host:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+           .js:776
+      442  [  158756ms] [LOG] [Fast Refresh] done in 113ms @ http://local
+           host:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+           .js:776
+      443 +[  174846ms] [LOG] [Fast Refresh] rebuilding @ http://localhos
+          +t:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.js
+          +:776                                                          
+      444 +[  174973ms] [LOG] [Fast Refresh] done in 70ms @ http://localh
+          +ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.
+          +js:776                                                        
+      445 +[  175137ms] [LOG] [Fast Refresh] done in 70ms @ http://localh
+          +ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.
+          +js:776                                                        
+      446 +[  175729ms] [LOG] [Fast Refresh] done in 896ms @ http://local
+          +host:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+          +.js:776                                                       
+      447 +[  175796ms] [LOG] [Fast Refresh] done in 896ms @ http://local
+          +host:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+          +.js:776                                                       
+
+⏺ Bash(cd /Users/junyeol/Documents/8around-sns-wt/skeleton && perl -0pi -e
+      's/세로선으로 이어진 글 칸, 댓글 칸, 답글 입력 줄, "답글" 제목줄,\n \*
+      답글 칸의 순서와 높이를 `page.tsx`와 같게 둔다./구분선 없이 이어진…)
+  ⎿  10: * 답글 칸의 순서와 높이를 `page.tsx`와 같게 둔다. 이어짐 세로선은
+     그리지 않는다.
+  ⎿  Shell cwd was reset to /Users/junyeol/Documents/8around-sns
+  ⎿  Updated .playwright-mcp/console-2026-09-14T04-07-32-504Z.log (+1 -0)
+      445  [  175137ms] [LOG] [Fast Refresh] done in 70ms @ http://localh
+           ost:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._.
+           js:776
+      446  [  175729ms] [LOG] [Fast Refresh] done in 896ms @ http://local
+           host:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+           .js:776
+      447  [  175796ms] [LOG] [Fast Refresh] done in 896ms @ http://local
+           host:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+           .js:776
+      448 +[  186190ms] [LOG] [Fast Refresh] done in 896ms @ http://local
+          +host:3001/_next/static/chunks/node_modules_next_dist_1e8vcs8._
+          +.js:776                                                       
+
+  Searched for 1 pattern, read 3 files, called playwright 4 times (ctrl+o to expand)
+
+⏺ 스켈레톤을 정리했습니다—아바타는 원형이 되고 막대 사이 간격이 생겨 겹침이
+  사라졌으며, 칸 높이는 기존대로 유지했습니다. 이제 임시 지연 코드를 제거하고
+  검증 후 커밋하겠습니다.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Write(~/Documents/8around-sns-wt/auth-field/components/ui/TextField.tsx)
+  ⎿  Error writing file
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Write(~/Documents/8around-sns-wt/auth-field/components/ui/TextField.tsx)
+  ⎿  Added 62 lines, removed 20 lines
+       1 +"use client";                                                  
+       2 +                                                               
+       3 +import { Eye, EyeOff } from "lucide-react";                    
+       4  import type { ComponentProps } from "react";
+       2 -import { useId } from "react";                                 
+       5 +import { useId, useState } from "react";                       
+       6 +import { cn } from "@/lib/utils/cn";                           
+       7  
+       8  type TextFieldProps = Omit<ComponentProps<"input">, "id"> & {
+       9    label: string;
+       6 -  /** 인라인 에러 문구. 있으면 보더와 helper text가 danger로 바
+         -뀐다 */                                                        
+      10 +  /** 인라인 에러 문구. 있으면 보더, 라벨, helper text가 danger
+         +로 바뀐다 */                                                   
+      11    error?: string;
+      12    /** 평상시 아래에 깔리는 안내 문구 */
+      13    hint?: string;
+      14  };
+      15  
+      16  /**
+      13 - * 입력칸 하나와 안내 또는 에러 한 줄. 라벨은 화면에서 감추고 `
+         -placeholder`가 그 말을 대신한다,                               
+      14 - * 없으면 라벨 문구를 그대로 placeholder로 쓴다. Threads의 채운
+         - 상자 모양이다. 결정 0016.                                     
+      17 + * 입력칸 하나와 안내 또는 에러 한 줄. 라벨이 칸 안에 있다가,  
+         +칸을 누르거나 값이 차면                                        
+      18 + * 테두리 위로 올라가 작아진다. 라벨 뒤를 `canvas`로 칠해 테두 
+         +리를 끊는다. 결정 0026.                                        
+      19   *
+      20 + * `placeholder`는 라벨이 올라간 뒤에만 보인다. 올라가기 전에는
+         + 라벨과 겹치므로 투명하게 둔다.                                
+      21 + * 라벨이 뜨는지는 `:placeholder-shown`으로 가르므로 예시 문구 
+         +가 없어도 빈 칸 하나를 넣는다.                                 
+      22 + *                                                             
+      23   * `error`가 있으면 보더가 danger로 바뀌고 `aria-invalid`가 붙
+          는다. 문구를 다른 자리에 띄우는
+      24   * 폼은 `aria-invalid`만 넘겨서 보더만 켠다. 로그인이 그렇다.
+      25   *
+      19 - * 상자는 `background`로 채우고 `fg-muted` 테두리를 두른다. 채 
+         -움만으로는 흰 바탕과                                           
+      20 - * 1.1:1이라 경계가 안 보이고, `hairline` 테두리는 1.23:1이다. 
+         -`fg-muted`가 흰 바탕에서                                       
+      21 - * 3.04:1로 결정 0012의 기준을 넘는다. 그래서 이 입력칸은 흰 바
+         -탕 위에 서야 한다.                                             
+      26 + * `type="password"`면 오른쪽에 보기 토글이 붙는다. 누르면 `typ
+         +e`만 바꾸고 값은 그대로다.                                     
+      27 + *                                                             
+      28 + * 상자는 흰 채움에 `fg-muted` 테두리다. 흰 바탕에서 3.04:1로  
+         +결정 0012의 기준을 넘는다.                                     
+      29 + * 그래서 이 입력칸은 흰 바탕 위에 서야 한다.                  
+      30   */
+      31  export function TextField({
+      32    label,
+      33    error,
+      34    hint,
+      35    placeholder,
+      36 +  type,                                                        
+      37    "aria-invalid": ariaInvalid,
+      38    ...props
+      39  }: TextFieldProps) {
+     ...
+      41    const describedById = `${id}-desc`;
+      42    const description = error ?? hint;
+      43    const invalid = Boolean(error) || ariaInvalid === true;
+      44 +  const password = type === "password";                        
+      45 +  const [revealed, setRevealed] = useState(false);             
+      46  
+      47    return (
+      48      <div className="flex flex-col gap-1">
+      38 -      <label className="sr-only" htmlFor={id}>                 
+      39 -        {label}                                                
+      40 -      </label>                                                 
+      41 -      <input                                                   
+      42 -        id={id}                                                
+      43 -        aria-describedby={description ? describedById : undefin
+         -ed}                                                            
+      44 -        aria-invalid={invalid || undefined}                    
+      45 -        className={`h-14 rounded-lg border bg-background px-4 t
+         -ext-body text-fg outline-none placeholder:text-fg-muted focus:b
+         -order-fg ${                                                    
+      46 -          invalid ? "border-danger" : "border-fg-muted"        
+      47 -        }`}                                                    
+      48 -        placeholder={placeholder ?? label}                     
+      49 -        {...props}                                             
+      50 -      />                                                       
+      49 +      <div className="relative">                               
+      50 +        <input                                                 
+      51 +          id={id}                                              
+      52 +          aria-describedby={description ? describedById : undef
+         +ined}                                                          
+      53 +          aria-invalid={invalid || undefined}                  
+      54 +          className={cn(                                       
+      55 +            "peer h-14 w-full rounded-lg border bg-canvas px-4 
+         +text-body text-fg outline-none transition-colors duration-[var(
+         +--motion-fast)] ease-(--ease-standard) placeholder:text-transpa
+         +rent focus:placeholder:text-fg-muted",                         
+      56 +            invalid ? "border-danger" : "border-fg-muted focus:
+         +border-fg",                                                    
+      57 +            password && "pr-12",                               
+      58 +          )}                                                   
+      59 +          placeholder={placeholder ?? " "}                     
+      60 +          type={password && revealed ? "text" : type}          
+      61 +          {...props}                                           
+      62 +        />                                                     
+      63 +        {/* 기본은 올라간 자리다. 비어 있을 때만 칸 가운데로 내
+         +려오고, 포커스가 그것을 다시 이긴다.                           
+      64 +            Tailwind가 placeholder-shown 변형을 focus보다 앞에 
+         +내보내서 이 순서가 선다 */}                                    
+      65 +        <label                                                 
+      66 +          className={cn(                                       
+      67 +            "pointer-events-none absolute top-0 left-3 -transla
+         +te-y-1/2 bg-canvas px-1 text-body-sm transition-all duration-[v
+         +ar(--motion-fast)] ease-(--ease-standard)",                    
+      68 +            "peer-placeholder-shown:top-1/2 peer-placeholder-sh
+         +own:text-body",                                                
+      69 +            "peer-focus:top-0 peer-focus:text-body-sm",        
+      70 +            invalid ? "text-danger" : "text-fg-muted peer-focus
+         +:text-fg",                                                     
+      71 +          )}                                                   
+      72 +          htmlFor={id}                                         
+      73 +        >                                                      
+      74 +          {label}                                              
+      75 +        </label>                                               
+      76 +        {password && (                                         
+      77 +          <button                                              
+      78 +            aria-label={revealed ? "비밀번호 숨기기" : "비밀번 
+         +호 보기"}                                                      
+      79 +            aria-pressed={revealed}                            
+      80 +            className="absolute top-1/2 right-2 -translate-y-1/
+         +2 rounded-md p-2 text-fg-muted transition-colors duration-[var(
+         +--motion-fast)] ease-(--ease-standard) hover:bg-background hove
+         +r:text-fg focus-visible:outline-2 focus-visible:outline-offset-
+         +2 focus-visible:outline-primary disabled:cursor-not-allowed"   
+      81 +            disabled={props.disabled}                          
+      82 +            onClick={() => setRevealed((v) => !v)}             
+      83 +            type="button"                                      
+      84 +          >                                                    
+      85 +            {revealed ? (                                      
+      86 +              <EyeOff aria-hidden className="size-5" />        
+      87 +            ) : (                                              
+      88 +              <Eye aria-hidden className="size-5" />           
+      89 +            )}                                                 
+      90 +          </button>                                            
+      91 +        )}                                                     
+      92 +      </div>                                                   
+      93        {description && (
+      94          <p
+      95            className={`px-1 text-body-sm ${error ? "text-danger"
+           : "text-fg-muted"}`}
+
+  Called playwright, ran 1 shell command (ctrl+o to expand)
+
+⏺ 동작 수치가 의도대로 확인됐습니다 — 빈 칸에서는 라벨이 중앙에, 포커스 시
+  테두리 위로 이동하고, 값 입력 후 포커스를 벗어나도 그대로 유지됩니다. 화면을
+  확인해보겠습니다.
+
+  Read 4 files (ctrl+o to expand)
+
+⏺ 화면이 의도대로 잘 나옵니다 — 라벨이 테두리를 끊고 올라가는 애니메이션, 에러
+  상태, 400px 폭 모두 정상입니다. 이제 결정 기록을 남기고 문서 참조를
+  맞추겠습니다.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Bash(pkill -f "next dev -p 3002"; cd /Users/junyeol/Documents/8around-sns &&
+      rm -rf .playwright-mcp; git status --short | wc -l; lsof -iTCP:3001
+      -iTCP:3002 -sTCP:LIS…)
+  ⎿  0
+     ports closed
+     /Users/junyeol/Documents/8around-sns                15f4254 [main]
+     … +8 lines (ctrl+o to expand)
+  ⎿  Deleted .playwright-mcp/console-2026-09-14T04-12-47-401Z.log (+0 -8)
+      1 -[     323ms] [INFO] %cDownload the React DevTools for a better d
+        -evelopment experience: https://react.dev/link/react-devtools fon
+        -t-weight:bold @ http://localhost:3001/_next/static/chunks/node_m
+        -odules_next_dist_1e8vcs8._.js:776                               
+      2 -[     379ms] [LOG] [HMR] connected @ http://localhost:3001/_next
+        -/static/chunks/node_modules_next_dist_1e8vcs8._.js:776          
+      3 -[    1137ms] [INFO] %cDownload the React DevTools for a better d
+        -evelopment experience: https://react.dev/link/react-devtools fon
+        -t-weight:bold @ http://localhost:3001/_next/static/chunks/node_m
+        -odules_next_dist_1e8vcs8._.js:776                               
+      4 -[    1148ms] [LOG] [HMR] connected @ http://localhost:3001/_next
+        -/static/chunks/node_modules_next_dist_1e8vcs8._.js:776          
+      5 -[    1890ms] [INFO] %cDownload the React DevTools for a better d
+        -evelopment experience: https://react.dev/link/react-devtools fon
+        -t-weight:bold @ http://localhost:3001/_next/static/chunks/node_m
+        -odules_next_dist_1e8vcs8._.js:776                               
+      6 -[    1908ms] [LOG] [HMR] connected @ http://localhost:3001/_next
+        -/static/chunks/node_modules_next_dist_1e8vcs8._.js:776          
+      7 -[    2536ms] [INFO] %cDownload the React DevTools for a better d
+        -evelopment experience: https://react.dev/link/react-devtools fon
+        -t-weight:bold @ http://localhost:3001/_next/static/chunks/node_m
+        -odules_next_dist_1e8vcs8._.js:776                               
+      8 -[    2549ms] [LOG] [HMR] connected @ http://localhost:3001/_next
+        -/static/chunks/node_modules_next_dist_1e8vcs8._.js:776          
+  ⎿  … 18 more files changed
+
+  Called playwright (ctrl+o to expand)
+
+⏺ 두 작업 모두 끝났고 각 브랜치에 커밋했습니다. 둘 다 npm run verify를
+  통과했습니다. push는 하지 않았습니다.
+
+  할당량은 제가 볼 수 없습니다. 이 세션은 지금도 정상으로 돌아가고 있습니다.
+  /limit-reset 메시지는 지금 적용할 초기화가 없다는 뜻이고, 한도를 다 썼다는
+  뜻은 아닙니다.
+
+  1. 입력칸 라벨이 떠오르는 디자인 (style/auth-floating-label, 워크트리
+  8around-sns-wt/auth-field)
+
+  - 라벨 움직임: 라벨이 처음엔 칸 가운데에 있습니다. 칸을 누르면 테두리 위로
+    올라가며 작아지고, 라벨 뒤 흰 면이 테두리를 끊습니다. 값이 차 있으면
+    포커스를 떠나도 위에 남습니다.
+  - 로그인과 가입: 둘 다 같은 입력칸 컴포넌트를 쓰므로 함께 바뀌었습니다. 상자는
+    회색 채움에서 흰 채움과 테두리로 바꿨습니다.
+  - 비밀번호 칸: 보기와 숨기기 토글을 붙였습니다.
+  - 예시 문구: "you@example.com" 같은 문구는 라벨이 올라간 뒤에만 보입니다.
+  - 움직임 값: 기존 토큰(150ms, standard 이징)만 썼습니다. 새 이징은 없습니다.
+  - 결정 기록: 결정 0016의 "라벨은 감추고 placeholder가 대신한다"를 뒤집는
+    변경이라 결정 0026으로 남겼습니다. 0016은 일부 대체됨으로 바꿨습니다.
+
+  브라우저에서 확인한 값입니다.
+
+  ┌────────────────────────┬───────────┬────────────┐
+  │          상태          │ 라벨 위치 │ 크기와 색  │
+  ├────────────────────────┼───────────┼────────────┤
+  │ 빈 칸                  │ 칸 가운데 │ 16px, 회색 │
+  ├────────────────────────┼───────────┼────────────┤
+  │ 포커스                 │ 테두리 위 │ 14px, 검정 │
+  ├────────────────────────┼───────────┼────────────┤
+  │ 값 입력 후 포커스 떠남 │ 테두리 위 │ 14px, 회색 │
+  ├────────────────────────┼───────────┼────────────┤
+  │ 에러                   │ 칸 가운데 │ 빨강       │
+  └────────────────────────┴───────────┴────────────┘
+
+  비밀번호 토글을 누르면 입력 형식이 텍스트로 바뀌는 것도 확인했습니다. 1280
+  폭과 400 폭 모두 정상입니다.
+
+  개선안 C에 있던 기능 두 가지는 이번에 넣지 않았습니다. 별명 칸의 @ 접두와
+  비밀번호 규칙 실시간 체크입니다. 라벨 디자인과 따로 되돌릴 수 있는 기능이라
+  나눴습니다. 원하시면 이어서 넣겠습니다.
+
+  2. 스켈레톤 단순화 (fix/skeleton-match-layout, 워크트리
+  8around-sns-wt/skeleton)
+
+  로딩 화면을 캡처해 보니 원인이 셋이었습니다.
+  - 겹쳐 보임: 글줄 막대가 줄 높이 24px를 꽉 채워 위아래 줄이 틈 없이
+    붙었습니다. 막대를 줄 가운데 12px로 줄였습니다.
+  - 아바타가 네모: 스켈레톤이 클래스를 문자열로 이어 붙여 기본 모서리 값이 원형
+    값을 이겼습니다. cn()으로 합치게 고쳐 원형이 됐습니다.
+  - 정보 과다: 좋아요 아이콘, 숫자, 시간, 섹션 제목, 답글 세로선, 팔로우 버튼
+    막대를 모두 뺐습니다. 이제 아바타, 이름, 본문 두 줄만 그립니다.
+
+  빠진 요소의 높이는 빈 공간으로 남겨서 데이터가 와도 화면이 튀지 않습니다.
+
+  참고할 점
+  - 개발 서버: 확인을 위해 워크트리에서 3001과 3002 포트로 잠깐 띄웠고, 끝난 뒤
+    둘 다 껐습니다.
+  - 확인 못 한 것: Chrome 자동완성이 칸을 옅은 파랑으로 칠할 때 라벨 뒤 흰 면이
+    도드라지는지는 보지 못했습니다.
+  - 남은 워크트리: 두 문서 워크트리 login-ui와 signup-ui는 커밋 없이 남아
+    있습니다. 필요 없으면 지워도 됩니다.
+
+✻ Worked for 11m 44s · done 1:17 PM
+
+❯ 아티팩트 전용 브랜치, 아티팩트 파일 두 개 다 삭제해주고, 스켈레톤, 그리고 ui  
+  관련 수정사항 했던 부분들 pr 생성해줘.                                        
+
+⏺ 아티팩트용 워크트리와 브랜치, 로컬 파일을 정리하고 PR 두 개를 만듭니다. 먼저
+  PR 절차 스킬을 불러옵니다.
+
+⏺ Skill(pr)  ⎿  Successfully loaded skill
+
+  Created PR #57, created PR #58, ran 4 shell commands (ctrl+o to expand)
+
+⏺ PR 두 개를 열었고, 두 PR 모두 CI와 Vercel 프리뷰 배포, Claude 자동 리뷰가
+  통과했습니다. 머지는 하지 않았습니다.
+
+  - 스켈레톤: https://github.com/junye0l/8around-sns/pull/57
+  - 입력칸 라벨: https://github.com/junye0l/8around-sns/pull/58
+
+  삭제한 것
+  - 워크트리와 브랜치: 아티팩트 전용 워크트리 두 개와 브랜치
+    docs/login-ui-reference, docs/signup-ui-reference를 지웠습니다. 원격에
+    올라간 적 없고 커밋도 없던 브랜치입니다.
+  - 로컬 파일: 스크래치패드의 로그인·회원가입 아티팩트 HTML과 거기 쓰인
+    스크린샷을 지웠습니다.
+  - 게시된 아티팩트: 두 개는 claude.ai에 아직 남아 있습니다. 제 도구에는 게시된
+    아티팩트를 지우는 기능이 없습니다. claude.ai/code/artifacts에서 직접 삭제해
+    주세요.
+
+  PR 본문에 적은 남은 일
+  - 프리뷰 확인: 두 PR 모두 "프리뷰 URL에서 직접 눌러봤다"를 체크하지
+    않았습니다. 로컬 개발 서버에서만 확인했기 때문입니다. 머지 전에 Vercel
+    프리뷰에서 한 번 눌러봐 주세요.
+  - 머지 순서: 두 브랜치는 겹치는 파일이 없어 어느 쪽을 먼저 머지해도 됩니다.
+  - 자동 리뷰: 지적이 달렸는지는 아직 읽지 않았습니다. 대응하려면 /pr-review를
+    쓰면 됩니다.
+
+✻ Brewed for 8m 0s · done 1:26 PM
+
+⏺ Stopped watching Artifact: "회원가입 UI 개선안" (artifact not found)
+
+⏺ 회원가입 UI 개선안 아티팩트가 삭제된 것을 확인했습니다. 그 아티팩트의 변경
+  감시도 함께 끝났습니다. 로그인 UI 개선안 쪽은 아직 삭제 알림을 받지
+  못했습니다. 그것도 지우셨다면 따로 할 일은 없습니다.
+
+✻ Sautéed for 4s · done 1:26 PM
+
+⏺ Stopped watching Artifact: "로그인 UI 개선안" (artifact not found)
+
+⏺ 로그인 UI 개선안 아티팩트도 삭제된 것을 확인했습니다. 아티팩트는 두 개 모두
+  없어졌습니다. 로컬 파일과 전용 브랜치도 이미 지운 상태라 아티팩트 관련 정리는
+  끝났습니다.
+
+✻ Crunched for 2s · done 1:26 PM
+
+❯ /pr-review                                                                    
+
+⏺ PR #57과 #58의 리뷰 지적을 먼저 모읍니다.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ PR #58에는 별다른 지적이 없고, #57에는 h-lh가 실제로 height: 1lh로
+  컴파일되는지 묻는 인라인 지적이 하나 있네요. 빌드 산출물을 직접
+  확인해보겠습니다.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ 빌드된 CSS를 확인해보니 해당 규칙이 정상적으로 포함되어 있어, "조용히
+  무시된다"는 지적은 사실과 다릅니다. 이를 부적절한 지적으로 판정하고 근거를
+  담아 답글을 작성하겠습니다.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ 두 PR의 리뷰를 확인했습니다. 지적은 PR #57의 인라인 하나뿐이었고, 검증해 보니
+  부적절해서 고친 코드는 없습니다.
+
+  PR #57 스켈레톤: 지적 1건, 부적절
+  - 지적 내용: 리뷰어는 h-lh가 이 레포에서 처음 쓰는 클래스라고 했습니다. 대괄호
+    없이 컴파일되지 않으면 액션 줄과 섹션 제목 자리 높이가 0이 된다고 봤습니다.
+    리뷰 환경에 node_modules가 없어 확인하지 못했다고 적었습니다.
+  - 빌드로 확인: 이 브랜치를 next build로 빌드했습니다. 생성된 CSS에 아래 규칙이
+    들어 있습니다.
+
+  .next/static/chunks/2iie5x9eg6w4r.css: .h-lh{height:1lh}
+
+  - Tailwind 소스: 길이 단위 목록에 lh가 들어 있어 대괄호 없이도 받습니다.
+  - 브라우저 측정: 앞서 브라우저에서 잰 글 칸 높이는 145px였습니다. 이 값은 액션
+    줄 37px를 포함한 값입니다. 높이가 0이었다면 124px이 나와야 합니다.
+  - 처리: 👎를 달고 위 근거로 답글을 남겼습니다. 스레드는 규칙대로 열어 두었으니
+    닫는 것은 직접 해 주세요.
+
+  PR #58 입력칸 라벨: 지적 0건
+  - 자동 리뷰가 버그와 규칙 위반을 찾지 못했다고 총평만 남겼습니다. 인라인
+    지적은 없습니다.
+
+  상태
+  - CI: 두 PR 모두 verify, 자동 리뷰, Vercel 프리뷰 배포가 통과했습니다.
+  - 로컬: 빌드 캐시는 지웠고 스켈레톤 워크트리는 깨끗합니다.
+
+  남은 절차
+  - 프리뷰 확인: 머지 전에 두 Vercel 프리뷰에서 직접 눌러봐 주세요.
+    - 스켈레톤: https://8around-new-sns-git-fix-skeleton-match-layout-dante-0e6d
+      bef4.vercel.app
+    - 입력칸: https://8around-new-sns-git-style-auth-floating-label-dante-0e6dbe
+      f4.vercel.app
+  - 머지: 두 PR은 겹치는 파일이 없어 순서와 상관없이 머지하면 됩니다.
+
+✻ Cogitated for 1m 20s · done 1:30 PM
+
+❯ 두 개다 확인했고, merge 진행해주고 로컬 브랜치 삭제 및 main 최신화            
+
+⏺ 두 PR을 머지 커밋으로 머지하고, 워크트리와 로컬 브랜치를 지운 뒤 main을
+  최신화합니다.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Bash(WT=/Users/junyeol/Documents/8around-sns-wt; git worktree remove
+      $WT/skeleton && git worktree remove $WT/auth-field && git branch -d
+      fix/skeleton-match-layout st…)
+  ⎿  warning: deleting branch 'fix/skeleton-match-layout' that has been mer
+     ged to
+              'refs/remotes/origin/fix/skeleton-match-layout', but not yet
+     … +15 lines (ctrl+o to expand)
+  ⎿  Updated app/(feed)/loading.tsx (+8 -14)
+       1  import { PageShell } from "@/components/layout/PageShell";
+       2 -import { Skeleton } from "@/components/ui/Skeleton";           
+       2 +import {                                                       
+       3 +        ComposeRowSkeleton,                                    
+       4 +        ContentCardSkeleton,                                   
+       5 +} from "@/components/ui/Skeleton";                             
+       6  
+       7  /**
+       5 - * 추천의 첫 페인트. 컬럼 뼈대를 `app/(feed)/page.tsx`와 같게  
+         -세워서 데이터가 와도                                           
+       6 - * 화면이 튀지 않는다. 레일은 배경이 없어서 비워둔다.          
+       8 + * 추천의 첫 페인트. 글쓰기 줄과 글 칸을 `app/(feed)/page.tsx` 
+         +와 같은 클래스로 세워서                                        
+       9 + * 데이터가 와도 화면이 튀지 않는다. 레일은 배경이 없어서 비워 
+         +둔다.                                                          
+      10   *
+      11   * `(feed)` 그룹 안에 있다. 루트에 두면 이 파일이 앱 전체의 대
+          기 화면이 되어,
+      12   * 다른 화면으로 넘어갈 때 "추천" 제목의 스켈레톤이 먼저 뜨고 
+          그 화면의 스켈레톤이
+     ...
+      15  export default function Loading() {
+      16          return (
+      17                  <PageShell title="추천">
+      18 +                        <ComposeRowSkeleton />                 
+      19                          {[0, 1, 2, 3].map((row) => (
+      16 -                                <div                           
+      17 -                                        className="flex gap-3 b
+         -order-hairline border-b px-6 py-4 last:border-b-0"             
+      18 -                                        key={row}              
+      19 -                                >                              
+      20 -                                        <Skeleton className="si
+         -ze-9 shrink-0 rounded-full" />                                 
+      21 -                                        <div className="flex fl
+         -ex-1 flex-col gap-2">                                          
+      22 -                                                <Skeleton class
+         -Name="h-4 w-32" />                                             
+      23 -                                                <Skeleton class
+         -Name="h-4 w-full" />                                           
+      24 -                                                <Skeleton class
+         -Name="h-4 w-3/4" />                                            
+      25 -                                        </div>                 
+      26 -                                </div>                         
+      20 +                                <ContentCardSkeleton actions ke
+         +y={row} />                                                     
+      21                          ))}
+      22                  </PageShell>
+      23          );
+  ⎿  Updated app/comment/[id]/loading.tsx (+13 -14)
+       1  import { PageShell } from "@/components/layout/PageShell";
+       2 -import { Skeleton } from "@/components/ui/Skeleton";           
+       2 +import {                                                       
+       3 +        ComposeRowSkeleton,                                    
+       4 +        ContentCardSkeleton,                                   
+       5 +        SectionHeadingSkeleton,                                
+       6 +} from "@/components/ui/Skeleton";                             
+       7  
+       8  /**
+       5 - * 답글 화면의 첫 페인트. 제목이 "답글"이라 `app/post/[id]/load
+         -ing.tsx`를 쓰지 못한다.                                        
+       9 + * 답글 화면의 첫 페인트. 구분선 없이 이어진 글 칸, 댓글 칸, 답
+         +글 입력 줄, "답글" 제목줄,                                     
+      10 + * 답글 칸의 순서와 높이를 `page.tsx`와 같게 둔다. 이어짐 세로 
+         +선은 그리지 않는다.                                            
+      11   *
+      12   * 뒤로 갈 글은 댓글을 읽어야 알 수 있으므로 여기서는 "/"를 둔
+          다. 주소는 뒤에
+      13   * 바뀌지만 화살표 자리는 그대로여서 제목이 옆으로 밀리지 않는
+          다.
+     ...
+      15  export default function CommentLoading() {
+      16          return (
+      17                  <PageShell backHref="/" title="답글">
+      13 -                        {[0, 1, 2].map((row) => (              
+      14 -                                <div                           
+      15 -                                        className="flex gap-3 b
+         -order-hairline border-b px-6 py-4 last:border-b-0"             
+      16 -                                        key={row}              
+      17 -                                >                              
+      18 -                                        <Skeleton className="si
+         -ze-9 shrink-0 rounded-full" />                                 
+      19 -                                        <div className="flex fl
+         -ex-1 flex-col gap-2">                                          
+      20 -                                                <Skeleton class
+         -Name="h-4 w-32" />                                             
+      21 -                                                <Skeleton class
+         -Name="h-4 w-full" />                                           
+      22 -                                                <Skeleton class
+         -Name="h-4 w-3/4" />                                            
+      23 -                                        </div>                 
+      24 -                                </div>                         
+      18 +                        <ContentCardSkeleton connected />      
+      19 +                        <ContentCardSkeleton />                
+      20 +                        <ComposeRowSkeleton />                 
+      21 +                        <SectionHeadingSkeleton />             
+      22 +                        {[0, 1].map((row) => (                 
+      23 +                                <ContentCardSkeleton key={row} 
+         +/>                                                             
+      24                          ))}
+      25                  </PageShell>
+      26          );
+  ⎿  Updated app/following/loading.tsx (+4 -14)
+       1  import { PageShell } from "@/components/layout/PageShell";
+       2 -import { Skeleton } from "@/components/ui/Skeleton";           
+       2 +import { ContentCardSkeleton } from "@/components/ui/Skeleton";
+       3  
+       4  /**
+       5 - * 팔로잉 피드의 첫 페인트. `app/loading.tsx`는 제목이 "추천"이
+         -라 여기까지 쓰지 못한다.                                       
+       6 - *                                                             
+       5 + * 팔로잉 피드의 첫 페인트. `app/(feed)/loading.tsx`는 제목이 "
+         +추천"이고 글쓰기 줄이                                          
+       6 + * 있어 여기까지 쓰지 못한다.                                  
+       7   */
+       8  export default function FollowingLoading() {
+       9          return (
+      10                  <PageShell title="팔로잉">
+      11                          {[0, 1, 2, 3].map((row) => (
+      12 -                                <div                           
+      13 -                                        className="flex gap-3 b
+         -order-hairline border-b px-6 py-4 last:border-b-0"             
+      14 -                                        key={row}              
+      15 -                                >                              
+      16 -                                        <Skeleton className="si
+         -ze-9 shrink-0 rounded-full" />                                 
+      17 -                                        <div className="flex fl
+         -ex-1 flex-col gap-2">                                          
+      18 -                                                <Skeleton class
+         -Name="h-4 w-32" />                                             
+      19 -                                                <Skeleton class
+         -Name="h-4 w-full" />                                           
+      20 -                                                <Skeleton class
+         -Name="h-4 w-3/4" />                                            
+      21 -                                        </div>                 
+      22 -                                </div>                         
+      12 +                                <ContentCardSkeleton actions ke
+         +y={row} />                                                     
+      13                          ))}
+      14                  </PageShell>
+      15          );
+  ⎿  Updated app/post/[id]/loading.tsx (+12 -15)
+       1  import { PageShell } from "@/components/layout/PageShell";
+       2 -import { Skeleton } from "@/components/ui/Skeleton";           
+       2 +import {                                                       
+       3 +        ComposeRowSkeleton,                                    
+       4 +        ContentCardSkeleton,                                   
+       5 +        SectionHeadingSkeleton,                                
+       6 +} from "@/components/ui/Skeleton";                             
+       7  
+       8  /**
+       5 - * 상세 화면의 첫 페인트. `app/loading.tsx`는 제목이 "추천"이라
+         - 여기까지 쓰지 못한다.                                         
+       6 - *                                                             
+       9 + * 상세 화면의 첫 페인트. 글 한 칸, 댓글 입력 줄, "댓글" 제목줄
+         +, 댓글 칸의 순서와                                             
+      10 + * 높이를 `page.tsx`와 같게 둔다. 댓글 칸은 답글이 없는 모양이 
+         +다.                                                            
+      11   */
+      12  export default function PostLoading() {
+      13          return (
+      14                  <PageShell backHref="/" title="게시글">
+      11 -                        {[0, 1, 2].map((row) => (              
+      12 -                                <div                           
+      13 -                                        className="flex gap-3 b
+         -order-hairline border-b px-6 py-4 last:border-b-0"             
+      14 -                                        key={row}              
+      15 -                                >                              
+      16 -                                        <Skeleton className="si
+         -ze-9 shrink-0 rounded-full" />                                 
+      17 -                                        <div className="flex fl
+         -ex-1 flex-col gap-2">                                          
+      18 -                                                <Skeleton class
+         -Name="h-4 w-32" />                                             
+      19 -                                                <Skeleton class
+         -Name="h-4 w-full" />                                           
+      20 -                                                <Skeleton class
+         -Name="h-4 w-3/4" />                                            
+      21 -                                        </div>                 
+      22 -                                </div>                         
+      15 +                        <ContentCardSkeleton actions />        
+      16 +                        <ComposeRowSkeleton />                 
+      17 +                        <SectionHeadingSkeleton />             
+      18 +                        {[0, 1].map((row) => (                 
+      19 +                                <ContentCardSkeleton actions ke
+         +y={row} />                                                     
+      20                          ))}
+      21                  </PageShell>
+      22          );
+  ⎿  Created app/u/[username]/followers/loading.tsx (+16 -0)
+       1 +import { PageShell } from "@/components/layout/PageShell";     
+       2 +import { UserRowSkeleton } from "@/components/profile/UserRowSk
+         +eleton";                                                       
+       3 +                                                               
+       4 +/**                                                            
+       5 + * 팔로워 목록의 첫 페인트. 윗 폴더의 `loading.tsx`는 프로필 헤
+         +더를 그려서 여기까지                                           
+       6 + * 쓰지 못한다. 뒤로 갈 프로필은 데이터가 와야 알 수 있어 "/"를
+         + 둔다. 화살표 자리는 같다.                                     
+       7 + */                                                            
+       8 +export default function FollowersLoading() {                   
+       9 +        return (                                               
+      10 +                <PageShell backHref="/" title="팔로워">        
+      11 +                        {[0, 1, 2].map((row) => (              
+      12 +                                <UserRowSkeleton key={row} />  
+      13 +                        ))}                                    
+      14 +                </PageShell>                                   
+      15 +        );                                                     
+      16 +}                                                              
+  ⎿  … 9 more files changed
+
+⏺ 두 PR을 머지했고 로컬은 정리를 마쳤습니다. main은 최신 상태입니다.
+
+  ┌─────┬─────────────────┬───────────┐
+  │ PR  │      내용       │ 머지 커밋 │
+  ├─────┼─────────────────┼───────────┤
+  │ #57 │ 스켈레톤 단순화 │ 40dad70   │
+  ├─────┼─────────────────┼───────────┤
+  │ #58 │ 입력칸 라벨     │ 3d71983   │
+  └─────┴─────────────────┴───────────┘
+
+  - 머지 방식: 규칙대로 머지 커밋으로 머지했습니다.
+  - 로컬 정리: 워크트리 두 개와 로컬 브랜치 두 개를 지웠습니다. 비게 된 워크트리
+    상위 폴더도 지웠습니다.
+  - 원격 브랜치: 제가 지우려 했을 때 이미 없었습니다. 머지하면서 레포 설정이
+    자동으로 지운 것으로 보입니다.
+  - 삭제 경고: 로컬 브랜치를 지울 때 "HEAD에 아직 머지되지 않았다"는 경고가
+    떴습니다. main을 받기 전에 지워서 난 경고입니다. 받은 뒤 main 로그에 두 머지
+    커밋이 모두 들어 있어 잃은 커밋은 없습니다.
+  - main 상태: 메인 트리는 3d71983에 있고 변경 사항이 없습니다. 브랜치는 main
+    하나만 남았습니다.
+  - 리뷰 스레드: #57에서 반박해 둔 h-lh 스레드는 열린 채로 머지됐습니다.
+    필요하면 PR에서 직접 닫아 주세요.
+
+✻ Cogitated for 41s · done 1:32 PM
