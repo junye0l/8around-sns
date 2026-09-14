@@ -18,11 +18,14 @@ import { interestLength, normalizeInterests } from "@/lib/utils/interests";
 export function InterestsField({
 	defaultValue,
 	error,
+	onChange,
 	pending = false,
 }: {
 	defaultValue: string[];
 	/** 서버가 돌려준 관심사 에러 문구 */
 	error?: string;
+	/** 넣거나 뺄 때마다 지금 목록. 편집 모달이 바뀐 것이 있는지 본다 */
+	onChange?: (items: string[]) => void;
 	/** 저장 중. 값을 바꾸지 못하게 막는다 */
 	pending?: boolean;
 }) {
@@ -32,11 +35,16 @@ export function InterestsField({
 	const full = items.length >= INTERESTS_MAX;
 	const locked = pending || full;
 
+	function update(next: string[]) {
+		setItems(next);
+		onChange?.(next);
+	}
+
 	function add() {
 		if (locked) return;
 		// maxLength는 UTF-16으로 세고 한글 조합 중에는 넘칠 수 있어 글자 수를 한 번 더 본다
 		if (interestLength(draft.trim()) > INTEREST_CHARS_MAX) return;
-		setItems(normalizeInterests([...items, draft]));
+		update(normalizeInterests([...items, draft]));
 		setDraft("");
 	}
 
@@ -80,7 +88,7 @@ export function InterestsField({
 								disabled={pending}
 								label={item}
 								onRemove={() => {
-									setItems(items.filter((value) => value !== item));
+									update(items.filter((value) => value !== item));
 									// 지운 버튼이 사라지면 포커스가 body로 떨어진다
 									input.current?.focus();
 								}}

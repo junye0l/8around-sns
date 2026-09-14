@@ -1,7 +1,7 @@
 "use client";
 
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
-import { useActionState, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ComposeDialog } from "@/components/ui/ComposeDialog";
 import {
 	Dialog,
@@ -16,6 +16,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
+import { useSubmitAction } from "@/hooks/useSubmitAction";
 
 type MenuResult = { ok: true } | { ok: false; error: string };
 type MenuAction = (
@@ -152,7 +153,7 @@ function DeleteDialog({
 	onOpenChange: (open: boolean) => void;
 	onCloseAutoFocus: (event: Event) => void;
 }) {
-	const [result, formAction, pending] = useActionState(
+	const [result, formAction, pending] = useSubmitAction<MenuResult | null>(
 		config.deleteAction,
 		null,
 	);
