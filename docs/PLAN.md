@@ -71,15 +71,11 @@
 - [x] 팔로워 · 팔로잉 수와 목록 — 수를 누르면 `/u/[username]/followers` · `/following`으로 간다
 - [x] 팔로잉 기준 피드 필터 — `/following`. 팔로우 목록을 먼저 읽고 `in`으로 거른다 (`lib/queries/post.ts`의 `listFollowingFeed`)
 - [x] 프로필 화면에 그 사람이 쓴 글 — 헤더 아래에 최신순으로 편다 (`lib/queries/post.ts`의 `listPostsByAuthor`). 사용자가 요청해서 범위에 들어왔다
-- [ ] **프로필 편집 — 표시 이름만 바꾼다.** 아직 안 만들었다. 가입 때 받는 칸은 `username` 하나뿐이고
-  트리거가 그 값을 `display_name`에도 그대로 넣는다 (`supabase/migrations/0001_init.sql:36-43`).
-  그래서 두 값이 글자까지 같고, 프로필 헤더에서 같은 문자열이 두 줄로 보인다.
-  아이디는 주소이자 남이 부르는 이름이라 고정하고, 표시 이름만 고치게 한다.
-  DB는 이미 받을 준비가 돼 있다 — `display_name`은 1~30자 제약이 붙은 별도 컬럼이고
-  "본인 프로필만 수정한다" 정책이 `0001_init.sql:121-124`에 있다. 마이그레이션 없이
-  `lib/services/profile.ts`, `lib/actions/profile.ts`, 화면만 있으면 된다.
-  같이 볼 것: `bio`도 그릴 자리만 있고 채울 길이 없다. 가입 폼의 "별명" 라벨은 실제로는 아이디 칸이라
-  표시 이름이 생기면 이름을 다시 나눠야 한다. 요구 기능 6개 밖이라 착수 전에 범위 결정이 먼저다
+- [x] 프로필 편집 — 내 프로필의 팔로우 버튼 자리에 "프로필 편집" 버튼, 모달에서 표시 이름과 프로필 이미지를 바꾼다.
+  아이디(`username`)는 주소라 고정이다. 이미지는 Storage `avatars` 버킷에 두고 프로필에는 경로만 저장한다
+  (`supabase/migrations/0007_profile_avatars.sql`, [결정 0030](decisions/0030-profile-avatar-upload.md)). 사용자가 요청해서 범위에 들어왔다.
+  나중에 편집할 칸이 늘면 모달에서 화면으로 옮길 수 있다. `bio`는 아직 채울 길이 없다.
+  가입 폼의 "별명" 라벨은 실제로는 아이디 칸이라 이름을 다시 나누는 일이 남아 있다
 
 ## 6. 공통 컴포넌트
 
@@ -96,7 +92,7 @@ shadcn 도입은 여기 딸린다. 가져오는 기준은 [결정 0009](decision
 
 - [x] 토큰을 `app/globals.css`에 옮기고 `@theme`로 노출
 - [x] `Button` — primary(검정), outline, loading, disabled, pressed, keyboard focus, `href`(링크형). 높이 40px
-- [x] `Avatar` — 이름 첫 글자. 이미지 업로드는 범위 밖이다
+- [x] `Avatar` — 프로필 이미지, 없으면 사람 아이콘 (결정 0030)
 - [x] `Composer` — 게시글 · 댓글 · 답글이 같이 쓴다. 숨은 입력(`post_id` · `parent_id`)만 바깥에서 넣는다. 카운터 없음, 높이 고정 ([결정 0014](decisions/0014-composer-layout.md))
 - [x] `ContentCard` — 게시글 · 댓글 · 답글이 같은 모양이라 하나를 같이 쓴다. 그림자 없음, `border-hairline` 1px로만 분리. `connected`면 아바타 밑으로 스레드 세로선이 흐른다
 - [x] `PageShell` — 가운데 카드 컬럼 · 붙박이 제목줄. 카드 상자도 여기서 그린다 ([결정 0015](decisions/0015-threads-shell.md)). 레일은 `app/(main)/layout.tsx`가 그린다 ([결정 0028](decisions/0028-sidenav-in-layout.md))

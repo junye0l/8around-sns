@@ -52,3 +52,4 @@
 | [0026](0026-auth-floating-label.md) | 입력칸 라벨을 보이게 두고, 누르면 테두리 위로 올린다 | 확정 |
 | [0027](0027-auth-page-layout.md) | 인증 화면을 왼쪽 정렬로 바꾸고, 건너가는 줄을 버튼으로 둔다 | 확정 |
 | [0028](0028-sidenav-in-layout.md) | 왼쪽 레일을 레이아웃으로 올리고, 프로필에 걸린 두 줄만 기다린다 | 확정 |
+| [0030](0030-profile-avatar-upload.md) | 프로필 이미지는 Storage에 두고, 브라우저가 줄여서 Server Action으로 올린다 | 확정 |
