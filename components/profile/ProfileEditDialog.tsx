@@ -165,18 +165,22 @@ function ProfileEditForm({
 			className="flex flex-col gap-6 px-6 pt-2 pb-6"
 		>
 			<div className="flex flex-col items-center gap-2">
-				{/* 사진 자체가 버튼이다. 늘 깔린 어두운 막과 연필이 누를 수 있다고 말하고, hover와 pressed에서 막이 짙어진다 */}
+				{/* 사진 자체가 버튼이다. 늘 깔린 어두운 막과 연필이 누를 수 있다고 말하고, hover와 pressed에서 막이 짙어진다.
+				    저장 중에는 진짜 disabled 대신 aria-disabled로 막는다. 포커스가 body로 떨어지지 않는다 (결정 0012, Button.tsx와 같다) */}
 				<button
+					aria-busy={pending || undefined}
+					aria-disabled={pending || undefined}
 					aria-label="프로필 사진 바꾸기"
-					className="group/avatar relative shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed"
-					disabled={pending}
-					onClick={() => fileInput.current?.click()}
+					className="group/avatar relative shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-busy:cursor-not-allowed"
+					onClick={() => {
+						if (!pending) fileInput.current?.click();
+					}}
 					type="button"
 				>
 					<Avatar className="size-21" path={avatarPath} preview={preview} />
 					<span
 						aria-hidden
-						className="absolute inset-0 flex items-center justify-center rounded-full bg-fg/30 text-canvas transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) group-hover/avatar:bg-fg/50 group-active/avatar:bg-fg/60 group-disabled/avatar:bg-fg/30"
+						className="absolute inset-0 flex items-center justify-center rounded-full bg-fg/30 text-canvas transition-colors duration-[var(--motion-fast)] ease-(--ease-standard) group-hover/avatar:bg-fg/50 group-active/avatar:bg-fg/60 group-aria-busy/avatar:bg-fg/30 group-aria-busy/avatar:group-hover/avatar:bg-fg/30"
 					>
 						<Pencil className="size-6" />
 					</span>
