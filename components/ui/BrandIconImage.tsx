@@ -9,6 +9,7 @@ const ON_PRIMARY = "#ffffff";
  * 둥근 모서리는 브라우저 탭용이다. iOS는 제 모양으로 모서리를 깎으므로 `rounded`를 끈다.
  *
  * 글꼴은 next/og 기본 글꼴이다. `app/fonts`의 Pretendard는 woff2라 ImageResponse가 읽지 못한다.
+ * 색을 옮겨 적은 것과 글꼴 선택은 결정 0051.
  * @see app/icon.tsx
  * @see app/apple-icon.tsx
  */
