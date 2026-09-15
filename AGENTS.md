@@ -23,30 +23,29 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 범위
 
-요구 기능은 **6개**다. 이것이 전부다.
+요구 기능은 **6개**다.
 
 회원가입, 로그인, 팔로우와 팔로잉, 게시글 작성, 댓글, 대댓글
 
-좋아요는 요구 기능이 아니지만 사용자가 요청해서 범위에 들어왔다. **게시글에만** 단다,
-댓글에는 달지 않는다 ([결정 0020](docs/decisions/0020-post-likes.md)).
-다크 모드도 사용자가 요청해서 들어왔다. 더 보기의 디자인 메뉴에서 고른다 ([결정 0040](docs/decisions/0040-theme-switch.md)).
-
-범위 밖(알림, DM, 이미지 업로드, 검색, 해시태그 등)은 **사용자 요청이 없으면 구현하지 않는다.**
+범위 밖은 **사용자 요청이 없으면 구현하지 않는다.**
 
 ## 명령어
 
-| 명령 | 용도 |
-|------|------|
-| `npm run verify` | lint, typecheck, test, harness. 커밋 전에 이것만 돌리면 된다 |
-| `npm run format` | Biome 포맷 + 자동 수정 |
-| `npm run dev` | 개발 서버. **에이전트가 직접 실행하지 않는다 (규칙 7)** |
-| `npm run db:push` | 마이그레이션을 원격 DB에 적용. 규칙 7에 따라 먼저 묻는다 |
-| `npm run types:gen` | 스키마에서 `types/database.ts` 재생성 |
-| `npm run harness` | 규칙 중 기계가 볼 수 있는 것만 검사한다. `verify`가 부른다 |
-| `npm run test:e2e` | 떠 있는 개발 서버에 대고 심사 시나리오 E2E를 돌린다. 실제 DB에 계정이 남으므로 CI 실패를 재현할 때만 쓴다 (규칙 17) |
 
-CI는 `verify` 3단계에 `npm run build`를 더해 그대로 돌린다. 로컬에서 `verify`가 통과하면 CI도 통과한다.
-E2E는 CI의 다른 job이 러너 안에 띄운 로컬 Supabase에 대고 돌린다 ([결정 0048](docs/decisions/0048-e2e-against-remote-db.md)).
+| 명령                  | 용도                                                                        |
+| ------------------- | ------------------------------------------------------------------------- |
+| `npm run verify`    | lint, typecheck, test, harness. 커밋 전에 이것만 돌리면 된다                          |
+| `npm run format`    | Biome 포맷 + 자동 수정                                                          |
+| `npm run dev`       | 개발 서버. **에이전트가 직접 실행하지 않는다 (규칙 7)**                                       |
+| `npm run db:push`   | 마이그레이션을 원격 DB에 적용. 규칙 7에 따라 먼저 묻는다                                        |
+| `npm run types:gen` | 스키마에서 `types/database.ts` 재생성                                             |
+| `npm run harness`   | 규칙 중 기계가 볼 수 있는 것만 검사한다. `verify`가 부른다                                    |
+| `npm run test:e2e`  | 떠 있는 개발 서버에 대고 심사 시나리오 E2E를 돌린다. 실제 DB에 계정이 남으므로 CI 실패를 재현할 때만 쓴다 (규칙 17) |
+
+
+CI는 `verify` 3단계에 `npm run build`를 더해 그대로 돌린다. 로컬에서 `verify`가 통과하면 CI도 통과한다. 
+
+E2E는 CI의 다른 job이 러너 안에 띄운 로컬 Supabase에 대고 돌린다[.](docs/decisions/0048-e2e-against-remote-db.md)
 
 ## 구조
 
@@ -75,14 +74,16 @@ docs/                   PLAN.md, DESIGN.md
 
 **어디에 둘지 헷갈릴 때**
 
-| 이건 | 여기 |
-|------|------|
-| 여러 기능에서 쓸 버튼, 아바타, 태그 | `components/ui/` |
-| 게시글에서만 쓰는 카드 | `components/post/` |
-| `useState`가 두 군데 이상에서 같은 모양으로 반복될 때 | `hooks/` |
-| 입력만으로 결과가 정해지는 함수 | `lib/utils/` + 테스트 |
-| DB를 읽는다 | `lib/queries/` |
-| DB를 쓴다 | `lib/services/` (로직) + `lib/actions/` (진입점) |
+
+| 이건                                  | 여기                                          |
+| ----------------------------------- | ------------------------------------------- |
+| 여러 기능에서 쓸 버튼, 아바타, 태그               | `components/ui/`                            |
+| 게시글에서만 쓰는 카드                        | `components/post/`                          |
+| `useState`가 두 군데 이상에서 같은 모양으로 반복될 때 | `hooks/`                                    |
+| 입력만으로 결과가 정해지는 함수                   | `lib/utils/` + 테스트                          |
+| DB를 읽는다                             | `lib/queries/`                              |
+| DB를 쓴다                              | `lib/services/` (로직) + `lib/actions/` (진입점) |
+
 
 디렉터리는 **첫 파일이 생길 때 만든다.** 빈 폴더를 미리 파두지 않는다.
 
@@ -108,23 +109,23 @@ Tailwind v4를 쓴다. 유틸리티를 화면에 직접 흩뿌리지 않고 공�
 - `@theme`로 Tailwind 유틸리티에 노출한다. `bg-canvas`, `text-fg`, `text-body`, `rounded-md`, `border-hairline`
 - 간격은 Tailwind 숫자 스케일을 쓴다. 그것이 곧 4px 그리드다. `p-1`은 4px, `p-4`는 16px, `p-16`은 64px
 - 임의의 값을 쓰지 않는다. `p-[13px]`, `text-[#333]` 같은 것이다. 6px이 필요하면 `p-1.5`를 쓴다.
-  그리드 밖의 값이 꼭 필요하면 이유를 주석으로 남긴다
+그리드 밖의 값이 꼭 필요하면 이유를 주석으로 남긴다
 - 컴포넌트를 어디에 둘지는 규칙 2를 따른다. 화면 전용이면 기능 폴더, 어디서나 쓰일 성격이면 `components/ui/`
-- 컴포넌트를 만들면 `docs/DESIGN.md`의 Components & States가 요구하는 상태를 다 채운다.
-  loading, disabled, pressed, keyboard focus 넷이다. 하나라도 비면 미완성이다
-- 화면 문구는 `docs/DESIGN.md`에 없다. 새로 쓸 때는 Voice & Tone 절에 맞추고, 이미 있는 화면의 말투를 따른다
+- 컴포넌트를 만들면 `docs/DESIGN.md`의 Components &amp; States가 요구하는 상태를 다 채운다.
+loading, disabled, pressed, keyboard focus 넷이다. 하나라도 비면 미완성이다
+- 화면 문구는 `docs/DESIGN.md`에 없다. 새로 쓸 때는 Voice &amp; Tone 절에 맞추고, 이미 있는 화면의 말투를 따른다
 - 문서에 없는 값을 지어내지 않는다. 필요한데 없으면 멈추고 묻는다
 - 라이트와 다크를 둘 다 지원한다. 색 토큰은 `app/globals.css`에 `light-dark(라이트, 다크)` 한 줄로 적고,
-  화면 코드에서는 `dark:` 변형이나 `prefers-color-scheme` 분기를 쓰지 않는다 ([결정 0040](docs/decisions/0040-theme-switch.md))
+화면 코드에서는 `dark:` 변형이나 `prefers-color-scheme` 분기를 쓰지 않는다[.](docs/decisions/0040-theme-switch.md)
 - 포커스와 키보드를 다뤄야 하는 것은 직접 만들지 않는다. 모달, 시트, 드롭다운, 탭이 그렇다.
-  shadcn 소스를 가져와 우리 토큰에 맞춘다. 클래스를 합칠 때는 `lib/utils/cn.ts`의 `cn()`을 쓴다
+shadcn 소스를 가져와 우리 토큰에 맞춘다. 클래스를 합칠 때는 `lib/utils/cn.ts`의 `cn()`을 쓴다
 - 아이콘은 `lucide-react`에서 가져온다. SVG를 손으로 그리지 않는다.
-  `aria-hidden`은 직접 붙인다. lucide가 안 붙인다
+`aria-hidden`은 직접 붙인다. lucide가 안 붙인다
 
 소프트 서피스 디자인에서 오는 제약이다. 근거는 `docs/DESIGN.md`와 [결정 0043](docs/decisions/0043-soft-surface.md)에 있다.
 
 - 보라(`primary`)는 동작과 현재 위치에만 칠한다. 장식으로 쓰지 않는다. 관심사 톤은 칩과 아바타에만 쓴다
-- 글꼴은 `app/fonts/`의 Pretendard 하나다([결정 0044](docs/decisions/0044-renewal-open-decisions.md)). 다른 웹폰트는 결정을 거치지 않고 넣지 않는다
+- 글꼴은 `app/fonts/`의 Pretendard 하나다.[](docs/decisions/0044-renewal-open-decisions.md) 다른 웹폰트는 결정을 거치지 않고 넣지 않는다
 - 새 이징이나 duration을 만들지 않는다. `--motion-*`과 `--ease-*` 셋만 쓴다. 스프링과 오버슈트는 금지다
 - 그림자는 라이트에서 `shadow-card`, `shadow-raised` 둘만 쓴다. 다크는 그림자 없이 면 색으로 나눈다
 - 한글 본문은 단어 단위로 줄바꿈한다. `break-keep`과 `wrap-anywhere`를 같이 둔다
@@ -164,14 +165,16 @@ Tailwind v4를 쓴다. 유틸리티를 화면에 직접 흩뿌리지 않고 공�
 
 같은 사실이 두 곳에 적혀 있으면 둘 다 틀린 것으로 친다.
 
-| 사실 | 유일한 출처 |
-|------|-------------|
-| DB 스키마 | `supabase/migrations/*.sql`. 대시보드에서 손으로 고치지 않는다 |
-| DB 타입 | `types/database.ts`. `npm run types:gen`으로 생성한다 (규칙 8) |
-| 색, 간격, 폰트 | `docs/DESIGN.md` 토큰 |
-| 개발 규칙 | 이 문서 |
-| 일정, 범위 | `docs/PLAN.md` |
-| 결정과 그 이유 | `docs/decisions/NNNN-*.md` (규칙 14) |
+
+| 사실        | 유일한 출처                                                 |
+| --------- | ------------------------------------------------------ |
+| DB 스키마    | `supabase/migrations/*.sql`. 대시보드에서 손으로 고치지 않는다        |
+| DB 타입     | `types/database.ts`. `npm run types:gen`으로 생성한다 (규칙 8) |
+| 색, 간격, 폰트 | `docs/DESIGN.md` 토큰                                    |
+| 개발 규칙     | 이 문서                                                   |
+| 일정, 범위    | `docs/PLAN.md`                                         |
+| 결정과 그 이유  | `docs/decisions/NNNN-*.md` (규칙 14)                     |
+
 
 문서에 없는데 코드에 남긴 값은 `app/globals.css`에 "로컬 확장"이라고 적고 이유를 붙인다.
 그 주석이 그 값의 출처가 된다.
@@ -247,12 +250,14 @@ npm run types:gen           types/database.ts 재생성
 
 성공 경로만 만든 화면을 됐다고 하지 않는다. 상태마다 자리가 정해져 있다.
 
-| 상태 | 어디에 |
-|---|---|
-| 로딩 | 그 라우트에 `loading.tsx`. 화면 전환이 없는 폼은 버튼 비활성으로 대신한다 |
+
+| 상태   | 어디에                                                    |
+| ---- | ------------------------------------------------------ |
+| 로딩   | 그 라우트에 `loading.tsx`. 화면 전환이 없는 폼은 버튼 비활성으로 대신한다       |
 | 빈 상태 | 목록이 비면 `components/ui/EmptyState.tsx`로 문구와 다음 행동을 보여준다 |
-| 없음 | 주소가 가리키는 것이 없으면 그 라우트에 `not-found.tsx` |
-| 에러 | `app/error.tsx`가 받는다. 화면마다 따로 만들지 않는다 |
+| 없음   | 주소가 가리키는 것이 없으면 그 라우트에 `not-found.tsx`                 |
+| 에러   | `app/error.tsx`가 받는다. 화면마다 따로 만들지 않는다                  |
+
 
 접근성은 Biome의 a11y 룰이 CI에서 본다. 여기에 따로 적지 않는다.
 
@@ -360,11 +365,13 @@ docs/agents-rules       문서
 
 대신 이렇게 한다:
 
-| 하고 싶은 것 | 대신 |
-|---|---|
+
+| 하고 싶은 것           | 대신                                                 |
+| ----------------- | -------------------------------------------------- |
 | 브랜치를 최신 main에 맞추기 | `git merge origin/main`. 머지 커밋이 남지만 남의 참조가 깨지지 않는다 |
-| 잘못 올린 커밋 되돌리기 | `git revert <커밋>`. 지우지 말고 되돌리는 커밋을 새로 쌓는다 |
-| 커밋 메시지 오타 | 그냥 둔다. 히스토리를 다시 쓸 만큼 중요하지 않다 |
+| 잘못 올린 커밋 되돌리기     | `git revert <커밋>`. 지우지 말고 되돌리는 커밋을 새로 쌓는다          |
+| 커밋 메시지 오타         | 그냥 둔다. 히스토리를 다시 쓸 만큼 중요하지 않다                       |
+
 
 히스토리를 다시 쓰면 남이 받아간 커밋과 어긋나고, PR에 달린 리뷰 코멘트가 떨어져 나간다.
 정리된 히스토리보다 **잃어버리지 않는 히스토리**가 낫다.
@@ -380,15 +387,17 @@ docs/agents-rules       문서
 (한 줄로 충분하면 본문은 생략)
 ```
 
-| 타입 | 용도 |
-|------|------|
-| `feat` | 기능 추가 |
-| `fix` | 버그 수정 |
+
+| 타입         | 용도             |
+| ---------- | -------------- |
+| `feat`     | 기능 추가          |
+| `fix`      | 버그 수정          |
 | `refactor` | 동작 변화 없는 구조 변경 |
-| `style` | 화면, 토큰, 스타일 |
-| `chore` | 설정, 빌드, 의존성 |
-| `docs` | 문서 |
-| `test` | 테스트 |
+| `style`    | 화면, 토큰, 스타일    |
+| `chore`    | 설정, 빌드, 의존성    |
+| `docs`     | 문서             |
+| `test`     | 테스트            |
+
 
 - 요약은 한국어, 마침표 없이, 50자 이내
 - 커밋 하나는 **되돌릴 수 있는 단위**여야 한다. "작업중" 커밋을 남기지 않는다
@@ -419,7 +428,10 @@ PR을 만드는 시점과 리뷰를 보는 시점이 다르기 때문이다.
 
 `.env.local` (커밋 금지, `.env.example` 참고)
 
-| 키 | 용도 |
-|----|------|
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 익명 키 |
+
+| 키                               | 용도                |
+| ------------------------------- | ----------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase 프로젝트 URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 익명 키              |
+
+
