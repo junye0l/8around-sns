@@ -26,7 +26,7 @@ export function InterestTag({ label }: { label: string }) {
 }
 
 /**
- * 큰 관심사 칩. 프로필 헤더, 내 프로필 요약, 편집 시트가 쓴다. 14px / 600, 좌우 12px, 위아래 4px, 관심사 톤.
+ * 큰 관심사 칩. 프로필 헤더와 편집 시트가 쓴다. 14px / 600, 좌우 12px, 위아래 4px, 관심사 톤.
  * `onRemove`를 주면 오른쪽에 지우기 버튼이 붙는다.
  * @see docs/DESIGN.md 관심사 칩
  */
