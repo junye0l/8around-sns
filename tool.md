@@ -3,7 +3,7 @@
 
 | 도구 / 라이브러리                  | 용도                                        |
 | --------------------------- | ----------------------------------------- |
-| Claude Code                 | 전체 구현 및 리팩토링, 서브에이전트와 git worktree로 병렬 작업 |
+| Claude Code                 | 전체 구현 및 리팩토링, 서브에이전트와 git worktree로 병렬 작업, `/goal`로 기능 단위 목표 진행, Artifacts로 점검 보고 확인, WebFetch로 외부 서비스 공식 문서 조회 |
 | Claude Code + GitHub Action | PR 자동 코드 리뷰                               |
 | Playwright MCP              | 브라우저를 열어 화면 동작 확인                         |
 | impeccable                  | 디자인, 접근성 점검과 리뉴얼 방향 제안                    |
